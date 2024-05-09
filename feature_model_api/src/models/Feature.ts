@@ -1,11 +1,11 @@
-import { Attribute } from "../interfaces/attribute.js";
+import { Attribute } from "../types/attribute.js";
 
-class Feature {
+export class Feature {
     private name: string;
-    private attributes: Attribute[];
-    private subFeatures: Feature[];
+    private attributes: Attribute;
+    public subFeatures: Feature[];
 
-    constructor( name: string , attributes : Attribute[] ,  subFeatures: Feature[] =[] ){
+    constructor( name: string , attributes : Attribute ,  subFeatures: Feature[] =[] ){
         this.name =  name ;
         this.attributes = attributes ;
         this.subFeatures = subFeatures ;

@@ -1,3 +1,3 @@
-export interface Attribute {
+export type Attribute = {
     [key: string]: string[]; 
 }
