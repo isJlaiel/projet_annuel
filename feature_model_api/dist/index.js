@@ -1,8 +1,10 @@
-import { promises as fs } from 'fs';
-import { parseXML } from './utils/FeatureXmlParser.js';
-const xmlData = await fs.readFile('src/storage/model.xml', 'utf-8');
-parseXML(xmlData).then(features => {
-    console.log('Parsed Features:', features);
-    // Now, you can pass these features to your front end for visualization
+import express from "express";
+import featureRoutes from './routes/featureRoutes.js';
+const app = express();
+const PORT = 3000;
+app.use(express.json());
+app.use('/', featureRoutes);
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
 });
 //# sourceMappingURL=index.js.map

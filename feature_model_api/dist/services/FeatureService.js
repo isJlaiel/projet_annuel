@@ -1,7 +1,7 @@
 import * as xml2js from 'xml2js';
 import { Feature } from '../models/Feature.js';
 export class FeatureService {
-    async parseFromXMLToFeatures(xmlData) {
+    static async parseFromXMLToFeatures(xmlData) {
         const parser = new xml2js.Parser({ explicitChildren: true, preserveChildrenOrder: true, charsAsChildren: false });
         try {
             const result = await parser.parseStringPromise(xmlData);
@@ -15,7 +15,7 @@ export class FeatureService {
             return [];
         }
     }
-    parse(featureData) {
+    static parse(featureData) {
         return featureData.map(f => {
             const attributes = f.$ || {};
             /**       console.log(featureData[0].subFeature[0].Feature)

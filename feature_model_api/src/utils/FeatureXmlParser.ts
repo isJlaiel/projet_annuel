@@ -1,6 +1,6 @@
 import * as xml2js from 'xml2js';
 import { promises as fs } from 'fs';
-import { Feature } from '../models/Feature.js';
+import { Feature } from '../models/feature.js';
 import { Attribute } from '../types/attribute.js';
 export async function parseXML(xmlData: string){
     const parser = new xml2js.Parser({ explicitChildren: true, preserveChildrenOrder: true, charsAsChildren: false });
