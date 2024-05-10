@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -26,51 +26,6 @@ const nodeTypes = {
   feature: FeatureNode,
   root: RootNode,
   choice: ChoiceNode
-};
-
-function buildTree(nodes: any[], edges: any[], direction = "TB") {
-  const isHorizontal = direction === "LR";
-  const dagreGraph = new dagre.graphlib.Graph();
-  dagreGraph.setDefaultEdgeLabel(() => ({}));
-  dagreGraph.setGraph({ rankdir: direction });
-
-  nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
-  });
-
-  edges.forEach((edge) => {
-    dagreGraph.setEdge(edge.source, edge.target);
-  });
-
-  dagre.layout(dagreGraph);
-
-  nodes.forEach((node) => {
-    const nodeWithPosition = dagreGraph.node(node.id);
-    node.targetPosition = isHorizontal ? "left" : "top";
-    node.sourcePosition = isHorizontal ? "right" : "bottom";
-
-    // We are shifting the dagre node position (anchor=center center) to the top left
-    // so it matches the React Flow node anchor point (top left).
-    node.position = {
-      x: nodeWithPosition.x - nodeWidth / 2,
-      y: nodeWithPosition.y - nodeHeight / 2,
-    };
-  });
-
-  return { nodes, edges };
-}
-
-const findNode = (node: any, nodeId: string): any => {
-  if (node.id === nodeId) {
-    return node;
-  }
-  for (let child of node.children) {
-    const found = findNode(child, nodeId);
-    if (found) {
-      return found;
-    }
-  }
-  return null;
 };
 
 function processFeatures(features: any, parentId: string): any {
@@ -146,6 +101,39 @@ function processFeatures(features: any, parentId: string): any {
 }
 
 export default function FlowDiagram() {
+  const dagreGraph = useRef(new dagre.graphlib.Graph()).current;
+
+  const buildTree = useCallback((nodes: any[], edges: any[], direction = "TB") => {
+    const isHorizontal = direction === "LR";
+    dagreGraph.setDefaultEdgeLabel(() => ({}));
+    dagreGraph.setGraph({ rankdir: direction });
+  
+    nodes.forEach((node) => {
+      dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+    });
+  
+    edges.forEach((edge) => {
+      dagreGraph.setEdge(edge.source, edge.target);
+    });
+  
+    dagre.layout(dagreGraph);
+  
+    nodes.forEach((node) => {
+      const nodeWithPosition = dagreGraph.node(node.id);
+      node.targetPosition = isHorizontal ? "left" : "top";
+      node.sourcePosition = isHorizontal ? "right" : "bottom";
+  
+      // We are shifting the dagre node position (anchor=center center) to the top left
+      // so it matches the React Flow node anchor point (top left).
+      node.position = {
+        x: nodeWithPosition.x - nodeWidth / 2,
+        y: nodeWithPosition.y - nodeHeight / 2,
+      };
+    });
+  
+    return { nodes, edges };
+  }, []);
+
   const [graphData, setGraphData] = useState<{ nodes: Node[]; edges: Edge[] }>({
     nodes: [],
     edges: [],
@@ -177,67 +165,24 @@ export default function FlowDiagram() {
         const tree = buildTree(newNodes, newEdges);
         setNodes(tree.nodes);
         setEdges(tree.edges);
-      });
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la récupération des données :", error);
+      });  
   }, []);
-
-  const tree = buildTree(graphData.nodes, graphData.edges);
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
 
-  const getDescendantIds = (node: any): string[] => {
-    let ids: any[] = [];
-    node.children.forEach((child: any) => {
-      ids.push(child.id);
-      ids = ids.concat(getDescendantIds(child));
-    });
-    return ids;
-  };
-
-  const findParentNode = (node: any, nodeId: string): any => {
-    for (let child of node.children) {
-      if (child.id === nodeId) {
-        return node;
-      }
-      const found = findParentNode(child, nodeId);
-      if (found) {
-        return found;
-      }
+  const handleNodeClick = (_event: any, node: { id: string; }) => {
+    const edge = edges.find(edge => edge.target === node.id);
+    if(edge){
+      let parentId = edge.source;
+      let updatedNodes = nodes.map(n => n.id === parentId ? { ...n, nodeStyle: { backgroundColor: 'green' } } : n);
+      setNodes(updatedNodes);
     }
-    return null;
-  };
-
-  const getAllDescendantIds = (node: any): string[] => {
-    let ids = [];
-    for (let child of node.children) {
-      ids.push(child.id);
-      ids = ids.concat(getAllDescendantIds(child));
-    }
-    return ids;
-  };
-
-  const applyFadeStyle = (nodeId: string) => {
-    const parentNode = findParentNode(tree, nodeId);
-    const siblingIds = parentNode
-      ? parentNode.children
-          .map((child: any) => child.id)
-          .filter((id: string) => id !== nodeId)
-      : [];
-    const descendantIds = siblingIds.flatMap((id: any) =>
-      getAllDescendantIds(findNode(tree, id))
-    );
-
-    setNodes((prevNodes) =>
-      prevNodes.map((node) =>
-        siblingIds.includes(node.id) || descendantIds.includes(node.id)
-          ? node.style && node.style.opacity === 0.2
-            ? { ...node, style: { ...node.style, opacity: 1 } }
-            : { ...node, style: { ...node.style, opacity: 0.2 } }
-          : node
-      )
-    );
   };
 
   return (
@@ -248,8 +193,8 @@ export default function FlowDiagram() {
           edges={edges}
           nodeTypes={nodeTypes}
           onConnect={onConnect}
-          onNodeClick={(_, node) => applyFadeStyle(node.id)}
-        >
+          onNodeClick={handleNodeClick}
+          >
           <Controls />
           <MiniMap />
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
