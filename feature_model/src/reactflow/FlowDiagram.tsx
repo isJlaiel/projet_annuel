@@ -9,6 +9,7 @@ import ReactFlow, {
   Edge,
   Connection,
   BackgroundVariant,
+  ReactFlowProvider,
 } from "reactflow";
 import FeatureNode from "./FeatureNode";
 
@@ -23,31 +24,31 @@ const initialNodes = [
     id: "0",
     type: "feature",
     position: { x: 0, y: 0 },
-    data: { label: "ROOT", isMandatory: true, cardinality: "1" },
+    data: { label: "ROOT", isMandatory: true, cardinality: "" },
   },
   {
     id: "1",
     type: "feature",
     position: { x: 0, y: 0 },
-    data: { label: "Timing", isMandatory: false, cardinality: "n" },
+    data: { label: "Timing", isMandatory: false, cardinality: "1..n" },
   },
   {
     id: "2",
     type: "feature",
     position: { x: 0, y: 0 },
-    data: { label: "Scheduling", isMandatory: false, cardinality: "+" },
+    data: { label: "Scheduling", isMandatory: false, cardinality: "" },
   },
   {
     id: "3",
     type: "feature",
     position: { x: 0, y: 0 },
-    data: { label: "Courses", isMandatory: true, cardinality: "1..n" },
+    data: { label: "Courses", isMandatory: true, cardinality: "" },
   },
   {
     id: "4",
     type: "feature",
     position: { x: 0, y: 0 },
-    data: { label: "Exams", isMandatory: true, cardinality: "1..n" },
+    data: { label: "Exams", isMandatory: true, cardinality: "" },
   },
 ];
 
@@ -58,7 +59,7 @@ const initialEdges = [
   { id: "e1-4", source: "1", target: "4" },
 ];
 
-function buildTree(nodes: any[], edges: any[], xSpacing = 200, ySpacing = 100) {
+function buildTree(nodes: any[], edges: any[], xSpacing = 150, ySpacing = 150) {
   const idToNodeMap = new Map();
 
   nodes.forEach((node) => {
@@ -85,9 +86,11 @@ function buildTree(nodes: any[], edges: any[], xSpacing = 200, ySpacing = 100) {
   ) {
     const initialNode = nodes.find((n) => n.id === node.id);
     if (initialNode) {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 5;
       initialNode.position = {
-        x: index * xSpacing - ((siblingCount - 1) * xSpacing) / 2,
-        y: depth * ySpacing,
+        x: centerX + (index * xSpacing - ((siblingCount - 1) * xSpacing) / 2),
+        y: centerY + depth * ySpacing,
       };
     }
     node.children.forEach((child: any, i: number | undefined) =>
@@ -103,9 +106,23 @@ function buildTree(nodes: any[], edges: any[], xSpacing = 200, ySpacing = 100) {
   return rootNode;
 }
 
+const findNode = (node: any, nodeId: string): any => {
+  if (node.id === nodeId) {
+    return node;
+  }
+  for (let child of node.children) {
+    const found = findNode(child, nodeId);
+    if (found) {
+      return found;
+    }
+  }
+  return null;
+};
+
 export default function FlowDiagram() {
   // Construire l'arbre pour positionner les noeuds
-  buildTree(initialNodes, initialEdges);
+  const tree = buildTree(initialNodes, initialEdges);
+  console.log(tree);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -115,20 +132,47 @@ export default function FlowDiagram() {
     [setEdges]
   );
 
+  const getDescendantIds = (node: any): string[] => {
+    let ids: any[] = [];
+    node.children.forEach((child: any) => {
+      ids.push(child.id);
+      ids = ids.concat(getDescendantIds(child));
+    });
+    return ids;
+  };
+
+  const applyFadeStyle = (nodeId: string) => {
+    const node = findNode(tree, nodeId);
+    const descendantIds = node ? getDescendantIds(node) : [];
+
+    setNodes((prevNodes) =>
+      prevNodes.map((node) =>
+        node.id === nodeId || descendantIds.includes(node.id)
+          ? node.style && node.style.opacity === 0.2
+            ? { ...node, style: { ...node.style, opacity: 1 } }
+            : { ...node, style: { ...node.style, opacity: 0.2 } }
+          : node
+      )
+    );
+  };
+
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-      >
-        <Controls />
-        <MiniMap />
-        <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-      </ReactFlow>
+      <ReactFlowProvider>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onNodeClick={(_, node) => applyFadeStyle(node.id)}
+        >
+          <Controls />
+          <MiniMap />
+          <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+        </ReactFlow>
+      </ReactFlowProvider>
     </div>
   );
 }
