@@ -10,18 +10,4 @@ export class FeatureModel {
         this.features=features;
     }
 
-
-    public getName(): string{
-        return this.name ;
-    }
-
-    public addFeature(feature: Feature): void {
-        this.features.push(feature);
-    }
-
-    public getFeatures(): Feature[] {
-        return this.features;
-    }
-
-
 }

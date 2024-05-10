@@ -10,7 +10,6 @@ import { FeatureModel } from '../models/featureModel.js';
     public static async getFeatures (req: Request, res:Response): Promise<void> {
         try{
             const xmlData = await fs.readFile('src/storage/model.xml', 'utf-8');
-                console.log('hey2');
             const featureModel: FeatureModel  = await FeatureService.parseFromXMLToFeatures(xmlData)
             res.json(featureModel);
 
