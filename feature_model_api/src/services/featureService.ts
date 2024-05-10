@@ -37,7 +37,7 @@ export class FeatureService {
         if (!subFeaturesData || subFeaturesData.length === 0) {
             return new SubFeature();
         }
-        const parsedSubFeatures = subFeaturesData.map(subFeature => {
+        const parsedSubFeatures : SubFeature = subFeaturesData.map(subFeature => {
             const subFeatureType = subFeature.$?.type;
             const features = subFeature.Feature ? this.parseFeatures(subFeature.Feature) : []
             const subFeatures = subFeature.subFeature ? subFeature.subFeature.map(s => {
@@ -49,7 +49,7 @@ export class FeatureService {
             return new SubFeature(subFeatureType, features, subFeatures);
         });
     
-        return parsedSubFeatures;
+        return parsedSubFeatures[0];
     }
 
 

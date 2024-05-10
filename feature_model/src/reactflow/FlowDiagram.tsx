@@ -18,6 +18,7 @@ import "reactflow/dist/style.css";
 import RootNode from "./RootNode";
 import dagre from "dagre";
 import ChoiceNode from "./ChoiceNode";
+import axios from "axios";
 
 const nodeWidth = 100;
 const nodeHeight = 80;
@@ -35,7 +36,7 @@ function processFeatures(features: any, parentId: string): any {
   const nodes = [];
   const edges = [];
 
-  for (let feature of features) {
+  for (const feature of features) {
     const nodeId = parentId + "-" + feature.attributes.name;
 
     nodes.push({
@@ -55,8 +56,9 @@ function processFeatures(features: any, parentId: string): any {
     });
 
     if (feature.subFeatures) {
-      let subFeature = feature.subFeatures.subFeature;
-      if (subFeature) {
+      const subFeatures = feature.subFeatures.subFeatures
+      if(subFeatures){
+        for(const subFeature of subFeatures){
         nodes.push({
           id: nodeId + "-choice-" + subFeature.type,
           type: "choice",
@@ -72,7 +74,7 @@ function processFeatures(features: any, parentId: string): any {
           target: nodeId + "-choice-" + subFeature.type,
         });
 
-        for (let sFeatures of subFeature.features) {
+        for(const sFeatures of subFeature.features){
           nodes.push({
             id: nodeId + "-" + sFeatures.attributes.name,
             type: "feature",
@@ -90,7 +92,7 @@ function processFeatures(features: any, parentId: string): any {
             target: nodeId + "-" + sFeatures.attributes.name,
           });
         }
-      }
+      }}
       const subResults = processFeatures(feature.subFeatures.features, nodeId);
       nodes.push(...subResults.nodes);
       edges.push(...subResults.edges);
@@ -101,6 +103,7 @@ function processFeatures(features: any, parentId: string): any {
 }
 
 export default function FlowDiagram() {
+
   const dagreGraph = useRef(new dagre.graphlib.Graph()).current;
 
   const buildTree = useCallback(
@@ -145,21 +148,19 @@ export default function FlowDiagram() {
   const [edges, setEdges] = useEdgesState([]);
 
   useEffect(() => {
-    fetch("/src/data.json")
-      .then((response) => response.json())
-      .then((content) => {
+    axios.get("http://localhost:3002/")
+      .then((response) => {
         const root = {
           id: "root",
           type: "root",
           position: { x: 0, y: 0 },
           data: {
-            label: content.name,
+            label: response.data.name,
             isMandatory: true,
           },
         };
 
-        const results = processFeatures(content.features, "root");
-
+        const results = processFeatures(response.data.features, "root");
         const newNodes = [root, ...results.nodes];
         const newEdges = results.edges;
 
