@@ -1,12 +1,11 @@
 import { Attribute } from "../types/attribute.js";
+import SubFeature from "./subFeature.js";
 
 export class Feature {
-    private name: string;
     private attributes: Attribute;
-    public subFeatures: Feature[];
+    private subFeatures: SubFeature ;
 
-    constructor( name: string , attributes : Attribute ,  subFeatures: Feature[] =[] ){
-        this.name =  name ;
+    constructor(  attributes : Attribute ,  subFeatures: SubFeature ={}){
         this.attributes = attributes ;
         this.subFeatures = subFeatures ;
 

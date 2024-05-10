@@ -2,6 +2,7 @@
 <!-- Feature Model for a UTP -->
 <FeatureModel name="feature model for UTP" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:noNamespaceSchemaLocation="featureModel-schema.xsd">
+   <Features>           
     <Feature name="courses" mandatory="true">
         <!-- Features for managing course -->
         <subFeature>
@@ -70,4 +71,5 @@
         <Feature name="resourcing" optional="true"/>
     </subFeature >
    </Feature>
+</Features> 
 </FeatureModel>
