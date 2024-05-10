@@ -25,7 +25,7 @@ const nodeHeight = 80;
 const nodeTypes = {
   feature: FeatureNode,
   root: RootNode,
-  choice: ChoiceNode
+  choice: ChoiceNode,
 };
 
 function processFeatures(features: any, parentId: string): any {
@@ -44,7 +44,7 @@ function processFeatures(features: any, parentId: string): any {
       position: { x: 0, y: 0 },
       data: {
         label: feature.attributes.name,
-        isMandatory: feature.attributes.mandatory === 'true' ? true : false,
+        isMandatory: feature.attributes.mandatory === "true" ? true : false,
       },
     });
 
@@ -55,14 +55,14 @@ function processFeatures(features: any, parentId: string): any {
     });
 
     if (feature.subFeatures) {
-      let subFeature = feature.subFeatures.subFeature
-      if(subFeature){
+      let subFeature = feature.subFeatures.subFeature;
+      if (subFeature) {
         nodes.push({
           id: nodeId + "-choice-" + subFeature.type,
           type: "choice",
           position: { x: 0, y: 0 },
           data: {
-            type: subFeature.type
+            type: subFeature.type,
           },
         });
 
@@ -72,14 +72,15 @@ function processFeatures(features: any, parentId: string): any {
           target: nodeId + "-choice-" + subFeature.type,
         });
 
-        for(let sFeatures of subFeature.features){
+        for (let sFeatures of subFeature.features) {
           nodes.push({
             id: nodeId + "-" + sFeatures.attributes.name,
             type: "feature",
             position: { x: 0, y: 0 },
             data: {
               label: sFeatures.attributes.name,
-              isMandatory: sFeatures.attributes.optional === "true" ? true : false,
+              isMandatory:
+                sFeatures.attributes.optional === "true" ? true : false,
             },
           });
 
@@ -87,8 +88,7 @@ function processFeatures(features: any, parentId: string): any {
             id: "edge-" + sFeatures.attributes.name,
             source: nodeId + "-choice-" + subFeature.type,
             target: nodeId + "-" + sFeatures.attributes.name,
-          })
-
+          });
         }
       }
       const subResults = processFeatures(feature.subFeatures.features, nodeId);
@@ -103,36 +103,39 @@ function processFeatures(features: any, parentId: string): any {
 export default function FlowDiagram() {
   const dagreGraph = useRef(new dagre.graphlib.Graph()).current;
 
-  const buildTree = useCallback((nodes: any[], edges: any[], direction = "TB") => {
-    const isHorizontal = direction === "LR";
-    dagreGraph.setDefaultEdgeLabel(() => ({}));
-    dagreGraph.setGraph({ rankdir: direction });
-  
-    nodes.forEach((node) => {
-      dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
-    });
-  
-    edges.forEach((edge) => {
-      dagreGraph.setEdge(edge.source, edge.target);
-    });
-  
-    dagre.layout(dagreGraph);
-  
-    nodes.forEach((node) => {
-      const nodeWithPosition = dagreGraph.node(node.id);
-      node.targetPosition = isHorizontal ? "left" : "top";
-      node.sourcePosition = isHorizontal ? "right" : "bottom";
-  
-      // We are shifting the dagre node position (anchor=center center) to the top left
-      // so it matches the React Flow node anchor point (top left).
-      node.position = {
-        x: nodeWithPosition.x - nodeWidth / 2,
-        y: nodeWithPosition.y - nodeHeight / 2,
-      };
-    });
-  
-    return { nodes, edges };
-  }, []);
+  const buildTree = useCallback(
+    (nodes: any[], edges: any[], direction = "TB") => {
+      const isHorizontal = direction === "LR";
+      dagreGraph.setDefaultEdgeLabel(() => ({}));
+      dagreGraph.setGraph({ rankdir: direction });
+
+      nodes.forEach((node) => {
+        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+      });
+
+      edges.forEach((edge) => {
+        dagreGraph.setEdge(edge.source, edge.target);
+      });
+
+      dagre.layout(dagreGraph);
+
+      nodes.forEach((node) => {
+        const nodeWithPosition = dagreGraph.node(node.id);
+        node.targetPosition = isHorizontal ? "left" : "top";
+        node.sourcePosition = isHorizontal ? "right" : "bottom";
+
+        // We are shifting the dagre node position (anchor=center center) to the top left
+        // so it matches the React Flow node anchor point (top left).
+        node.position = {
+          x: nodeWithPosition.x - nodeWidth / 2,
+          y: nodeWithPosition.y - nodeHeight / 2,
+        };
+      });
+
+      return { nodes, edges };
+    },
+    []
+  );
 
   const [graphData, setGraphData] = useState<{ nodes: Node[]; edges: Edge[] }>({
     nodes: [],
@@ -168,7 +171,7 @@ export default function FlowDiagram() {
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des données :", error);
-      });  
+      });
   }, []);
 
   const onConnect = useCallback(
@@ -176,13 +179,54 @@ export default function FlowDiagram() {
     [setEdges]
   );
 
-  const handleNodeClick = (_event: any, node: { id: string; }) => {
-    const edge = edges.find(edge => edge.target === node.id);
-    if(edge){
-      let parentId = edge.source;
-      let updatedNodes = nodes.map(n => n.id === parentId ? { ...n, nodeStyle: { backgroundColor: 'green' } } : n);
-      setNodes(updatedNodes);
+  const handleNodeClick = (_event: any, clickedNode: { id: string }) => {
+    const node = nodes.find((n) => n.id === clickedNode.id);
+    if (node && node.data.isDisabled) {
+      return; // Si le noeud est désactivé, on ne fait rien
     }
+    let updatedNodes = [...nodes];
+
+    const updateNodeAndParents = (nodeId: string, isSelected: boolean) => {
+      updatedNodes = updatedNodes.map((n) =>
+        n.id === nodeId ? { ...n, data: { ...n.data, isSelected } } : n
+      );
+      if (isSelected) {
+        const edge = edges.find((edge) => edge.target === nodeId);
+        if (edge) {
+          updateNodeAndParents(edge.source, isSelected);
+        }
+      }
+    };
+
+    if (node) {
+      const isSelected = !node.data.isSelected;
+      updateNodeAndParents(node.id, isSelected);
+
+      // Check if parent is a "Choice Node" of type "XOR"
+      const parentEdge = edges.find((edge) => edge.target === node.id);
+      if (parentEdge) {
+        const parentNode = updatedNodes.find((n) => n.id === parentEdge.source);
+        if (
+          parentNode &&
+          parentNode.type === "choice" &&
+          parentNode.data.type === "XOR"
+        ) {
+          // Fade and disable nodes that have the same parent
+          updatedNodes = updatedNodes.map((n) => {
+            const edge = edges.find((edge) => edge.target === n.id);
+            if (edge && edge.source === parentNode.id && n.id !== node.id) {
+              return {
+                ...n,
+                data: { ...n.data, isSelected: false, isDisabled: isSelected },
+              };
+            }
+            return n;
+          });
+        }
+      }
+    }
+
+    setNodes(updatedNodes);
   };
 
   return (
@@ -194,7 +238,7 @@ export default function FlowDiagram() {
           nodeTypes={nodeTypes}
           onConnect={onConnect}
           onNodeClick={handleNodeClick}
-          >
+        >
           <Controls />
           <MiniMap />
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
