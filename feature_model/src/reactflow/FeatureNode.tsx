@@ -21,25 +21,32 @@ function FeatureNode({ data, isConnectable }: FeatureNodeProps) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        minWidth: "80px"
+        minWidth: "80px",
       }}
     >
       <div
         className="react-flow__node-default"
-        style={{ ...nodeStyle, width: "20px", height: "20px", borderRadius: "50%" }}
+        style={{
+          ...nodeStyle,
+          width: "20px",
+          height: "20px",
+          borderRadius: "50%",
+        }}
       >
-        {data.label !== "ROOT" && (
-          <Handle
-            type="target"
-            position={Position.Top}
-            isConnectable={isConnectable}
-          />
-        )}
+        <Handle
+          type="target"
+          position={Position.Top}
+          isConnectable={isConnectable}
+        />
         <Handle
           type="source"
           position={Position.Bottom}
           isConnectable={isConnectable}
-          style={data.cardinality ? { width: "16px", height: "16px", bottom: "-14px" } : {}}
+          style={
+            data.cardinality
+              ? { width: "16px", height: "16px", bottom: "-14px" }
+              : {}
+          }
         />
         <div style={{ position: "relative", height: "0", width: "100%" }}>
           {data.cardinality && (
@@ -59,7 +66,9 @@ function FeatureNode({ data, isConnectable }: FeatureNodeProps) {
           )}
         </div>
       </div>
-      <div style={{ marginTop: "-5px", marginBottom: "2px", fontSize: "15px" }}>{data.label}</div>
+      <div style={{ marginTop: "-5px", marginBottom: "2px", fontSize: "15px" }}>
+        {data.label}
+      </div>
     </div>
   );
 }

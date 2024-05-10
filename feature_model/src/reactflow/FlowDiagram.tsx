@@ -17,6 +17,7 @@ import FeatureNode from "./FeatureNode";
 import "reactflow/dist/style.css";
 import RootNode from "./RootNode";
 import dagre from "dagre";
+import ChoiceNode from "./ChoiceNode";
 
 const nodeWidth = 100;
 const nodeHeight = 80;
@@ -24,6 +25,7 @@ const nodeHeight = 80;
 const nodeTypes = {
   feature: FeatureNode,
   root: RootNode,
+  choice: ChoiceNode
 };
 
 function buildTree(nodes: any[], edges: any[], direction = "TB") {
@@ -87,7 +89,7 @@ function processFeatures(features: any, parentId: string): any {
       position: { x: 0, y: 0 },
       data: {
         label: feature.attributes.name,
-        isMandatory: feature.attributes.mandatory,
+        isMandatory: feature.attributes.mandatory === 'true' ? true : false,
       },
     });
 
@@ -98,6 +100,42 @@ function processFeatures(features: any, parentId: string): any {
     });
 
     if (feature.subFeatures) {
+      let subFeature = feature.subFeatures.subFeature
+      if(subFeature){
+        nodes.push({
+          id: nodeId + "-choice-" + subFeature.type,
+          type: "choice",
+          position: { x: 0, y: 0 },
+          data: {
+            type: subFeature.type
+          },
+        });
+
+        edges.push({
+          id: "edge-" + subFeature.type,
+          source: nodeId,
+          target: nodeId + "-choice-" + subFeature.type,
+        });
+
+        for(let sFeatures of subFeature.features){
+          nodes.push({
+            id: nodeId + "-" + sFeatures.attributes.name,
+            type: "feature",
+            position: { x: 0, y: 0 },
+            data: {
+              label: sFeatures.attributes.name,
+              isMandatory: sFeatures.attributes.optional === "true" ? true : false,
+            },
+          });
+
+          edges.push({
+            id: "edge-" + sFeatures.attributes.name,
+            source: nodeId + "-choice-" + subFeature.type,
+            target: nodeId + "-" + sFeatures.attributes.name,
+          })
+
+        }
+      }
       const subResults = processFeatures(feature.subFeatures.features, nodeId);
       nodes.push(...subResults.nodes);
       edges.push(...subResults.edges);
@@ -129,7 +167,6 @@ export default function FlowDiagram() {
           },
         };
 
-        console.log(content.features);
         const results = processFeatures(content.features, "root");
 
         const newNodes = [root, ...results.nodes];
