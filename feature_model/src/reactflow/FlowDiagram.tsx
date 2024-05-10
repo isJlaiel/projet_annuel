@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState, useEffect } from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -7,6 +7,7 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
   Edge,
+  Node,
   Connection,
   BackgroundVariant,
   ReactFlowProvider,
@@ -14,96 +15,47 @@ import ReactFlow, {
 import FeatureNode from "./FeatureNode";
 
 import "reactflow/dist/style.css";
+import RootNode from "./RootNode";
+import dagre from "dagre";
+
+const nodeWidth = 100;
+const nodeHeight = 80;
 
 const nodeTypes = {
   feature: FeatureNode,
+  root: RootNode,
 };
 
-const initialNodes = [
-  {
-    id: "0",
-    type: "feature",
-    position: { x: 0, y: 0 },
-    data: { label: "ROOT", isMandatory: true, cardinality: "" },
-  },
-  {
-    id: "1",
-    type: "feature",
-    position: { x: 0, y: 0 },
-    data: { label: "Timing", isMandatory: false, cardinality: "1..n" },
-  },
-  {
-    id: "2",
-    type: "feature",
-    position: { x: 0, y: 0 },
-    data: { label: "Scheduling", isMandatory: false, cardinality: "" },
-  },
-  {
-    id: "3",
-    type: "feature",
-    position: { x: 0, y: 0 },
-    data: { label: "Courses", isMandatory: true, cardinality: "" },
-  },
-  {
-    id: "4",
-    type: "feature",
-    position: { x: 0, y: 0 },
-    data: { label: "Exams", isMandatory: true, cardinality: "" },
-  },
-];
-
-const initialEdges = [
-  { id: "e0-1", source: "0", target: "1" },
-  { id: "e0-2", source: "0", target: "2" },
-  { id: "e0-3", source: "0", target: "3" },
-  { id: "e1-4", source: "1", target: "4" },
-];
-
-function buildTree(nodes: any[], edges: any[], xSpacing = 150, ySpacing = 150) {
-  const idToNodeMap = new Map();
+function buildTree(nodes: any[], edges: any[], direction = "TB") {
+  const isHorizontal = direction === "LR";
+  const dagreGraph = new dagre.graphlib.Graph();
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
+  dagreGraph.setGraph({ rankdir: direction });
 
   nodes.forEach((node) => {
-    idToNodeMap.set(node.id, { id: node.id, ...node.data, children: [] });
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
   });
 
   edges.forEach((edge) => {
-    const parent = idToNodeMap.get(edge.source);
-    const child = idToNodeMap.get(edge.target);
-    if (parent && child) {
-      parent.children.push(child);
-    }
+    dagreGraph.setEdge(edge.source, edge.target);
   });
 
-  const root = nodes.find(
-    (node) => !edges.some((edge) => edge.target === node.id)
-  );
+  dagre.layout(dagreGraph);
 
-  function assignPositions(
-    node: { id: any; children: any[] },
-    depth = 0,
-    index = 0,
-    siblingCount = 1
-  ) {
-    const initialNode = nodes.find((n) => n.id === node.id);
-    if (initialNode) {
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 5;
-      initialNode.position = {
-        x: centerX + (index * xSpacing - ((siblingCount - 1) * xSpacing) / 2),
-        y: centerY + depth * ySpacing,
-      };
-    }
-    node.children.forEach((child: any, i: number | undefined) =>
-      assignPositions(child, depth + 1, i, node.children.length)
-    );
-  }
+  nodes.forEach((node) => {
+    const nodeWithPosition = dagreGraph.node(node.id);
+    node.targetPosition = isHorizontal ? "left" : "top";
+    node.sourcePosition = isHorizontal ? "right" : "bottom";
 
-  const rootNode = root ? idToNodeMap.get(root.id) : null;
-  if (rootNode) {
-    assignPositions(rootNode);
-  }
+    // We are shifting the dagre node position (anchor=center center) to the top left
+    // so it matches the React Flow node anchor point (top left).
+    node.position = {
+      x: nodeWithPosition.x - nodeWidth / 2,
+      y: nodeWithPosition.y - nodeHeight / 2,
+    };
+  });
 
-  return rootNode;
+  return { nodes, edges };
 }
 
 const findNode = (node: any, nodeId: string): any => {
@@ -119,13 +71,79 @@ const findNode = (node: any, nodeId: string): any => {
   return null;
 };
 
-export default function FlowDiagram() {
-  // Construire l'arbre pour positionner les noeuds
-  const tree = buildTree(initialNodes, initialEdges);
-  console.log(tree);
+function processFeatures(features: any, parentId: string): any {
+  if (!features) {
+    return { nodes: [], edges: [] };
+  }
+  const nodes = [];
+  const edges = [];
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  for (let feature of features) {
+    const nodeId = parentId + "-" + feature.attributes.name;
+
+    nodes.push({
+      id: nodeId,
+      type: "feature",
+      position: { x: 0, y: 0 },
+      data: {
+        label: feature.attributes.name,
+        isMandatory: feature.attributes.mandatory,
+      },
+    });
+
+    edges.push({
+      id: "edge-" + feature.attributes.name,
+      source: parentId,
+      target: nodeId,
+    });
+
+    if (feature.subFeatures) {
+      const subResults = processFeatures(feature.subFeatures.features, nodeId);
+      nodes.push(...subResults.nodes);
+      edges.push(...subResults.edges);
+    }
+  }
+
+  return { nodes, edges };
+}
+
+export default function FlowDiagram() {
+  const [graphData, setGraphData] = useState<{ nodes: Node[]; edges: Edge[] }>({
+    nodes: [],
+    edges: [],
+  });
+  const [nodes, setNodes] = useNodesState([]);
+  const [edges, setEdges] = useEdgesState([]);
+
+  useEffect(() => {
+    fetch("/src/data.json")
+      .then((response) => response.json())
+      .then((content) => {
+        const root = {
+          id: "root",
+          type: "root",
+          position: { x: 0, y: 0 },
+          data: {
+            label: content.name,
+            isMandatory: true,
+          },
+        };
+
+        console.log(content.features);
+        const results = processFeatures(content.features, "root");
+
+        const newNodes = [root, ...results.nodes];
+        const newEdges = results.edges;
+
+        setGraphData({ nodes: newNodes, edges: newEdges });
+
+        const tree = buildTree(newNodes, newEdges);
+        setNodes(tree.nodes);
+        setEdges(tree.edges);
+      });
+  }, []);
+
+  const tree = buildTree(graphData.nodes, graphData.edges);
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -141,13 +159,42 @@ export default function FlowDiagram() {
     return ids;
   };
 
+  const findParentNode = (node: any, nodeId: string): any => {
+    for (let child of node.children) {
+      if (child.id === nodeId) {
+        return node;
+      }
+      const found = findParentNode(child, nodeId);
+      if (found) {
+        return found;
+      }
+    }
+    return null;
+  };
+
+  const getAllDescendantIds = (node: any): string[] => {
+    let ids = [];
+    for (let child of node.children) {
+      ids.push(child.id);
+      ids = ids.concat(getAllDescendantIds(child));
+    }
+    return ids;
+  };
+
   const applyFadeStyle = (nodeId: string) => {
-    const node = findNode(tree, nodeId);
-    const descendantIds = node ? getDescendantIds(node) : [];
+    const parentNode = findParentNode(tree, nodeId);
+    const siblingIds = parentNode
+      ? parentNode.children
+          .map((child: any) => child.id)
+          .filter((id: string) => id !== nodeId)
+      : [];
+    const descendantIds = siblingIds.flatMap((id: any) =>
+      getAllDescendantIds(findNode(tree, id))
+    );
 
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
-        node.id === nodeId || descendantIds.includes(node.id)
+        siblingIds.includes(node.id) || descendantIds.includes(node.id)
           ? node.style && node.style.opacity === 0.2
             ? { ...node, style: { ...node.style, opacity: 1 } }
             : { ...node, style: { ...node.style, opacity: 0.2 } }
@@ -163,8 +210,6 @@ export default function FlowDiagram() {
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onNodeClick={(_, node) => applyFadeStyle(node.id)}
         >

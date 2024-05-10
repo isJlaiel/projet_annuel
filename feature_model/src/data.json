@@ -1,0 +1,100 @@
+{
+  "name": "UTP",
+  "features": [
+    {
+      "attributes": {
+        "name": "courses",
+        "mandatory": "true"
+      },
+      "subFeatures": {
+        "features": [
+          {
+            "attributes": {
+              "name": "course-hierarchy",
+              "optional": "true"
+            },
+            "subFeatures": []
+          },
+          {
+            "attributes": {
+              "name": "event",
+              "optional": "true"
+            },
+            "subFeatures": []
+          }
+        ]
+      }
+    },
+    {
+      "attributes": {
+        "name": "timing",
+        "mandatory": "true"
+      },
+      "subFeatures": {
+        "features": [
+          {
+            "attributes": {
+              "name": "full-period",
+              "optional": "true"
+            },
+            "subFeatures": []
+          },
+          {
+            "attributes": {
+              "name": "full-week",
+              "optional": "true"
+            },
+            "subFeatures": []
+          },
+          {
+            "attributes": {
+              "name": "single-week",
+              "optional": "true"
+            },
+            "subFeatures": []
+          }
+        ]
+      }
+    },
+    {
+      "attributes": {
+        "name": "hosting",
+        "mandatory": "false"
+      },
+      "subFeatures": {
+        "features": [
+          {
+            "attributes": {
+              "name": "room-capacity",
+              "optional": "true"
+            },
+            "subFeatures": []
+          }
+        ],
+        "subFeature": {
+          "type": "OR",
+          "features": [
+            {
+              "attributes": {
+                "name": "no-room"
+              },
+              "subFeatures": []
+            },
+            {
+              "attributes": {
+                "name": "single-room"
+              },
+              "subFeatures": []
+            },
+            {
+              "attributes": {
+                "name": "multi-room"
+              },
+              "subFeatures": []
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

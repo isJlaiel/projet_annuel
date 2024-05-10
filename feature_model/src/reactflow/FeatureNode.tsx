@@ -15,48 +15,6 @@ function FeatureNode({ data, isConnectable }: FeatureNodeProps) {
     ? { backgroundColor: "black", color: "white" }
     : { backgroundColor: "white", color: "black" };
 
-  if (data.label === "ROOT") {
-    return (
-      <div
-        className="react-flow__node-default"
-        style={{ ...nodeStyle, width: "60px", borderRadius: "20%" }}
-      >
-        <div>{data.label}</div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <Handle
-            type="source"
-            position={Position.Bottom}
-            isConnectable={isConnectable}
-            style={data.cardinality ? { width: "16px", height: "16px" } : {}}
-          />
-          <div style={{ position: "relative", height: "0", width: "100%" }}>
-            {data.cardinality && (
-              <span
-                style={{
-                  position: "absolute",
-                  top: "-1px",
-                  left: "0",
-                  right: "0",
-                  fontSize: "8px",
-                  textAlign: "center",
-                  color: "white",
-                }}
-              >
-                {data.cardinality}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       style={{
