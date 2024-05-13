@@ -30,7 +30,7 @@ function FeatureNode({ data, isConnectable }: IFeatureNode) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        minWidth: "80px",
+        minWidth: "80px"
       }}
     >
       <div
@@ -43,20 +43,25 @@ function FeatureNode({ data, isConnectable }: IFeatureNode) {
           border: data.isMandatory ? "4px solid black" : "",
         }}
       >
-        <Handle
-          type="target"
-          position={Position.Top}
-          isConnectable={isConnectable}
-        />
+        {data.label !== "ROOT" && (
+          <Handle
+            type="target"
+            position={Position.Top}
+            isConnectable={isConnectable}
+          />
+        )}
+        {data.label !== "ROOT" && (
+          <Handle
+            type="target"
+            position={Position.Top}
+            isConnectable={isConnectable}
+          />
+        )}
         <Handle
           type="source"
           position={Position.Bottom}
           isConnectable={isConnectable}
-          style={
-            data.cardinality
-              ? { width: "16px", height: "16px", bottom: "-14px" }
-              : {}
-          }
+          style={data.cardinality ? { width: "16px", height: "16px", bottom: "-14px" } : {}}
         />
         <div style={{ position: "relative", height: "0", width: "100%" }}>
           {data.cardinality && (
@@ -76,9 +81,7 @@ function FeatureNode({ data, isConnectable }: IFeatureNode) {
           )}
         </div>
       </div>
-      <div style={{ marginTop: "-5px", marginBottom: "2px", fontSize: "15px" }}>
-        {data.label}
-      </div>
+      <div style={{ marginTop: "-5px", marginBottom: "2px", fontSize: "15px" }}>{data.label}</div>
     </div>
   );
 }

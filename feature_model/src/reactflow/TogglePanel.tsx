@@ -1,9 +1,36 @@
 import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
 import { FiMenu } from "react-icons/fi";
+import Node from './FlowDiagram';
+import Edge from './FlowDiagram';
 
-const TogglePanel = () => {
+
+const TogglePanel = ({nodes, edges}: {nodes: typeof Node[], edges: typeof Edge[]}) => {
   const [pannelOpen, setPannelOpen] = useState(false);
+
+  function handleClick() {
+    const buildJson = (nodeId: string) => {
+      const node = nodes.find(n => n.id === nodeId);
+      if (!node) return null;
+  
+      const childrenEdges = edges.filter(e => e.source === nodeId);
+      const childrenNodes = childrenEdges.map(e => buildJson(e.target));
+  
+      return {
+        id: node.id,
+        type: node.type,
+        data: node.data,
+        children: childrenNodes
+      };
+    };
+  
+    const root = nodes.find(n => n.type === 'root');
+    if (!root) return;
+  
+    const json = buildJson(root.id);
+    console.log(json);
+  }
+  
 
   return (
     <>
@@ -43,7 +70,7 @@ const TogglePanel = () => {
             alignItems: "center",
           }}
         >
-          <button>Soumettre le modèle</button>
+          <button onClick={handleClick}>Soumettre le modèle</button>
         </div>
       )}
     </>
