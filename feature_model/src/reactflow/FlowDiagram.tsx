@@ -35,7 +35,7 @@ function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[
       position: { x: 0, y: 0 },
       data: {
         label: feature.attributes.name,
-        isMandatory: feature.attributes.mandatory === "true" ? true : false,
+        isMandatory: feature.attributes.mandatory === "true",
       },
     });
 
