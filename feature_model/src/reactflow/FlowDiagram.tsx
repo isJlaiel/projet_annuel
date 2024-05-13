@@ -255,14 +255,14 @@ const FlowDiagram: React.FC<object> = () => {
             onConnect={onConnect}
             onNodeClick={handleNodeClick}
           >
-            <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+            <Background color="black" style={{backgroundColor: " #3f3f3f"}} variant={BackgroundVariant.Dots} gap={12} size={1} />
           </ReactFlow>
         </div>
         <div style={{ zIndex: 2, position: "absolute", right: "0", top: "0" }}>
         <TogglePanel nodes={nodes} edges={edges} />
         </div>
-        <Controls position="top-left" />
-        <MiniMap position="bottom-left" />
+        <Controls position="top-left" showInteractive={false} />
+        <MiniMap nodeColor="black" position="bottom-left" />
       </ReactFlowProvider>
     </div>
   );
