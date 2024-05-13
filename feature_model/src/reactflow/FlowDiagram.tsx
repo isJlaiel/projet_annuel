@@ -19,6 +19,7 @@ import RootNode from "./RootNode";
 import dagre from "dagre";
 import ChoiceNode from "./ChoiceNode";
 import axios from "axios";
+import TogglePanel from "./TogglePanel";
 
 const nodeWidth = 100;
 const nodeHeight = 80;
@@ -56,43 +57,44 @@ function processFeatures(features: any, parentId: string): any {
     });
 
     if (feature.subFeatures) {
-      const subFeatures = feature.subFeatures.subFeatures
-      if(subFeatures){
-        for(const subFeature of subFeatures){
-        nodes.push({
-          id: nodeId + "-choice-" + subFeature.type,
-          type: "choice",
-          position: { x: 0, y: 0 },
-          data: {
-            type: subFeature.type,
-          },
-        });
-
-        edges.push({
-          id: "edge-" + subFeature.type,
-          source: nodeId,
-          target: nodeId + "-choice-" + subFeature.type,
-        });
-
-        for(const sFeatures of subFeature.features){
+      const subFeatures = feature.subFeatures.subFeatures;
+      if (subFeatures) {
+        for (const subFeature of subFeatures) {
           nodes.push({
-            id: nodeId + "-" + sFeatures.attributes.name,
-            type: "feature",
+            id: nodeId + "-choice-" + subFeature.type,
+            type: "choice",
             position: { x: 0, y: 0 },
             data: {
-              label: sFeatures.attributes.name,
-              isMandatory:
-                sFeatures.attributes.optional === "true" ? true : false,
+              type: subFeature.type,
             },
           });
 
           edges.push({
-            id: "edge-" + sFeatures.attributes.name,
-            source: nodeId + "-choice-" + subFeature.type,
-            target: nodeId + "-" + sFeatures.attributes.name,
+            id: "edge-" + subFeature.type,
+            source: nodeId,
+            target: nodeId + "-choice-" + subFeature.type,
           });
+
+          for (const sFeatures of subFeature.features) {
+            nodes.push({
+              id: nodeId + "-" + sFeatures.attributes.name,
+              type: "feature",
+              position: { x: 0, y: 0 },
+              data: {
+                label: sFeatures.attributes.name,
+                isMandatory:
+                  sFeatures.attributes.optional === "true" ? true : false,
+              },
+            });
+
+            edges.push({
+              id: "edge-" + sFeatures.attributes.name,
+              source: nodeId + "-choice-" + subFeature.type,
+              target: nodeId + "-" + sFeatures.attributes.name,
+            });
+          }
         }
-      }}
+      }
       const subResults = processFeatures(feature.subFeatures.features, nodeId);
       nodes.push(...subResults.nodes);
       edges.push(...subResults.edges);
@@ -103,7 +105,6 @@ function processFeatures(features: any, parentId: string): any {
 }
 
 export default function FlowDiagram() {
-
   const dagreGraph = useRef(new dagre.graphlib.Graph()).current;
 
   const buildTree = useCallback(
@@ -148,7 +149,8 @@ export default function FlowDiagram() {
   const [edges, setEdges] = useEdgesState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3002/")
+    axios
+      .get("http://localhost:3002/")
       .then((response) => {
         const root = {
           id: "root",
@@ -201,11 +203,15 @@ export default function FlowDiagram() {
 
     const updateNodeAndChildren = (nodeId: string, isSelected: boolean) => {
       updatedNodes = updatedNodes.map((n) =>
-        n.id === nodeId ? { ...n, data: { ...n.data, isSelected, isDisabled: false } } : n
+        n.id === nodeId
+          ? { ...n, data: { ...n.data, isSelected, isDisabled: false } }
+          : n
       );
       if (!isSelected) {
         const childEdges = edges.filter((edge) => edge.source === nodeId);
-        childEdges.forEach((edge) => updateNodeAndChildren(edge.target, isSelected));
+        childEdges.forEach((edge) =>
+          updateNodeAndChildren(edge.target, isSelected)
+        );
       }
     };
 
@@ -242,19 +248,31 @@ export default function FlowDiagram() {
   };
 
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
       <ReactFlowProvider>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          onConnect={onConnect}
-          onNodeClick={handleNodeClick}
+        <div
+          style={{
+            zIndex: 1,
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+          }}
         >
-          <Controls />
-          <MiniMap />
-          <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-        </ReactFlow>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            onConnect={onConnect}
+            onNodeClick={handleNodeClick}
+          >
+            <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+          </ReactFlow>
+        </div>
+        <div style={{ zIndex: 2, position: "absolute", right: "0", top: "0" }}>
+          <TogglePanel />
+        </div>
+        <Controls position="top-left" />
+        <MiniMap position="bottom-left" />
       </ReactFlowProvider>
     </div>
   );
