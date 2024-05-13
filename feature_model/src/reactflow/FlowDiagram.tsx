@@ -199,9 +199,20 @@ export default function FlowDiagram() {
       }
     };
 
+    const updateNodeAndChildren = (nodeId: string, isSelected: boolean) => {
+      updatedNodes = updatedNodes.map((n) =>
+        n.id === nodeId ? { ...n, data: { ...n.data, isSelected, isDisabled: false } } : n
+      );
+      if (!isSelected) {
+        const childEdges = edges.filter((edge) => edge.source === nodeId);
+        childEdges.forEach((edge) => updateNodeAndChildren(edge.target, isSelected));
+      }
+    };
+
     if (node) {
       const isSelected = !node.data.isSelected;
       updateNodeAndParents(node.id, isSelected);
+      updateNodeAndChildren(node.id, isSelected);
 
       // Check if parent is a "Choice Node" of type "XOR"
       const parentEdge = edges.find((edge) => edge.target === node.id);
