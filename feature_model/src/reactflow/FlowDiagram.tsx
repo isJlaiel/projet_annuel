@@ -1,17 +1,5 @@
 import { useCallback, useState, useEffect, useRef } from "react";
-import ReactFlow, {
-  MiniMap,
-  Controls,
-  Background,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  Edge,
-  Node,
-  Connection,
-  BackgroundVariant,
-  ReactFlowProvider,
-} from "reactflow";
+import ReactFlow, { MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge, Edge, Node, Connection, BackgroundVariant, ReactFlowProvider} from "reactflow";
 import FeatureNode from "./FeatureNode";
 import "reactflow/dist/style.css";
 import RootNode from "./RootNode";
@@ -19,6 +7,7 @@ import dagre from "dagre";
 import ChoiceNode from "./ChoiceNode";
 import TogglePanel from "./TogglePanel";
 import APIService from "../services/apiService";
+import { Feature } from "../interfaces/Feature";
 
 const nodeWidth = 100;
 const nodeHeight = 80;
@@ -29,12 +18,13 @@ const nodeTypes = {
   choice: ChoiceNode,
 };
 
-function processFeatures(features: any, parentId: string): any {
+function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[],edges: Edge[]} {
+  console.log(features)
   if (!features) {
     return { nodes: [], edges: [] };
   }
-  const nodes = [];
-  const edges = [];
+  const nodes : Node[] = [];
+  const edges : Edge[] = [];
 
   for (const feature of features) {
     const nodeId = parentId + "-" + feature.attributes.name;
@@ -58,7 +48,7 @@ function processFeatures(features: any, parentId: string): any {
     if (feature.subFeatures) {
       const subFeatures = feature.subFeatures.subFeatures;
       if (subFeatures) {
-        for (const subFeature of subFeatures) {
+        for (const subFeature  of subFeatures) {
           nodes.push({
             id: nodeId + "-choice-" + subFeature.type,
             type: "choice",
@@ -94,7 +84,7 @@ function processFeatures(features: any, parentId: string): any {
           }
         }
       }
-      const subResults = processFeatures(feature.subFeatures.features, nodeId);
+      const subResults = processFeatures(nodeId, feature.subFeatures.features);
       nodes.push(...subResults.nodes);
       edges.push(...subResults.edges);
     }
@@ -103,11 +93,13 @@ function processFeatures(features: any, parentId: string): any {
   return { nodes, edges };
 }
 
-export default function FlowDiagram() {
+
+const FlowDiagram: React.FC<object> = () => {
+
   const dagreGraph = useRef(new dagre.graphlib.Graph()).current;
 
   const buildTree = useCallback(
-    (nodes: any[], edges: any[], direction = "TB") => {
+    (nodes: Node[], edges: Edge[], direction = "TB") => {
       const isHorizontal = direction === "LR";
       dagreGraph.setDefaultEdgeLabel(() => ({}));
       dagreGraph.setGraph({ rankdir: direction });
@@ -140,7 +132,7 @@ export default function FlowDiagram() {
     []
   );
 
-  const [graphData, setGraphData] = useState<{ nodes: Node[]; edges: Edge[] }>({
+  const [, setGraphData] = useState<{ nodes: Node[]; edges: Edge[] }>({
     nodes: [],
     edges: [],
   });
@@ -160,7 +152,7 @@ export default function FlowDiagram() {
           },
         };
           console.log(response.data.features)
-        const results = processFeatures(response.data.features, "root");
+        const results = processFeatures( "root", response.data.features);
         const newNodes = [root, ...results.nodes];
         const newEdges = results.edges;
 
@@ -180,7 +172,7 @@ export default function FlowDiagram() {
     [setEdges]
   );
 
-  const handleNodeClick = (_event: any, clickedNode: { id: string }) => {
+  const handleNodeClick = (_event: unknown, clickedNode: { id: string }) => {
     const node = nodes.find((n) => n.id === clickedNode.id);
     if (node && node.data.isDisabled) {
       return; // Si le noeud est désactivé, on ne fait rien
@@ -275,3 +267,4 @@ export default function FlowDiagram() {
     </div>
   );
 }
+export default FlowDiagram;

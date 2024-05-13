@@ -2,7 +2,7 @@ import { Handle, Position } from "reactflow";
 import { IChoiceNode } from "../interfaces/ChoiceNode";
 
 
-function ChoiceNode({ data }: IChoiceNode) {
+const ChoiceNode: React.FC<IChoiceNode> = ({ data }) => {
   return (
     <div
       style={{

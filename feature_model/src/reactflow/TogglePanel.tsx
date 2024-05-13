@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
 import { FiMenu } from "react-icons/fi";
-import Node from "./FlowDiagram";
-import Edge from "./FlowDiagram";
+import {Node, Edge} from 'reactflow'
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -11,13 +10,8 @@ import ListItemText from "@mui/material/ListItemText";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ListItemButton from "@mui/material/ListItemButton";
 
-const TogglePanel = ({
-  nodes,
-  edges,
-}: {
-  nodes: (typeof Node)[];
-  edges: (typeof Edge)[];
-}) => {
+const TogglePanel: React.FC<{nodes:  Node[], edges:  Edge[]}> = ({nodes, edges}) => {
+
   const [pannelOpen, setPannelOpen] = useState(false);
   const [items, setItems] = useState<React.ReactElement[]>([]); // Ajouter un état pour les éléments
 

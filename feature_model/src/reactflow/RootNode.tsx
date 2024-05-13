@@ -1,8 +1,7 @@
 import { Handle, Position } from "reactflow";
 import { IRootNode } from "../interfaces/RootNode";
 
-
-function RootNode({ data, isConnectable }: IRootNode) {
+const RootNode: React.FC<IRootNode> = ({ data, isConnectable }) => {
 
     return (
       <div

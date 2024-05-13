@@ -2,7 +2,8 @@ import { Handle, Position } from "reactflow";
 import { IFeatureNode } from "../interfaces/FeatureNode";
 
 
-function FeatureNode({ data, isConnectable }: IFeatureNode) {
+const FeatureNode: React.FC<IFeatureNode> = ({ data, isConnectable }) => {
+
   let nodeStyle: React.CSSProperties;
   nodeStyle = {
     backgroundColor: "white",
