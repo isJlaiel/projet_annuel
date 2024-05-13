@@ -1,12 +1,8 @@
 import { Handle, Position } from "reactflow";
+import { IChoiceNode } from "../interfaces/ChoiceNode";
 
-interface ChoiceNodeProps {
-  data: {
-    type: string;
-  };
-}
 
-function ChoiceNode({ data }: ChoiceNodeProps) {
+function ChoiceNode({ data }: IChoiceNode) {
   return (
     <div
       style={{

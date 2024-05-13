@@ -6,7 +6,7 @@ import { FeatureModel } from '../models/featureModel.js';
 
 
  export default class FeatureController{
-  
+
     public static async getFeatures (req: Request, res:Response): Promise<void> {
         try{
             const xmlData = await fs.readFile('src/storage/model.xml', 'utf-8');
@@ -20,4 +20,8 @@ import { FeatureModel } from '../models/featureModel.js';
         
     }
 
+    static configureFeatures():Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+  
 }

@@ -1,18 +1,8 @@
 import { Handle, Position } from "reactflow";
+import { IFeatureNode } from "../interfaces/FeatureNode";
 
-interface FeatureNodeProps {
-  data: {
-    label: string;
-    isSelected: boolean;
-    isMandatory?: boolean;
-    children?: number[];
-    cardinality?: string;
-    isDisabled?: boolean;
-  };
-  isConnectable: boolean;
-}
 
-function FeatureNode({ data, isConnectable }: FeatureNodeProps) {
+function FeatureNode({ data, isConnectable }: IFeatureNode) {
   let nodeStyle: React.CSSProperties;
   nodeStyle = {
     backgroundColor: "white",

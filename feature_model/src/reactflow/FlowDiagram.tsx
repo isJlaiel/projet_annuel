@@ -13,13 +13,11 @@ import ReactFlow, {
   ReactFlowProvider,
 } from "reactflow";
 import FeatureNode from "./FeatureNode";
-
 import "reactflow/dist/style.css";
 import RootNode from "./RootNode";
 import dagre from "dagre";
 import ChoiceNode from "./ChoiceNode";
-import axios from "axios";
-import TogglePanel from "./TogglePanel";
+import APIService from "../services/apiService";
 
 const nodeWidth = 100;
 const nodeHeight = 80;
@@ -149,8 +147,7 @@ export default function FlowDiagram() {
   const [edges, setEdges] = useEdgesState([]);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3002/")
+    APIService.fetchFeatureModel()
       .then((response) => {
         const root = {
           id: "root",
@@ -161,7 +158,7 @@ export default function FlowDiagram() {
             isMandatory: true,
           },
         };
-
+          console.log(response.data.features)
         const results = processFeatures(response.data.features, "root");
         const newNodes = [root, ...results.nodes];
         const newEdges = results.edges;

@@ -1,13 +1,8 @@
 import { Handle, Position } from "reactflow";
+import { IRootNode } from "../interfaces/RootNode";
 
-interface RootNodeProps {
-  data: {
-    label: string;
-  };
-  isConnectable: boolean;
-}
 
-function RootNode({ data, isConnectable }: RootNodeProps) {
+function RootNode({ data, isConnectable }: IRootNode) {
 
     return (
       <div
