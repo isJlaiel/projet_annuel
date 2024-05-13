@@ -1,4 +1,4 @@
-import FlowDiagram from './reactflow/FlowDiagram';
+import FlowDiagram from './components/FlowDiagram';
 
 function App() {
   return <FlowDiagram />;

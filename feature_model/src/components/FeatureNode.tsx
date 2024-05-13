@@ -2,7 +2,7 @@ import { Handle, Position } from "reactflow";
 import { IFeatureNode } from "../interfaces/FeatureNode";
 
 
-const FeatureNode: React.FC<IFeatureNode> = ({ data, isConnectable }) => {
+const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
 
   let nodeStyle: React.CSSProperties;
   nodeStyle = {
@@ -48,20 +48,20 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data, isConnectable }) => {
           <Handle
             type="target"
             position={Position.Top}
-            isConnectable={isConnectable}
+            isConnectable={false}
           />
         )}
         {data.label !== "ROOT" && (
           <Handle
             type="target"
             position={Position.Top}
-            isConnectable={isConnectable}
+            isConnectable={false}
           />
         )}
         <Handle
           type="source"
           position={Position.Bottom}
-          isConnectable={isConnectable}
+          isConnectable={false}
           style={data.cardinality ? { width: "16px", height: "16px", bottom: "-14px" } : {}}
         />
         <div style={{ position: "relative", height: "0", width: "100%" }}>
