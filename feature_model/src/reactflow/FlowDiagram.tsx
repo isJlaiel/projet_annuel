@@ -17,6 +17,7 @@ import "reactflow/dist/style.css";
 import RootNode from "./RootNode";
 import dagre from "dagre";
 import ChoiceNode from "./ChoiceNode";
+import TogglePanel from "./TogglePanel";
 import APIService from "../services/apiService";
 
 const nodeWidth = 100;
@@ -25,11 +26,7 @@ const nodeHeight = 80;
 const nodeTypes = {
   feature: FeatureNode,
   root: RootNode,
-<<<<<<< Updated upstream
   choice: ChoiceNode,
-=======
-  choice: ChoiceNode
->>>>>>> Stashed changes
 };
 
 function processFeatures(features: any, parentId: string): any {
@@ -109,7 +106,6 @@ function processFeatures(features: any, parentId: string): any {
 export default function FlowDiagram() {
   const dagreGraph = useRef(new dagre.graphlib.Graph()).current;
 
-<<<<<<< Updated upstream
   const buildTree = useCallback(
     (nodes: any[], edges: any[], direction = "TB") => {
       const isHorizontal = direction === "LR";
@@ -143,38 +139,6 @@ export default function FlowDiagram() {
     },
     []
   );
-=======
-  const buildTree = useCallback((nodes: any[], edges: any[], direction = "TB") => {
-    const isHorizontal = direction === "LR";
-    dagreGraph.setDefaultEdgeLabel(() => ({}));
-    dagreGraph.setGraph({ rankdir: direction });
-  
-    nodes.forEach((node) => {
-      dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
-    });
-  
-    edges.forEach((edge) => {
-      dagreGraph.setEdge(edge.source, edge.target);
-    });
-  
-    dagre.layout(dagreGraph);
-  
-    nodes.forEach((node) => {
-      const nodeWithPosition = dagreGraph.node(node.id);
-      node.targetPosition = isHorizontal ? "left" : "top";
-      node.sourcePosition = isHorizontal ? "right" : "bottom";
-  
-      // We are shifting the dagre node position (anchor=center center) to the top left
-      // so it matches the React Flow node anchor point (top left).
-      node.position = {
-        x: nodeWithPosition.x - nodeWidth / 2,
-        y: nodeWithPosition.y - nodeHeight / 2,
-      };
-    });
-  
-    return { nodes, edges };
-  }, []);
->>>>>>> Stashed changes
 
   const [graphData, setGraphData] = useState<{ nodes: Node[]; edges: Edge[] }>({
     nodes: [],
@@ -208,11 +172,7 @@ export default function FlowDiagram() {
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des données :", error);
-<<<<<<< Updated upstream
       });
-=======
-      });  
->>>>>>> Stashed changes
   }, []);
 
   const onConnect = useCallback(
@@ -220,7 +180,6 @@ export default function FlowDiagram() {
     [setEdges]
   );
 
-<<<<<<< Updated upstream
   const handleNodeClick = (_event: any, clickedNode: { id: string }) => {
     const node = nodes.find((n) => n.id === clickedNode.id);
     if (node && node.data.isDisabled) {
@@ -284,21 +243,11 @@ export default function FlowDiagram() {
     }
 
     setNodes(updatedNodes);
-=======
-  const handleNodeClick = (_event: any, node: { id: string; }) => {
-    const edge = edges.find(edge => edge.target === node.id);
-    if(edge){
-      let parentId = edge.source;
-      let updatedNodes = nodes.map(n => n.id === parentId ? { ...n, nodeStyle: { backgroundColor: 'green' } } : n);
-      setNodes(updatedNodes);
-    }
->>>>>>> Stashed changes
   };
 
   return (
     <div style={{ width: "100vw", height: "100vh", position: "relative" }}>
       <ReactFlowProvider>
-<<<<<<< Updated upstream
         <div
           style={{
             zIndex: 1,
@@ -322,19 +271,6 @@ export default function FlowDiagram() {
         </div>
         <Controls position="top-left" />
         <MiniMap position="bottom-left" />
-=======
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          onConnect={onConnect}
-          onNodeClick={handleNodeClick}
-          >
-          <Controls />
-          <MiniMap />
-          <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
-        </ReactFlow>
->>>>>>> Stashed changes
       </ReactFlowProvider>
     </div>
   );
