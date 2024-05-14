@@ -259,7 +259,7 @@ const FlowDiagram: React.FC<object> = () => {
           </ReactFlow>
         </div>
         <div style={{ zIndex: 2, position: "absolute", right: "0", top: "0" }}>
-        <TogglePanel nodes={nodes} edges={edges} />
+        <TogglePanel nodes={nodes} />
         </div>
         <Controls position="top-left" showInteractive={false} />
         <MiniMap nodeColor="black" position="bottom-left" />

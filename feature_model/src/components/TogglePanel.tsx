@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
 import { FiMenu } from "react-icons/fi";
-import { Node, Edge } from "reactflow";
+import { Node } from "reactflow";
 import List from "@mui/material/List";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -13,9 +13,8 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import ListItemButton from "@mui/material/ListItemButton";
 import APIService from "../services/apiService";
 
-const TogglePanel: React.FC<{ nodes: Node[]; edges: Edge[] }> = ({
+const TogglePanel: React.FC<{ nodes: Node[] }> = ({
   nodes,
-  edges,
 }) => {
   const [pannelOpen, setPannelOpen] = useState(false);
   const [items, setItems] = useState<React.ReactElement[]>([]); // Ajouter un état pour les éléments
@@ -32,7 +31,6 @@ const TogglePanel: React.FC<{ nodes: Node[]; edges: Edge[] }> = ({
 
   function handleClick() {
     setIsLoading(true);
-    console.log(nodes, edges);
     const nodesData = nodes
       .filter((node) => node.type === "feature") // Filtrer les nœuds de type 'featureNode'
       .map((node) => ({
@@ -45,6 +43,7 @@ const TogglePanel: React.FC<{ nodes: Node[]; edges: Edge[] }> = ({
       }));
 
     const json = JSON.stringify(nodesData, null, 2);
+    console.log(json);
     // Appeler configureFeatureModel avec le JSON
     APIService.configureFeatureModel(json)
       .then((response) => {
