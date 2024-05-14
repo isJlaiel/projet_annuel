@@ -1,19 +1,26 @@
 import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
 import { FiMenu } from "react-icons/fi";
-import {Node, Edge} from 'reactflow'
+import { Node, Edge } from "reactflow";
 import List from "@mui/material/List";
+import CircularProgress from "@mui/material/CircularProgress";
+
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import ListItemText from "@mui/material/ListItemText";
 import DescriptionIcon from "@mui/icons-material/Description";
 import ListItemButton from "@mui/material/ListItemButton";
+import APIService from "../services/apiService";
 
-const TogglePanel: React.FC<{nodes:  Node[], edges:  Edge[]}> = ({nodes, edges}) => {
-
+const TogglePanel: React.FC<{ nodes: Node[]; edges: Edge[] }> = ({
+  nodes,
+  edges,
+}) => {
   const [pannelOpen, setPannelOpen] = useState(false);
   const [items, setItems] = useState<React.ReactElement[]>([]); // Ajouter un état pour les éléments
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   function generate(element: React.ReactElement) {
     return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) =>
@@ -24,23 +31,47 @@ const TogglePanel: React.FC<{nodes:  Node[], edges:  Edge[]}> = ({nodes, edges})
   }
 
   function handleClick() {
+    setIsLoading(true);
     console.log(nodes, edges);
-    const newItems = generate(
-      <ListItem>
-        <ListItemButton
-          style={{ borderRadius: "10px" }}
-          onClick={() => console.log("Item clicked!")}
-        >
-          <ListItemAvatar>
-            <Avatar style={{ backgroundColor: "black" }}>
-              <DescriptionIcon style={{ backgroundColor: "black" }} />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Model" />
-        </ListItemButton>
-      </ListItem>
-    );
-    setItems(newItems);
+    const nodesData = nodes
+      .filter((node) => node.type === "feature") // Filtrer les nœuds de type 'featureNode'
+      .map((node) => ({
+        label: node.data.label,
+        selected: node.data.isMandatory
+          ? true
+          : node.data.isSelected
+          ? true
+          : false,
+      }));
+
+    const json = JSON.stringify(nodesData, null, 2);
+    // Appeler configureFeatureModel avec le JSON
+    APIService.configureFeatureModel(json)
+      .then((response) => {
+        console.log("Response:", response);
+        const newItems = generate(
+          <ListItem>
+            <ListItemButton
+              style={{ borderRadius: "10px" }}
+              onClick={() => console.log("Item clicked!")}
+            >
+              <ListItemAvatar>
+                <Avatar style={{ backgroundColor: "black" }}>
+                  <DescriptionIcon style={{ backgroundColor: "black" }} />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Model" />
+            </ListItemButton>
+          </ListItem>
+        );
+        setItems(newItems);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setIsLoading(false);
+        setErrorMessage("Une erreur est survenue");
+      });
   }
 
   return (
@@ -82,7 +113,10 @@ const TogglePanel: React.FC<{nodes:  Node[], edges:  Edge[]}> = ({nodes, edges})
             alignItems: "center",
           }}
         >
-          <button onClick={handleClick} style={{ marginBottom: "15px", marginTop: "25px" }}>
+          <button
+            onClick={handleClick}
+            style={{ marginBottom: "15px", marginTop: "25px" }}
+          >
             Soumettre le modèle
           </button>
           <div
@@ -108,7 +142,13 @@ const TogglePanel: React.FC<{nodes:  Node[], edges:  Edge[]}> = ({nodes, edges})
                   height: "100%",
                 }}
               >
-                Aucun élément
+                {isLoading ? (
+                  <CircularProgress />
+                ) : errorMessage ? (
+                  <div>{errorMessage}</div>
+                ) : (
+                  "Aucun élément"
+                )}
               </div>
             )}
           </div>
