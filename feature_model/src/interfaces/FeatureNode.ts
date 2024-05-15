@@ -6,7 +6,7 @@ export interface IFeatureNode{
       children?: number[];
       cardinality?: string;
       isDisabled?: boolean;
+      values?: string[];
     };
-    isConnectable: boolean;
   }
   

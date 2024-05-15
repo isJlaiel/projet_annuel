@@ -31,7 +31,7 @@
         <subFeature type="OR">
             <Feature name="no-room" />
             <Feature name="single-room" />
-            <Feature name="multi-room" />
+            <Feature name="multi-room" values="[nbRooms]"/>
         </subFeature>
         <Feature name="room-capacity" optional="true"/>
         <subFeature type="XOR">

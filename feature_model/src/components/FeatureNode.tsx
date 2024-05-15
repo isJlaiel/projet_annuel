@@ -1,8 +1,22 @@
+import React, { useState } from "react";
 import { Handle, Position } from "reactflow";
 import { IFeatureNode } from "../interfaces/FeatureNode";
+import Modal from 'react-modal';
+
 
 
 const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleNodeClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  Modal.setAppElement('#root');
 
   let nodeStyle: React.CSSProperties;
   nodeStyle = {
@@ -34,6 +48,18 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
         minWidth: "80px"
       }}
     >
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+      >
+        <h2>Values</h2>
+        <ul>
+          {data.values?.map(value => (
+            <li key={value}>{value}</li>
+          ))}
+        </ul>
+        <button onClick={closeModal}>Close</button>
+      </Modal>
       <div
         className="react-flow__node-default"
         style={{
@@ -43,6 +69,7 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
           borderRadius: "50%",
           border: data.isMandatory ? "4px solid black" : "",
         }}
+        onClick={handleNodeClick}
       >
         {data.label !== "ROOT" && (
           <Handle
