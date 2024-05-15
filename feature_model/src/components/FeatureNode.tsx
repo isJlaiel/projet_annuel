@@ -1,8 +1,17 @@
+import { useState } from 'react';
 import { Handle, Position } from "reactflow";
 import { IFeatureNode } from "../interfaces/FeatureNode";
+import Modal from './NodeModal';
+
 
 
 const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const saveNodeValues = (newValues: { key: string, value: string | null }[]) => {
+    data.values = newValues;
+  };
+
 
   let nodeStyle: React.CSSProperties;
   nodeStyle = {
@@ -33,8 +42,13 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
         alignItems: "center",
         minWidth: "80px"
       }}
+      onClick={() => {
+        if (data.values && data.values.length > 0 && !data.isSelected) {
+          setIsModalOpen(true);
+        }
+      }}
     >
-      <div
+{isModalOpen && <Modal closeModal={() => setIsModalOpen(false)} values={data.values || []} nodeLabel={data.label} saveNodeValues={saveNodeValues}/>}      <div
         className="react-flow__node-default"
         style={{
           ...nodeStyle,
@@ -44,20 +58,13 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
           border: data.isMandatory ? "4px solid black" : "",
         }}
       >
-        {data.label !== "ROOT" && (
+        
           <Handle
             type="target"
             position={Position.Top}
             isConnectable={false}
           />
-        )}
-        {data.label !== "ROOT" && (
-          <Handle
-            type="target"
-            position={Position.Top}
-            isConnectable={false}
-          />
-        )}
+       
         <Handle
           type="source"
           position={Position.Bottom}

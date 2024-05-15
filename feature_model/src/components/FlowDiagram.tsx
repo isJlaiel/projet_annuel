@@ -1,5 +1,17 @@
 import { useCallback, useState, useEffect, useRef } from "react";
-import ReactFlow, { MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge, Edge, Node, Connection, BackgroundVariant, ReactFlowProvider} from "reactflow";
+import ReactFlow, {
+  MiniMap,
+  Controls,
+  Background,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  Edge,
+  Node,
+  Connection,
+  BackgroundVariant,
+  ReactFlowProvider,
+} from "reactflow";
 import FeatureNode from "./FeatureNode";
 import "reactflow/dist/style.css";
 import RootNode from "./RootNode";
@@ -18,13 +30,15 @@ const nodeTypes = {
   choice: ChoiceNode,
 };
 
-function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[],edges: Edge[]} {
-  console.log(features)
+function processFeatures(
+  parentId: string,
+  features?: Feature[]
+): { nodes: Node[]; edges: Edge[] } {
   if (!features) {
     return { nodes: [], edges: [] };
   }
-  const nodes : Node[] = [];
-  const edges : Edge[] = [];
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
 
   for (const feature of features) {
     const nodeId = parentId + "-" + feature.attributes.name;
@@ -36,11 +50,17 @@ function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[
       data: {
         label: feature.attributes.name,
         isMandatory: feature.attributes.mandatory === "true",
+        values: feature.attributes.values
+          ? feature.attributes.values
+              .replace(/[[\]]/g, "")
+              .split(",")
+              .map((value) => ({ key: value, value: null }))
+          : [],
       },
     });
 
     edges.push({
-      id: "edge-" + feature.attributes.name,
+      id: "edge-" + parentId + "-" + feature.attributes.name,
       source: parentId,
       target: nodeId,
     });
@@ -48,7 +68,7 @@ function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[
     if (feature.subFeatures) {
       const subFeatures = feature.subFeatures.subFeatures;
       if (subFeatures) {
-        for (const subFeature  of subFeatures) {
+        for (const subFeature of subFeatures) {
           nodes.push({
             id: nodeId + "-choice-" + subFeature.type,
             type: "choice",
@@ -59,7 +79,7 @@ function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[
           });
 
           edges.push({
-            id: "edge-" + subFeature.type,
+            id: "edge-" + nodeId + "-choice-" + subFeature.type,
             source: nodeId,
             target: nodeId + "-choice-" + subFeature.type,
           });
@@ -77,7 +97,13 @@ function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[
             });
 
             edges.push({
-              id: "edge-" + sFeatures.attributes.name,
+              id:
+                "edge-" +
+                nodeId +
+                "-choice-" +
+                subFeature.type +
+                "-" +
+                sFeatures.attributes.name,
               source: nodeId + "-choice-" + subFeature.type,
               target: nodeId + "-" + sFeatures.attributes.name,
             });
@@ -93,9 +119,7 @@ function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[
   return { nodes, edges };
 }
 
-
 const FlowDiagram: React.FC<object> = () => {
-
   const dagreGraph = useRef(new dagre.graphlib.Graph()).current;
 
   const buildTree = useCallback(
@@ -151,8 +175,7 @@ const FlowDiagram: React.FC<object> = () => {
             isMandatory: true,
           },
         };
-          console.log(response.data.features)
-        const results = processFeatures( "root", response.data.features);
+        const results = processFeatures("root", response.data.features);
         const newNodes = [root, ...results.nodes];
         const newEdges = results.edges;
 
@@ -174,7 +197,7 @@ const FlowDiagram: React.FC<object> = () => {
 
   const handleNodeClick = (_event: unknown, clickedNode: { id: string }) => {
     const node = nodes.find((n) => n.id === clickedNode.id);
-    if (node && node.data.isDisabled) {
+    if (node && (node.data.isDisabled || node.data.isMandatory || node.type==="choice")) {
       return; // Si le noeud est désactivé, on ne fait rien
     }
     let updatedNodes = [...nodes];
@@ -255,16 +278,22 @@ const FlowDiagram: React.FC<object> = () => {
             onConnect={onConnect}
             onNodeClick={handleNodeClick}
           >
-            <Background color="black" style={{backgroundColor: " #3f3f3f"}} variant={BackgroundVariant.Dots} gap={12} size={1} />
+            <Background
+              color="black"
+              style={{ backgroundColor: " #3f3f3f" }}
+              variant={BackgroundVariant.Dots}
+              gap={12}
+              size={1}
+            />
           </ReactFlow>
         </div>
         <div style={{ zIndex: 2, position: "absolute", right: "0", top: "0" }}>
-        <TogglePanel nodes={nodes} />
+          <TogglePanel nodes={nodes} />
         </div>
         <Controls position="top-left" showInteractive={false} />
         <MiniMap nodeColor="black" position="bottom-left" />
       </ReactFlowProvider>
     </div>
   );
-}
+};
 export default FlowDiagram;
