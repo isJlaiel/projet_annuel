@@ -20,8 +20,21 @@ import { FeatureModel } from '../models/featureModel.js';
         
     }
 
-    static configureFeatures():Promise<void> {
-        throw new Error('Method not implemented.');
+    static async configureFeatures(req: Request, res:Response):Promise<void> {
+        try {
+            
+            const featureData = req.body;  
+            await FeatureService.configureFeatures(featureData)
+            // console.log('Received feature configuration:', featureData);
+            res.status(200).json({
+                message: "Features configured successfully",
+                featureData: featureData
+            });
+            return;
+        } catch (error) {
+            console.error('Error configuring features:', error);
+            res.status(500).send('Internal Server Error');
+        }
     }
   
 }
