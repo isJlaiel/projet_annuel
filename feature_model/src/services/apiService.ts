@@ -39,7 +39,7 @@ export default class APIService {
             const response=  await APIService.getInstance().put("/features/configure",FeatureModelData)
             return response.data;
         } catch (error) {
-            console.error("Error adding user: ", error);
+            console.error("Error from configure FeatureModel: ", error);
             throw error;
         }
     }
