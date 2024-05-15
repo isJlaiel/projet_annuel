@@ -197,7 +197,7 @@ const FlowDiagram: React.FC<object> = () => {
 
   const handleNodeClick = (_event: unknown, clickedNode: { id: string }) => {
     const node = nodes.find((n) => n.id === clickedNode.id);
-    if (node && node.data.isDisabled) {
+    if (node && (node.data.isDisabled || node.data.isMandatory || node.type==="choice")) {
       return; // Si le noeud est désactivé, on ne fait rien
     }
     let updatedNodes = [...nodes];

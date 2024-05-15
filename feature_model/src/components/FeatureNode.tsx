@@ -65,11 +65,6 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
             isConnectable={false}
           />
        
-          <Handle
-            type="target"
-            position={Position.Top}
-            isConnectable={false}
-          />
         <Handle
           type="source"
           position={Position.Bottom}
