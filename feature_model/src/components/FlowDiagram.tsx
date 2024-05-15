@@ -19,7 +19,6 @@ const nodeTypes = {
 };
 
 function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[],edges: Edge[]} {
-  console.log(features)
   if (!features) {
     return { nodes: [], edges: [] };
   }
@@ -40,7 +39,7 @@ function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[
     });
 
     edges.push({
-      id: "edge-" + feature.attributes.name,
+      id: "edge-" + parentId + "-" + feature.attributes.name,
       source: parentId,
       target: nodeId,
     });
@@ -59,7 +58,7 @@ function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[
           });
 
           edges.push({
-            id: "edge-" + subFeature.type,
+            id: "edge-" + nodeId + "-choice-" + subFeature.type,
             source: nodeId,
             target: nodeId + "-choice-" + subFeature.type,
           });
@@ -77,7 +76,7 @@ function processFeatures( parentId: string, features?: Feature[]): {nodes: Node[
             });
 
             edges.push({
-              id: "edge-" + sFeatures.attributes.name,
+              id: "edge-" + nodeId + "-choice-" + subFeature.type + "-" + sFeatures.attributes.name,
               source: nodeId + "-choice-" + subFeature.type,
               target: nodeId + "-" + sFeatures.attributes.name,
             });
@@ -151,7 +150,6 @@ const FlowDiagram: React.FC<object> = () => {
             isMandatory: true,
           },
         };
-          console.log(response.data.features)
         const results = processFeatures( "root", response.data.features);
         const newNodes = [root, ...results.nodes];
         const newEdges = results.edges;
