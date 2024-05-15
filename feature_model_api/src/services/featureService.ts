@@ -3,6 +3,7 @@ import { Attribute } from "../types/attribute.js";
 import { Feature } from '../models/feature.js';
 import { FeatureModel } from '../models/featureModel.js';
 import SubFeature from '../models/subFeature.js';
+import { promises as fs } from 'fs';
 
 export class FeatureService {
     public static async parseFromXMLToFeatures(xmlData: string): Promise<FeatureModel> {
@@ -51,7 +52,19 @@ export class FeatureService {
     
         return parsedSubFeatures[0];
     }
+    static async configureFeatures(featureSelected : any) {
+        const parser = new xml2js.Parser();
+        const xmlConfig = (await fs.readFile('src/storage/config.xml', 'utf-8')).replace(/^\s+</, '<');
 
+        const config = (await parser.parseStringPromise(xmlConfig)).configuration;
+        // delete result.nomDeLaBalise;
+
+        // // Modifier un attribut
+        // if (result.laBalise && result.laBalise[0].$) {
+        //     result.laBalise[0].$.attribut = 'nouvelleValeur';
+        // }
+        
+    }
 
 
 }
