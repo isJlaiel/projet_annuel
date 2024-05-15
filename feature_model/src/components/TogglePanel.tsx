@@ -104,7 +104,6 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({
             background: "white",
             height: "90vh",
             width: "20vw",
-            minWidth: "200px",
             zIndex: 1,
             borderRadius: "30px",
             display: "flex",
