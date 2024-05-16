@@ -13,9 +13,12 @@
     <Feature name="timing" mandatory="true">
         <!-- Timing features for scheduling -->
         <subFeature>
-            <Feature name="full-period" optional="true"/>
+            <Feature name="full-period" optional="true">
+            <subFeature>
+               <Feature name="single-week" optional="true"/>
+            </subFeature>
+            </Feature>
             <Feature name="full-week" optional="true"/>
-            <Feature name="single-week" optional="true"/>
         </subFeature>
     </Feature>
     <Feature name="scheduling" mandatory="true">
