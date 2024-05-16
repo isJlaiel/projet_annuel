@@ -1,6 +1,7 @@
 export interface IValue {
   key: string;
-  value: string | null;
+  type: string;
+  value: string | number |boolean | null;
 }
 
 export interface IFeatureNode {
@@ -11,7 +12,7 @@ export interface IFeatureNode {
     children?: number[];
     cardinality?: string;
     isDisabled?: boolean;
-    values?: IValue[];
+    parameters?: IValue[];
   };
   isConnectable: boolean;
 }

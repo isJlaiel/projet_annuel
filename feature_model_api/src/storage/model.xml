@@ -13,7 +13,7 @@
     <Feature name="timing" mandatory="true">
         <!-- Timing features for scheduling -->
         <subFeature>
-            <Feature name="full-period" optional="true">
+            <Feature name="full-period" optional="true" parameters="[nrPeriods:number:20]">
             <subFeature>
                <Feature name="single-week" optional="true"/>
             </subFeature>
@@ -53,14 +53,14 @@
             <Feature name="multi-teacher"/>
         </subFeature>
         <Feature name="session-overlap" optional="true"/>
-        <Feature name="service" optional="true" values="[nrTeachers,nrRooms,nrFormations]"/>
+        <Feature name="service" optional="true"/>
         </subFeature>
     </Feature>
     <Feature name="attending" mandatory="true">
         <!-- Features related to session attendance -->
     <subFeature >
         <Feature name="session-overlap" optional="true"/>
-        <Feature name="sectioning" optional="true" values="[nrTeachers,nrRooms,nrFormations]"/>
+        <Feature name="sectioning" optional="true"/>
     </subFeature >
     </Feature>
     <Feature name="crosscutting" mandatory="true">

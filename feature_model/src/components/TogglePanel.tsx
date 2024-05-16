@@ -13,9 +13,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import ListItemButton from "@mui/material/ListItemButton";
 import APIService from "../services/apiService";
 
-const TogglePanel: React.FC<{ nodes: Node[] }> = ({
-  nodes,
-}) => {
+const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
   const [pannelOpen, setPannelOpen] = useState(false);
   const [items, setItems] = useState<React.ReactElement[]>([]); // Ajouter un état pour les éléments
   const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +38,15 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({
           : node.data.isSelected
           ? true
           : false,
-        values: node.data.values ? node.data.values : [],
+        parameters: node.data.parameters
+          ? node.data.parameters.map(
+              (param: { key: string; value: string | null; type: string }) => ({
+                key: param.key,
+                value: param.value || null,
+                type: param.type,
+              })
+            )
+          : [],
       }));
 
     const json = JSON.stringify(nodesData, null, 2);

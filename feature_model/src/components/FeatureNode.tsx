@@ -7,9 +7,9 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const saveNodeValues = (
-    newValues: { key: string; value: string | null }[]
+    newValues: { key: string; value: string | number | boolean | null; type: string }[]
   ) => {
-    data.values = newValues;
+    data.parameters = newValues;
   };
 
   let nodeStyle: React.CSSProperties;
@@ -42,7 +42,8 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
         minWidth: "80px",
       }}
       onClick={() => {
-        if (data.values && data.values.length > 0 && !data.isSelected) {
+        console.log(data);
+        if (data.parameters && data.parameters.length > 0 && !data.isSelected) {
           setIsModalOpen(true);
         }
       }}
@@ -50,7 +51,7 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
       {isModalOpen && (
         <Modal
           closeModal={() => setIsModalOpen(false)}
-          values={data.values || []}
+          parameters={data.parameters || []}
           nodeLabel={data.label}
           saveNodeValues={saveNodeValues}
         />

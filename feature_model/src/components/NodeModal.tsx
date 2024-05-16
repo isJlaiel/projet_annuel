@@ -4,11 +4,11 @@ import { INodeModal } from "../interfaces/NodeModal";
 
 const NodeModal: React.FC<INodeModal> = ({
   closeModal,
-  values,
+  parameters,
   nodeLabel,
   saveNodeValues,
 }) => {
-  const [inputValues, setInputValues] = useState(values);
+  const [inputValues, setInputValues] = useState(parameters);
 
   // Handle input change
   const handleInputChange =
@@ -67,20 +67,28 @@ const NodeModal: React.FC<INodeModal> = ({
       >
         <h2 style={{ color: "black" }}>{nodeLabel}</h2>
         <ul style={{ width: "100%" }}>
-          {inputValues.map((item, index) => (
-            <li
-              key={item.key}
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <label style={{ color: "black" }}>{item.key}</label>
-              <input
-                type="text"
-                value={item.value || ""}
-                onChange={handleInputChange(index)}
-                style={{ marginRight: "3em" }}
-              />
-            </li>
-          ))}
+        {inputValues.map((item, index) => {
+  let inputElement;
+  switch (item.type) {
+    case 'string':
+      inputElement = <input type="text" value={String(item.value) || ""} onChange={handleInputChange(index)} style={{ marginRight: "3em" }} />;
+      break;
+    case 'number':
+      inputElement = <input type="number" value={Number(item.value) || 0} onChange={handleInputChange(index)} style={{ marginRight: "3em" }} />;      break;
+    case 'bool':
+      inputElement = <input type="checkbox" checked={Boolean(item.value) || false} onChange={handleInputChange(index)} style={{ marginRight: "3em" }} />;
+      break;
+    default:
+      inputElement = <input type="text" value={String(item.value) || ""} onChange={handleInputChange(index)} style={{ marginRight: "3em" }} />;
+  }
+
+  return (
+    <li key={item.key} style={{ display: "flex", justifyContent: "space-between" }}>
+      <label style={{ color: "black" }}>{item.key}</label>
+      {inputElement}
+    </li>
+  );
+})}
         </ul>
         <button
           style={{

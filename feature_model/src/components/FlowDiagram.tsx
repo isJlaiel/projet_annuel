@@ -50,11 +50,14 @@ function processFeatures(
       data: {
         label: feature.attributes.name,
         isMandatory: feature.attributes.mandatory === "true",
-        values: feature.attributes.values
-          ? feature.attributes.values
+        parameters: feature.attributes.parameters
+          ? feature.attributes.parameters
               .replace(/[[\]]/g, "")
               .split(",")
-              .map((value) => ({ key: value, value: null }))
+              .map((parameter: string) => {
+                const [key, type, defaultValue] = parameter.split(":");
+                return { key, type, value: defaultValue || null };
+              })
           : [],
       },
     });

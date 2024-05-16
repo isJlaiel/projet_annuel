@@ -1,11 +1,12 @@
 export interface IValue {
     key: string;
-    value: string | null;
+    type: string;
+    value: string | number |boolean | null;
   }
 
 export interface INodeModal {
   closeModal: () => void;
-  values: IValue[];
+  parameters: IValue[];
   nodeLabel: string;
   saveNodeValues: (newValues: IValue[]) => void;
 }
