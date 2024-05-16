@@ -47,6 +47,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
               })
             )
           : [],
+        parent: node.id.split('/').slice(-2, -1)[0]
       }));
 
     const json = JSON.stringify(nodesData, null, 2);

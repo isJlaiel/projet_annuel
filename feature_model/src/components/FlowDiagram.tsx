@@ -20,10 +20,6 @@ import ChoiceNode from "./ChoiceNode";
 import TogglePanel from "./TogglePanel";
 import APIService from "../services/apiService";
 import { Feature } from "../interfaces/Feature";
-
-const nodeWidth = 100;
-const nodeHeight = 80;
-
 const nodeTypes = {
   feature: FeatureNode,
   root: RootNode,
@@ -41,7 +37,7 @@ function processFeatures(
   const edges: Edge[] = [];
 
   for (const feature of features) {
-    const nodeId = parentId + "-" + feature.attributes.name;
+    const nodeId = `${parentId}/${feature.attributes.name}`;
 
     nodes.push({
       id: nodeId,
@@ -63,7 +59,7 @@ function processFeatures(
     });
 
     edges.push({
-      id: "edge-" + parentId + "-" + feature.attributes.name,
+      id: `edge/${parentId}/${feature.attributes.name}`,
       source: parentId,
       target: nodeId,
     });
@@ -73,7 +69,7 @@ function processFeatures(
       if (subFeatures) {
         for (const subFeature of subFeatures) {
           nodes.push({
-            id: nodeId + "-choice-" + subFeature.type,
+            id: `${nodeId}/choice/${subFeature.type}`,
             type: "choice",
             position: { x: 0, y: 0 },
             data: {
@@ -82,14 +78,14 @@ function processFeatures(
           });
 
           edges.push({
-            id: "edge-" + nodeId + "-choice-" + subFeature.type,
+            id: `edge/${nodeId}/choice/${subFeature.type}`,
             source: nodeId,
-            target: nodeId + "-choice-" + subFeature.type,
+            target: `${nodeId}/choice/${subFeature.type}`,
           });
 
           for (const sFeatures of subFeature.features) {
             nodes.push({
-              id: nodeId + "-" + sFeatures.attributes.name,
+              id: `${nodeId}/${sFeatures.attributes.name}`,
               type: "feature",
               position: { x: 0, y: 0 },
               data: {
@@ -100,15 +96,9 @@ function processFeatures(
             });
 
             edges.push({
-              id:
-                "edge-" +
-                nodeId +
-                "-choice-" +
-                subFeature.type +
-                "-" +
-                sFeatures.attributes.name,
-              source: nodeId + "-choice-" + subFeature.type,
-              target: nodeId + "-" + sFeatures.attributes.name,
+              id: `edge/${nodeId}/choice/${subFeature.type}/${sFeatures.attributes.name}`,
+              source: `${nodeId}/choice/${subFeature.type}`,
+              target: `${nodeId}/${sFeatures.attributes.name}`,
             });
           }
         }
