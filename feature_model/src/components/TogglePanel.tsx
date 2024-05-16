@@ -40,6 +40,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({
           : node.data.isSelected
           ? true
           : false,
+        values: node.data.values ? node.data.values : [],
       }));
 
     const json = JSON.stringify(nodesData, null, 2);

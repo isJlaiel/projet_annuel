@@ -2,31 +2,34 @@ import { Handle, Position } from "reactflow";
 import { IRootNode } from "../interfaces/RootNode";
 
 const RootNode: React.FC<IRootNode> = ({ data, isConnectable }) => {
-
-    return (
+  return (
+    <div
+      className="react-flow__node-default"
+      style={{ backgroundColor: "white", width: "60px", borderRadius: "20%" }}
+    >
+      <div>{data.label}</div>
       <div
-        className="react-flow__node-default"
-        style={{ backgroundColor: 'white', width: "60px", borderRadius: "20%" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
       >
-        <div>{data.label}</div>
-        <div
+        <Handle
+          type="source"
           style={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
+            opacity: 0,
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
           }}
-        >
-          <Handle
-            type="source"
-            position={Position.Bottom}
-            isConnectable={isConnectable}
-          />
-          <div style={{ position: "relative", height: "0", width: "100%" }}>
-          </div>
-        </div>
+          position={Position.Bottom}
+          isConnectable={isConnectable}
+        />
+        <div style={{ position: "relative", height: "0", width: "100%" }}></div>
       </div>
-    );
-  }
-
+    </div>
+  );
+};
 
 export default RootNode;

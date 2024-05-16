@@ -13,9 +13,9 @@ import ReactFlow, {
   ReactFlowProvider,
 } from "reactflow";
 import FeatureNode from "./FeatureNode";
+import * as d3 from 'd3';
 import "reactflow/dist/style.css";
 import RootNode from "./RootNode";
-import dagre from "dagre";
 import ChoiceNode from "./ChoiceNode";
 import TogglePanel from "./TogglePanel";
 import APIService from "../services/apiService";
@@ -120,38 +120,39 @@ function processFeatures(
 }
 
 const FlowDiagram: React.FC<object> = () => {
-  const dagreGraph = useRef(new dagre.graphlib.Graph()).current;
-
   const buildTree = useCallback(
-    (nodes: Node[], edges: Edge[], direction = "TB") => {
-      const isHorizontal = direction === "LR";
-      dagreGraph.setDefaultEdgeLabel(() => ({}));
-      dagreGraph.setGraph({ rankdir: direction });
-
-      nodes.forEach((node) => {
-        dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+    (nodes: Node[], edges: Edge[]) => {
+      const width = 1200;
+      const height = width;
+      const radius = Math.min(width, height) / 2 - 30;
+      const nodesWithChildren = nodes.map(node => ({ ...node, children: [] as Node[] }));
+      
+      edges.forEach(edge => {
+        const sourceNode = nodesWithChildren.find(node => node.id === edge.source);
+        const targetNode = nodesWithChildren.find(node => node.id === edge.target);
+        if (sourceNode && targetNode) {
+          sourceNode.children.push(targetNode);
+        }
       });
-
-      edges.forEach((edge) => {
-        dagreGraph.setEdge(edge.source, edge.target);
+  
+      const root = d3.hierarchy(nodesWithChildren[0])
+  
+      const tree = d3.tree()
+        .size([2 * Math.PI, radius])
+        .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth);
+  
+      tree(root);
+  
+      root.each(node => {
+        if (node.x && node.y) {
+          node.data.position = {
+            x: node.y * Math.cos(node.x),
+            y: node.y * Math.sin(node.x),
+          };
+        }
       });
-
-      dagre.layout(dagreGraph);
-
-      nodes.forEach((node) => {
-        const nodeWithPosition = dagreGraph.node(node.id);
-        node.targetPosition = isHorizontal ? "left" : "top";
-        node.sourcePosition = isHorizontal ? "right" : "bottom";
-
-        // We are shifting the dagre node position (anchor=center center) to the top left
-        // so it matches the React Flow node anchor point (top left).
-        node.position = {
-          x: nodeWithPosition.x - nodeWidth / 2,
-          y: nodeWithPosition.y - nodeHeight / 2,
-        };
-      });
-
-      return { nodes, edges };
+  
+      return { nodes: nodesWithChildren, edges };
     },
     []
   );

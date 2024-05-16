@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { Handle, Position } from "reactflow";
 import { IFeatureNode } from "../interfaces/FeatureNode";
-import Modal from './NodeModal';
-
-
+import Modal from "./NodeModal";
 
 const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const saveNodeValues = (newValues: { key: string, value: string | null }[]) => {
+  const saveNodeValues = (
+    newValues: { key: string; value: string | null }[]
+  ) => {
     data.values = newValues;
   };
-
 
   let nodeStyle: React.CSSProperties;
   nodeStyle = {
@@ -40,7 +39,7 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        minWidth: "80px"
+        minWidth: "80px",
       }}
       onClick={() => {
         if (data.values && data.values.length > 0 && !data.isSelected) {
@@ -48,7 +47,15 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
         }
       }}
     >
-{isModalOpen && <Modal closeModal={() => setIsModalOpen(false)} values={data.values || []} nodeLabel={data.label} saveNodeValues={saveNodeValues}/>}      <div
+      {isModalOpen && (
+        <Modal
+          closeModal={() => setIsModalOpen(false)}
+          values={data.values || []}
+          nodeLabel={data.label}
+          saveNodeValues={saveNodeValues}
+        />
+      )}{" "}
+      <div
         className="react-flow__node-default"
         style={{
           ...nodeStyle,
@@ -58,18 +65,32 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
           border: data.isMandatory ? "4px solid black" : "",
         }}
       >
-        
-          <Handle
-            type="target"
-            position={Position.Top}
-            isConnectable={false}
-          />
-       
+        <Handle
+          type="target"
+          position={Position.Top}
+          style={{
+            opacity: 0,
+            left: "50%",
+            top: "60%",
+            transform: "translate(-50%, -60%)",
+          }}
+          isConnectable={false}
+        />
+
         <Handle
           type="source"
           position={Position.Bottom}
           isConnectable={false}
-          style={data.cardinality ? { width: "16px", height: "16px", bottom: "-14px" } : {}}
+          style={
+            data.cardinality
+              ? { width: "16px", height: "16px", bottom: "-14px" }
+              : {
+                  opacity: 0,
+                  left: "50%",
+                  top: "10%",
+                  transform: "translate(-50%, -10%)",
+                }
+          }
         />
         <div style={{ position: "relative", height: "0", width: "100%" }}>
           {data.cardinality && (
@@ -89,9 +110,11 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
           )}
         </div>
       </div>
-      <div style={{ marginTop: "-5px", marginBottom: "2px", fontSize: "15px" }}>{data.label}</div>
+      <div style={{ marginTop: "-5px", marginBottom: "2px", fontSize: "15px" }}>
+        {data.label}
+      </div>
     </div>
   );
-}
+};
 
 export default FeatureNode;
