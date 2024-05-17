@@ -1,4 +1,5 @@
 import { useCallback, useState, useEffect, useRef } from "react";
+import { IoIosInformationCircleOutline } from "react-icons/io";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -11,6 +12,7 @@ import ReactFlow, {
   Connection,
   BackgroundVariant,
   ReactFlowProvider,
+  ControlButton,
 } from "reactflow";
 import FeatureNode from "./FeatureNode";
 import * as d3 from "d3";
@@ -22,6 +24,7 @@ import APIService from "../services/apiService";
 import { Feature } from "../interfaces/Feature";
 import NodeContextMenu from "./NodeContextMenu";
 import React from "react";
+import LegendPanel from "./LegendPanel";
 const nodeTypes = {
   feature: FeatureNode,
   root: RootNode,
@@ -163,6 +166,7 @@ const FlowDiagram: React.FC<object> = () => {
   });
   const [nodes, setNodes] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
+  const [showLegendPanel, setShowLegendPanel] = useState(false);
   const [menu, setMenu] = useState<{
     id: string;
     top: number | undefined;
@@ -197,6 +201,9 @@ const FlowDiagram: React.FC<object> = () => {
         console.error("Erreur lors de la récupération des données :", error);
       });
   }, [buildTree, setEdges, setNodes]);
+
+  const toggleLegendPanel = () => setShowLegendPanel(prev => !prev);
+
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -346,7 +353,14 @@ const FlowDiagram: React.FC<object> = () => {
         <div style={{ zIndex: 2, position: "absolute", right: "0", top: "0" }}>
           <TogglePanel nodes={nodes} />
         </div>
-        <Controls position="top-left" showInteractive={false} />
+        <div>
+        {showLegendPanel && <LegendPanel />}
+        </div>
+        <Controls position="top-left" showInteractive={false} >
+          <ControlButton onClick={toggleLegendPanel}>
+          <IoIosInformationCircleOutline color="black"/>
+            </ControlButton>
+        </Controls>
         <MiniMap nodeColor="black" position="bottom-left" />
       </ReactFlowProvider>
     </div>
