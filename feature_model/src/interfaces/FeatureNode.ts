@@ -13,6 +13,8 @@ export interface IFeatureNode {
     cardinality?: string;
     isDisabled?: boolean;
     parameters?: IValue[];
+    showModal?: boolean;
+    onModalClose: () => void;
   };
   isConnectable: boolean;
 }

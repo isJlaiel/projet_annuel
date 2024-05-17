@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Handle, Position } from "reactflow";
 import { IFeatureNode } from "../interfaces/FeatureNode";
 import Modal from "./NodeModal";
 
 const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    setIsModalOpen(data.showModal || false);
+  }, [data.showModal]);
 
   const saveNodeValues = (
     newValues: { key: string; value: string | number | boolean | null; type: string }[]
@@ -50,7 +54,10 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
     >
       {isModalOpen && (
         <Modal
-          closeModal={() => setIsModalOpen(false)}
+          closeModal={() => {
+            setIsModalOpen(false);
+            data.onModalClose();
+          }}
           parameters={data.parameters || []}
           nodeLabel={data.label}
           saveNodeValues={saveNodeValues}
