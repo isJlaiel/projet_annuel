@@ -1,0 +1,142 @@
+<?xml version = "1.0"?>
+<configurations>
+    <configuration type="course" filter="*">
+        <ruleManagers>
+            
+            <ruleManager effect="amorcageTD" value="$k{1,2,3}" verification="part{TD},part{TP}" parent="1" probality="1" >
+                <rule>
+                    <selector generator="(class[id='$id'], {$k})" filters="course[id='$id'],part[label='TD']" />
+                    <selector generator="(class[parent='$id'], {1})" filters="course[id='$id'],part[label='TP']" />
+                    <constraint name="sequenced" type="hard"></constraint>
+                </rule>
+            </ruleManager>  
+            
+            <ruleManager effect="sameRooms" value="" verification="" probality="1" >
+                <rule>
+                    <selector generator="(class, *)" filters="course[id='$id']" />
+                    <constraint name="sameRooms" type="hard"></constraint>
+                </rule>
+            </ruleManager> 
+            
+            <ruleManager effect="sameTeachers" value="" verification="" probality="1" >
+                <rule>
+                    <selector generator="(class, *)" filters="part[id='$id']" />
+                    <constraint name="sameTeachers" type="hard"></constraint>
+                </rule>
+            </ruleManager> 
+            
+            <ruleManager effect="amorcageCM-TD" value="$k{1,2,3}" verification="part{CM},part{TD}" probality="0.7" >
+                <rule>
+                    <selector generator="(class, {$k})" filters="course[id='$id'],part[label='CM']" />
+                    <selector generator="(class, {1})" filters="course[id='$id'],part[label='TD']" />
+                    <constraint name="sequenced" type="hard"></constraint>
+                </rule>
+            </ruleManager> 
+            
+            <ruleManager effect="amorcageCMTD-TD" value="$k{1,2,3}" verification="part{CMTD},part{TD}" probality="0.6" >
+                <rule>
+                    <selector generator="(class, {$k})" filters="course[id='$id'],part[label='CMTD']" />
+                    <selector generator="(class, {1})" filters="course[id='$id'],part[label='TD']" />
+                    <constraint name="sequenced" type="hard"></constraint>
+                </rule>
+            </ruleManager> 
+            
+            <ruleManager effect="amorcageCMTD-TP" value="$k{1,2,3}" verification="part{CMTD},part{TP}" probality="0.7" >
+                <rule>
+                    <selector generator="(class[id='$id'], {$k})" filters="course[id='$id'],part[label='CMTD']" />
+                    <selector generator="(class[parent='$id'], {1})" filters="course[id='$id'],part[label='TP']" />
+                    <constraint name="sequenced" type="hard"></constraint>
+                </rule>
+            </ruleManager> 
+            
+            <ruleManager effect="amorcageCM-TP" value="$k{1,2,3,4}" verification="part{CM},part{TP}" probality="0.7" >
+                <rule>
+                    <selector generator="(class, {$k})" filters="course[id='$id'],part[label='CM']" />
+                    <selector generator="(class, {1})" filters="course[id='$id'],part[label='TP']" />
+                    <constraint name="sequenced" type="hard"></constraint>
+                </rule>
+            </ruleManager> 
+            
+            <ruleManager effect="periodic" value="$k{1,2,3,4}" verification="" probality="1" >
+                <rule>
+                    <selector generator="(class, {$n})" filters="part[id='$id']" />
+                    	<constraint name="periodic" type="hard">
+                            <parameters>
+                                <parameter name="value">1</parameter>
+                                <parameter name="unit">week</parameter>
+                            </parameters>
+                        </constraint>
+                </rule>
+            </ruleManager> 
+
+
+            
+        </ruleManagers>
+    </configuration>
+    
+    <configuration type="part" filter="CM">
+         <ruleManagers>
+            <ruleManager effect="amorcageCM-TP" value="$k{1,2,3,4}" verification="part{CM},part{TP}" probality="1" >
+                <rule>
+                    <selector generator="(class, {$k})" filters="course[id='$id'],part[label='CM']" />
+                    <selector generator="(class, {1})" filters="course[id='$id'],part[label='TP']" />
+                    <constraint name="sequenced" type="hard"></constraint>
+                </rule>
+            </ruleManager>  
+        </ruleManagers>
+    </configuration> 
+    
+    <configuration type="ALL" filter="*">
+        <ruleManagers>
+             <ruleManager effect="noOverlap-student" value="" verification="" probality="1" >
+                 <rule>
+                    <selector generator="(student, *)" filters="" />
+                    <constraint name="noOverlap" type="hard">
+                    </constraint>
+                </rule>
+             </ruleManager>
+             
+            <ruleManager effect="noOverlap-teachers" value="" verification="" probality="1" >
+                 <rule>
+                    <selector generator="(lecturer, *)" filters="" />
+                    <constraint name="noOverlap" type="hard">
+                    </constraint>
+                </rule> 
+             </ruleManager>
+            <ruleManager effect="noOverlap-room" value="" verification="" probality="1" >
+                <rule>
+                    <selector generator="(room, *)" filters="" />
+                    <constraint name="noOverlap" type="hard">
+                    </constraint>
+                </rule>
+             </ruleManager>
+            <ruleManager effect="sequenced-class" value="" verification="" probality="0.0" >
+                <rule>
+                    <selector generator="(class, *)" filters="" />
+                    <constraint name="sequenced" type="hard">
+                    </constraint>
+                </rule>
+             </ruleManager>
+             
+            <ruleManager effect="teacherService" value="" verification="" probality="1" >
+                <rule>
+                    <selector generator="(part, *)" filters="" />
+                    <constraint name="teacherService" type="hard">
+                    </constraint>
+                </rule>
+             </ruleManager>
+
+             
+        </ruleManagers>
+    </configuration>     
+
+    <configuration type="part" filter="TP">
+    </configuration> 
+    
+    <configuration type="part" filter="CMTD">
+    </configuration> 
+    
+<!--     <configuration type="part" filter="TD"> -->
+<!--     </configuration>  -->
+    
+</configurations>

@@ -5,26 +5,26 @@ import { Request, Response } from 'express';
 import { FeatureModel } from '../models/featureModel.js';
 
 
- export default class FeatureController{
-
-    public static async getFeatures (req: Request, res:Response): Promise<void> {
+ export  class FeatureController{
+     featureService: FeatureService;
+    constructor({featureService}: {featureService: FeatureService}){
+        this.featureService = featureService ;
+    }
+    public  async getFeatures (req: Request, res:Response): Promise<void> {
         try{
-            const xmlData = await fs.readFile('src/storage/model.xml', 'utf-8');
-            const featureModel: FeatureModel  = await FeatureService.parseFromXMLToFeatures(xmlData)
+            const featureModel: FeatureModel  = await this.featureService.parseFromXMLToFeatures()
             res.json(featureModel);
-
         } catch (error) {
             console.error("Failed to process features:", error);
             res.status(500).send(error);
         }
-        
     }
 
-    static async configureFeatures(req: Request, res:Response):Promise<void> {
+     async configureFeatures(req: Request, res:Response):Promise<void> {
         try {
             
             const featureData = req.body;  
-            await FeatureService.configureFeatures(featureData)
+            await this.featureService.configureFeatures(featureData)
             // console.log('Received feature configuration:', featureData);
             res.status(200).json({
                 message: "Features configured successfully",

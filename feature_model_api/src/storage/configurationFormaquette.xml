@@ -1,0 +1,143 @@
+<?xml version = "1.0"?>
+<!-- \{(\d.\d+):(\d*\w+)\} -->
+<!-- \{(\d.\d+):(\d*\w+-\w+)\} -->
+<!-- \{(\d.\d+):(\[*\d+,\d+\])\} -->
+<configuration>
+<days>5</days>
+<slots>1440</slots>
+
+<allowedslots>
+    <allowedslot name="t60" duration="60" >480,540,600,660,720,780,840,900,960,1020,1080</allowedslot>
+    <allowedslot name="t80" duration="80" >480,570,660,750,840,930,1020,1110</allowedslot>
+    <allowedslot name="t120" duration="120" >480,570,660,750,840,930,1020,1110</allowedslot>
+    <allowedslot name="t180" duration="180" >480,570,660,750,840,930,1020,1110</allowedslot>
+    <allowedslot name="t240" duration="240" >480,750</allowedslot>
+    <allowedslot name="t80-30" duration="80" >480:30:1080</allowedslot>
+</allowedslots>
+
+<formations nrFormations="6" >{L1:0.1},{L2:0.2},{L3:0.2},{M1:0.0},{M2:0.0}</formations>
+<departements>{DG:0.1},{D1:0.1},{D2:0.1},{D3:0.2},{D4:0.2},{D5:0.1},{D6:0.1},{D7:0.1},{D8:0.1},{D9:0.1},{D10:0.4},{D11:0.1}</departements> 
+
+<repas need="1" perGroupOrFormation="1" />
+
+<formation-departements>
+    <nrDepartement etape="L1" >{1:0.1},{2:0.5},{3:0.4},{4:0.1}</nrDepartement>
+    <nrDepartement etape="L2" >{1:0.2},{2:0.6},{3:0.2}</nrDepartement>
+    <nrDepartement etape="L3" >{1:0.4},{2:0.5},{3:0.1}</nrDepartement>
+    <nrDepartement etape="M1" >{1:0.8},{2:0.2}</nrDepartement>
+    <nrDepartement etape="M2" >{1:0.9},{2:0.1}</nrDepartement>                                
+</formation-departements>
+
+<courses>
+    <course etape="L1" >{[9,10]:1.0}</course>
+    <course etape="L2" >{[9,10]:1.0}</course>
+    <course etape="L3" >{[9,10]:1.0}</course>
+    <course etape="M1" >{[11,14]:1.0}</course>
+    <course etape="M2" >{[11,14]:1.0}</course>
+</courses>
+
+<distributionWeeks>
+    <distributionWeek etape="L1" >6</distributionWeek>
+    <distributionWeek etape="L2" >6</distributionWeek>
+    <distributionWeek etape="L3" >6</distributionWeek>
+    <distributionWeek etape="M2" >12</distributionWeek>
+    <distributionWeek etape="M1" >12</distributionWeek>
+</distributionWeeks>
+    
+<distributionHoraires>
+    <distributionHoraire etape="L1" >{t60:0.0},{t80:0.95},{t120:0.05},{t180:0.0},{t80-30:0.02}</distributionHoraire>
+    <distributionHoraire etape="L2" >{t60:0.0},{t80:0.95},{t120:0.05},{t180:0.0},{t80-30:0.02}</distributionHoraire>
+    <distributionHoraire etape="L3" >{t60:0.0},{t80:0.9},{t120:0.1},{t180:0.0},{t80-30:0.02}</distributionHoraire>
+    <distributionHoraire etape="M1" >{t60:0.0},{t80:0.1},{t120:0.0},{t180:0.6},{t240:0.3}</distributionHoraire>
+    <distributionHoraire etape="M2" >{t60:0.0},{t80:0.1},{t120:0.0},{t180:0.6},{t240:0.3}</distributionHoraire>    
+</distributionHoraires>
+
+<classheadcount>
+    <headcount name="headcountCM" value="200" />
+    <headcount name="headcountTD" value="40" />
+    <headcount name="headcountTP" value="20" />
+</classheadcount>
+
+<part-type>CM,TD,TP,CMTD</part-type>
+
+<part-composition>
+    <composition name="c1" value="CM" />
+    <composition name="c2" value="TD" />
+    <composition name="c3" value="TP" />
+    <composition name="c4" value="CMTD" />
+    <composition name="c5" value="CM-TD" />
+    <composition name="c6" value="CM-TP" />
+    <composition name="c7" value="CMTD-TD" />
+    <composition name="c8" value="CMTD-TP" />
+    <composition name="c9" value="TD-TP" />
+    <composition name="c10" value="CM-TD-TP" />
+</part-composition>
+
+<formation-composition>
+    <distribution etape="L1" >{c1:0.00},{c2:0.45},{c3:0.09},{c4:0.11},{c5:0.19},{c6:0.02},{c7:0.00},{c8:0.04},{c9:0.06},{c10:0.04}</distribution>
+    <distribution etape="L2" >{c1:0.00},{c2:0.45},{c3:0.09},{c4:0.11},{c5:0.19},{c6:0.02},{c7:0.00},{c8:0.04},{c9:0.06},{c10:0.04}</distribution>
+    <distribution etape="L3" >{c1:0.00},{c2:0.45},{c3:0.09},{c4:0.11},{c5:0.19},{c6:0.02},{c7:0.00},{c8:0.04},{c9:0.06},{c10:0.04}</distribution>
+    <distribution etape="M1" >{c1:0.12},{c2:0.01},{c3:0.11},{c4:0.14},{c5:0.24},{c6:0.11},{c7:0.00},{c8:0.00},{c9:0.02},{c10:0.25}</distribution>
+    <distribution etape="M2" >{c1:0.12},{c2:0.01},{c3:0.11},{c4:0.14},{c5:0.24},{c6:0.11},{c7:0.00},{c8:0.00},{c9:0.02},{c10:0.25}</distribution>
+</formation-composition>
+
+<departement-commun>
+    <departement id="DG" nrCours="1" probability="0.8" >{L1:0.9},{L2:0.9},{L3:0.9},{M1:0.9},{M2:0.9}</departement>
+    <departement id="D2" nrCours="1" probability="0.8" >{L1:0.9},{L2:0.9},{L3:0.1},{M1:0.1},{M2:0.1}</departement>
+</departement-commun>
+
+<part-dimension>
+    <part id="CM" nrTeachers="1" nrRooms="1" probability="0.9"/>
+    <part id="CM" nrTeachers="1" nrRooms="2" probability="0.1"/>
+    <part id="CM" nrTeachers="1" nrRooms="3" probability="0.05"/>
+    <part id="TP" nrTeachers="1" nrRooms="1" probability="0.8"/>
+    <part id="TP" nrTeachers="2" nrRooms="1" probability="0.2"/>
+    <part id="TD" nrTeachers="1" nrRooms="1" probability="1.0"/>
+    <part id="CMTD" nrTeachers="1" nrRooms="1" probability="1.0"/>
+</part-dimension>
+
+<departement-composition>
+    <departement id="D1">
+        <etape id="L1">{c1:0.7},{c2:0.5}</etape>
+        <etape id="L2">{c1:0.8},{c2:0.1}</etape>
+    </departement>
+    <departement id="D2">
+        <etape id="L1">{c1:0.7},{c2:0.5}</etape>
+        <etape id="L2">{c1:0.8},{c2:0.1}</etape>
+    </departement>
+</departement-composition>
+
+<formation-room>
+    <allowedRooms etape="L1">{CM:[Amphi,Salle-TD]},{CMTD:[Salle-TD]},{TD:[Salle-TD]},{TP:[Salle-TP]}</allowedRooms>
+    <allowedRooms etape="L2">{CM:[Amphi,Salle-TD]},{CMTD:[Salle-TD]},{TD:[Salle-TD]},{TP:[Salle-TP]}</allowedRooms>
+    <allowedRooms etape="L3">{CM:[Amphi,Salle-TD]},{CMTD:[Salle-TD]},{TD:[Salle-TD]},{TP:[Salle-TP]}</allowedRooms>
+    <allowedRooms etape="M1">{CM:[Salle-TD]},{CMTD:[Salle-TD]},{TD:[Salle-TD]},{TP:[Salle-TP]}</allowedRooms>
+    <allowedRooms etape="M2">{CM:[Salle-TD]},{CMTD:[Salle-TD]},{TD:[Salle-TD]},{TP:[Salle-TP]}</allowedRooms>
+</formation-room>
+
+<departement-rooms>
+    <departement id="D2">
+        <etape id="L1" >{CM:10:[Amphi,Salle-TD]:0.5},{TD:-1:[Salle-craie]:0.9}</etape>
+        <etape id="L2" >{CM:2:[Salle-TP]:1.7}</etape>
+    </departement>
+</departement-rooms>
+
+<haveParent>TD,TP</haveParent>
+<!-- pattern : {NameTypeRoom : proportion or number} if is proportion proprotion is <1 and if  number (counter of room of type)-->
+<!-- exemple : {Amphi:0.2},{Room-blackboard:10} create with proportion of 0.2 amphis-room and exactly 10 room blackboard-->
+<roomType nrRooms="110" >{Amphi:0.2},{Salle-TD:0.5},{Salle-TP:0.2},{Salle-info:0.2},{Salle-craie:10}</roomType>
+<roomGetDepartement>{Salle-TP:[*]},{Salle-craie:[D2,D3]}</roomGetDepartement>   
+<roomSize>
+    <room type="Amphi">{[90,150]:0.15},{[150,250]:0.7},{[250,300]:0.15}</room>
+    <room type="Salle-TD">{[10,20]:0.1},{[20,30]:0.4},{[30,40]:0.4},{[30,40]:0.1}</room>
+    <room type="Salle-TP">{[20,40]:0.95},{[40,50]:0.1}</room>
+    <room type="Salle-info">{[20,40]:1.0}</room>
+    <room type="Salle-craie">{[20,40]:1.0}</room>
+</roomSize>
+
+<probaMultimedia >{Salle-TD:0.95},{Salle-info:0.05}</probaMultimedia>
+<MinEffectifAmphi > 50 </MinEffectifAmphi>
+
+<teachers> 160 </teachers>
+
+</configuration>

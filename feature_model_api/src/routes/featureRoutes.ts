@@ -1,9 +1,12 @@
 import { Router } from 'express';
-import FeatureController from '../controllers/featureController.js';
-
+const featureRoutes = (container) => {
 const router = Router();
+const featureController = container.resolve('featureController');
 
-router.get('/features', FeatureController.getFeatures);
-router.put('/features/configure', FeatureController.configureFeatures);
+router.get('/features', (req, res) => featureController.getFeatures(req, res));
+router.put('/features/configure',(req, res) => featureController.configureFeatures(req, res));
 
-export default router;
+return router;
+};
+
+export default featureRoutes;

@@ -1,0 +1,9 @@
+<?xml version = "1.0"?>
+<formations>
+    <!-- <formation etape="L1">{0.1:[30,50]},{0.2:[50,150]},{0.6:[150,200]},{0.6:[200,300]},{0.2:[300,400]},{0.1:[400,500]}</formation>-->
+    <formation etape="L1">{0.1:[40,400]}</formation>
+    <formation etape="L2">{0.1:[30,50]},{0.3:[50,150]},{0.5:[150,200]},{0.4:[200,300]},{0.1:[300,400]}</formation>
+    <formation etape="L3">{0.1:[30,50]},{0.6:[50,150]},{0.4:[150,200]},{0.1:[200,300]}</formation>
+    <formation etape="M1">{1.0:[30,50]}</formation>
+    <formation etape="M2">{1.0:[30,50]}</formation>
+</formations>
