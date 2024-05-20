@@ -55,7 +55,7 @@ export default function ContextMenu({
     position: "absolute",
     borderRadius: "5px",
     margin: 0,
-    padding: "10px",
+    padding: "0px",
     zIndex: 9999,
   };
 
@@ -97,7 +97,7 @@ export default function ContextMenu({
           color: "black",
           textAlign: "center",
           borderBottom: "2px solid black",
-          marginBottom: "5px",
+          marginBottom: "0px",
           fontSize: "16px",
         }}
       >

@@ -121,7 +121,7 @@ const FlowDiagram: React.FC<object> = () => {
   const buildTree = useCallback((nodes: Node[], edges: Edge[]) => {
     const width = 1200;
     const height = width;
-    const radius = Math.min(width, height) / 2 - 30;
+    const radius = Math.min(width, height) / 1.7;
     const nodesWithChildren = nodes.map((node) => ({
       ...node,
       children: [] as Node[],
@@ -202,8 +202,7 @@ const FlowDiagram: React.FC<object> = () => {
       });
   }, [buildTree, setEdges, setNodes]);
 
-  const toggleLegendPanel = () => setShowLegendPanel(prev => !prev);
-
+  const toggleLegendPanel = () => setShowLegendPanel((prev) => !prev);
 
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -339,6 +338,7 @@ const FlowDiagram: React.FC<object> = () => {
             onConnect={onConnect}
             onNodeClick={handleNodeClick}
             onNodeContextMenu={onNodeContextMenu}
+            fitView={true}
           >
             <Background
               color="black"
@@ -353,13 +353,15 @@ const FlowDiagram: React.FC<object> = () => {
         <div style={{ zIndex: 2, position: "absolute", right: "0", top: "0" }}>
           <TogglePanel nodes={nodes} />
         </div>
-        <div>
-        {showLegendPanel && <LegendPanel />}
-        </div>
-        <Controls position="top-left" showInteractive={false} >
+        <div>{showLegendPanel && <LegendPanel />}</div>
+        <Controls
+          style={{ display: "flex", flexDirection: "row" }}
+          position="top-left"
+          showInteractive={false}
+        >
           <ControlButton onClick={toggleLegendPanel}>
-          <IoIosInformationCircleOutline color="black"/>
-            </ControlButton>
+            <IoIosInformationCircleOutline color="black" />
+          </ControlButton>
         </Controls>
         <MiniMap nodeColor="black" position="bottom-left" />
       </ReactFlowProvider>
