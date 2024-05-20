@@ -4,14 +4,8 @@ import { FiMenu } from "react-icons/fi";
 import { Node } from "reactflow";
 import List from "@mui/material/List";
 import CircularProgress from "@mui/material/CircularProgress";
-
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
-import ListItemText from "@mui/material/ListItemText";
-import DescriptionIcon from "@mui/icons-material/Description";
-import ListItemButton from "@mui/material/ListItemButton";
 import APIService from "../services/apiService";
+import FilesTree from "./FilesTree";
 
 const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
   const [pannelOpen, setPannelOpen] = useState(false);
@@ -56,7 +50,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
     APIService.configureFeatureModel(json)
       .then((response) => {
         console.log("Response:", response);
-        const newItems = generate(
+        const newItems = /*generate(
           <ListItem>
             <ListItemButton
               style={{ borderRadius: "10px" }}
@@ -70,7 +64,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
               <ListItemText primary="Model" />
             </ListItemButton>
           </ListItem>
-        );
+        );*/[];
         setItems(newItems);
         setIsLoading(false);
       })
@@ -139,8 +133,8 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
               overflow: "auto",
             }}
           >
-            {items.length > 0 ? (
-              <List>{items}</List>
+            {items.length == 0 ? (
+              <FilesTree />
             ) : (
               <div
                 style={{
