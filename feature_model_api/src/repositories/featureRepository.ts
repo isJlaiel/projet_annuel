@@ -11,7 +11,7 @@ export class FeatureRepository {
         this.builder = new xml2js.Builder();
     }
     async loadXML(path: string): Promise<any> {
-        const xmlData  =  (await fs.readFile(path, 'utf-8'));
+        const xmlData  =  (await fs.readFile(path, 'utf-8')).replace(/^\s+</, '<');
         return  await this.parser.parseStringPromise(xmlData);
 
     }
