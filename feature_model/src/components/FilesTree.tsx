@@ -7,12 +7,7 @@ import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
 import ArticleIcon from "@mui/icons-material/Article";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import FolderRounded from "@mui/icons-material/FolderRounded";
-import ImageIcon from "@mui/icons-material/Image";
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
-import VideoCameraBackIcon from "@mui/icons-material/VideoCameraBack";
 import Button from "@mui/material/Button";
 import DownloadIcon from "@mui/icons-material/Download";
 import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
@@ -33,44 +28,14 @@ import { TreeItem2Provider } from "@mui/x-tree-view/TreeItem2Provider";
 import { TreeViewBaseItem } from "@mui/x-tree-view/models";
 
 type FileType =
-  | "image"
-  | "pdf"
-  | "doc"
-  | "video"
   | "folder"
-  | "pinned"
-  | "trash";
+  | "doc"
 
 type ExtendedTreeItemProps = {
   fileType?: FileType;
   id: string;
   label: string;
 };
-
-const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
-  {
-    id: "1",
-    label: "19/05/2024 08:43:12",
-    children: [
-      { id: "1.1", label: "config", fileType: "doc" },
-      { id: "1.2", label: "solution 1", fileType: "doc" },
-      { id: "1.3", label: "solution 2", fileType: "doc" },
-      { id: "1.4", label: "solution 3", fileType: "doc" },
-      { id: "1.5", label: "solution 4", fileType: "doc" },
-    ],
-  },
-  {
-    id: "2",
-    label: "20/05/2024 16:12:45",
-    children: [
-      { id: "2.1", label: "config", fileType: "doc" },
-      { id: "2.2", label: "solution 1", fileType: "doc" },
-      { id: "2.3", label: "solution 2", fileType: "doc" },
-      { id: "2.4", label: "solution 3", fileType: "doc" },
-      { id: "2.5", label: "solution 4", fileType: "doc" },
-    ],
-  },
-];
 
 declare module "react" {
   interface CSSProperties {
@@ -102,13 +67,6 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
     marginRight: theme.spacing(2),
   },
   [`&.Mui-expanded `]: {
-    "&:not(.Mui-focused, .Mui-selected, .Mui-selected.Mui-focused) .labelIcon":
-      {
-        /*color:
-          theme.palette.mode === "light"
-            ? theme.palette.primary.main
-            : theme.palette.primary.dark,*/
-      },
     "&::before": {
       content: '""',
       display: "block",
@@ -162,9 +120,11 @@ interface CustomLabelProps {
   children: React.ReactNode;
   icon?: React.ElementType;
   expandable?: boolean;
+  onDownloadClick: (itemId: string) => void;
+  itemId: string;
 }
 
-function CustomLabel({ icon: Icon, children, ...other }: CustomLabelProps) {
+function CustomLabel({ icon: Icon, children, itemId, ...other }: CustomLabelProps) {
   return (
     <TreeItem2Label
       {...other}
@@ -196,13 +156,13 @@ function CustomLabel({ icon: Icon, children, ...other }: CustomLabelProps) {
           height: "fit-content",
           color: "black",
           borderColor: "black",
-          display: "flex", // Ajoutez cette ligne
-          alignItems: "center", // Ajoutez cette ligne
-          justifyContent: "center", // Ajoutez cette ligne
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
-        onClick={(event) => {
-          event.stopPropagation();
-          console.log(children);
+        onClick={(e) => {
+          e.stopPropagation();
+          other.onDownloadClick(itemId);
         }}
       >
         <DownloadIcon style={{ color: "#000029" }} />
@@ -220,20 +180,8 @@ const isExpandable = (reactChildren: React.ReactNode) => {
 
 const getIconFromFileType = (fileType: FileType) => {
   switch (fileType) {
-    case "image":
-      return ImageIcon;
-    case "pdf":
-      return PictureAsPdfIcon;
-    case "doc":
-      return ArticleIcon;
-    case "video":
-      return VideoCameraBackIcon;
     case "folder":
       return FolderRounded;
-    case "pinned":
-      return FolderOpenIcon;
-    case "trash":
-      return DeleteIcon;
     default:
       return ArticleIcon;
   }
@@ -241,7 +189,9 @@ const getIconFromFileType = (fileType: FileType) => {
 
 interface CustomTreeItemProps
   extends Omit<UseTreeItem2Parameters, "rootRef">,
-    Omit<React.HTMLAttributes<HTMLLIElement>, "onFocus"> {}
+    Omit<React.HTMLAttributes<HTMLLIElement>, "onFocus"> {
+      onDownloadClick: () => void;
+    }
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: CustomTreeItemProps,
@@ -291,6 +241,9 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
               icon,
               expandable: expandable && status.expanded,
             })}
+            itemId={itemId}
+            onDownloadClick={props.onDownloadClick}
+
           />
         </CustomTreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}
@@ -299,19 +252,24 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   );
 });
 
-export default function FileExplorer() {
+interface FileExplorerProps {
+  items: TreeViewBaseItem<ExtendedTreeItemProps>[];
+  onDownloadClick: (item: TreeViewBaseItem<ExtendedTreeItemProps>) => void;
+}
+
+export default function FileExplorer({ items, onDownloadClick }: FileExplorerProps) {
   return (
     <RichTreeView
-      items={ITEMS}
+      items={items}
       aria-label="file explorer"
-      defaultSelectedItems="1.1"
       sx={{
         height: "fit-content",
         flexGrow: 1,
         maxWidth: 400,
         overflowY: "auto",
       }}
-      slots={{ item: CustomTreeItem }}
+      slots={{ item: (props) => <CustomTreeItem {...props} onDownloadClick={onDownloadClick} /> }}
+
     />
   );
 }

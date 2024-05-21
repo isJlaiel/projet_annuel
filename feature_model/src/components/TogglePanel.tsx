@@ -2,29 +2,57 @@ import React, { useState } from "react";
 import { MdClose } from "react-icons/md";
 import { FiMenu } from "react-icons/fi";
 import { Node } from "reactflow";
-import List from "@mui/material/List";
 import CircularProgress from "@mui/material/CircularProgress";
 import APIService from "../services/apiService";
-import FilesTree from "./FilesTree";
+import FileExplorer from "./FilesTree";
+import { TreeViewBaseItem } from "@mui/x-tree-view/models";
+import { ExtendedTreeItemProps } from "./FilesTree";
 
 const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
   const [pannelOpen, setPannelOpen] = useState(false);
-  const [items, setItems] = useState<React.ReactElement[]>([]); // Ajouter un état pour les éléments
+  const [items, setItems] = useState<TreeViewBaseItem<ExtendedTreeItemProps>[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  function generate(element: React.ReactElement) {
-    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) =>
-      React.cloneElement(element, {
-        key: value,
-      })
-    );
+  interface ServerResponseItem {
+    path: string;
+    name: string;
+    children?: ServerResponseItem[];
   }
 
-  function handleClick() {
-    setIsLoading(true);
-    const nodesData = nodes
-      .filter((node) => node.type === "feature") // Filtrer les nœuds de type 'featureNode'
+  interface NodeData {
+    label: string;
+    selected: boolean;
+    parameters: { key: string; value: string | null; type: string }[];
+    parent: string;
+  }
+
+  function processServerFilesTree(
+    response: ServerResponseItem[]
+  ): TreeViewBaseItem<ExtendedTreeItemProps>[] {
+    return response.map((item: ServerResponseItem) => {
+      if (item.children !== undefined) {
+        return {
+          id: item.path,
+          label: item.name,
+          fileType: "folder",
+          children: processServerFilesTree(item.children),
+        };
+      } else {
+        return {
+          id: item.path,
+          label: item.name,
+          fileType: "doc",
+        };
+      }
+    });
+  }
+
+  function jsonifyNodes(nodes: Node[]): NodeData[] {
+    return nodes
+      .filter((node) => node.type === "feature")
       .map((node) => ({
         label: node.data.label,
         selected: node.data.isMandatory
@@ -41,37 +69,34 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
               })
             )
           : [],
-        parent: node.id.split('/').slice(-2, -1)[0]
+        parent: node.id.split("/").slice(-2, -1)[0],
       }));
+  }
 
+  function handleDownloadClick(ItemId: string) {
+    console.log("Download clicked", ItemId);
+  }
+
+  function handleSubmitClick() {
+    setIsLoading(true);
+    // convert nodes to JSON
+    const nodesData = jsonifyNodes(nodes);
     const json = JSON.stringify(nodesData, null, 2);
-    console.log(json);
-    // Appeler configureFeatureModel avec le JSON
+
+    // ask the API to run generator
     APIService.configureFeatureModel(json)
-      .then((response) => {
-        console.log("Response:", response);
-        const newItems = /*generate(
-          <ListItem>
-            <ListItemButton
-              style={{ borderRadius: "10px" }}
-              onClick={() => console.log("Item clicked!")}
-            >
-              <ListItemAvatar>
-                <Avatar style={{ backgroundColor: "black" }}>
-                  <DescriptionIcon style={{ backgroundColor: "black" }} />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Model" />
-            </ListItemButton>
-          </ListItem>
-        );*/[];
-        setItems(newItems);
+      .then(() => {
+        // get the updated files tree
+        APIService.getFilesTree().then((response) => {
+          // format server response and update state
+          setItems(processServerFilesTree(response.data));
+        });
         setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
         setIsLoading(false);
-        setErrorMessage("Une erreur est survenue");
+        setErrorMessage("Error while submitting the model. Please try again.");
       });
   }
 
@@ -116,10 +141,10 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
           }}
         >
           <button
-            onClick={handleClick}
+            onClick={handleSubmitClick}
             style={{ marginBottom: "15px", marginTop: "25px" }}
           >
-            Soumettre le modèle
+            Submit Model
           </button>
           <div
             className="list-container"
@@ -133,8 +158,8 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
               overflow: "auto",
             }}
           >
-            {items.length == 0 ? (
-              <FilesTree />
+            {items.length > 0 ? (
+              <FileExplorer items={items} onDownloadClick={handleDownloadClick} />
             ) : (
               <div
                 style={{
@@ -149,7 +174,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
                 ) : errorMessage ? (
                   <div>{errorMessage}</div>
                 ) : (
-                  "Aucun élément"
+                  "No files to display."
                 )}
               </div>
             )}

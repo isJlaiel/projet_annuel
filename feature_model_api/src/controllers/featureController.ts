@@ -3,6 +3,7 @@ import { Feature } from '../models/feature.js';
 import { FeatureService } from '../services/featureService.js';
 import { Request, Response } from 'express';
 import { FeatureModel } from '../models/featureModel.js';
+import path from 'path';
 
 
  export  class FeatureController{
@@ -35,5 +36,30 @@ import { FeatureModel } from '../models/featureModel.js';
             res.status(500).send('Internal Server Error');
         }
     }
+
+    private async getFilesTree(dir: string): Promise<any> {
+        const dirents = await fs.readdir(dir, { withFileTypes: true });
+        const files = await Promise.all(dirents.map(async (dirent) => {
+            const res = path.resolve(dir, dirent.name);
+            const relativePath = path.relative('src/storage/files', res);
+            if (dirent.isDirectory()) {
+                return { name: dirent.name, path: relativePath, children: await this.getFilesTree(res) };
+            } else {
+                return { name: dirent.name, path: relativePath };
+            }
+        }));
+        return files;
+    }
+
+    async getFiles(req: Request, res: Response): Promise<void> {
+        try {
+            const files = await this.getFilesTree('src/storage/files');
+            res.json(files);
+        } catch (error) {
+            console.error('Error reading files:', error);
+            res.status(500).send('Internal Server Error');
+        }
+    }
+
   
 }

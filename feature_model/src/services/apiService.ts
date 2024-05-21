@@ -44,4 +44,13 @@ export default class APIService {
         }
     }
 
+    static async getFilesTree(){
+        try {
+            return (await APIService.getInstance().get("/features/files")) ;
+        } catch (error) {
+            console.error("Error fetching files: ", error);
+            throw error;
+        }
+    }
+
 }
