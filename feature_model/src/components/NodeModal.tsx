@@ -12,11 +12,15 @@ const NodeModal: React.FC<INodeModal> = ({
 
   // Handle input change
   const handleInputChange =
-    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newInputValues = [...inputValues];
+  (index: number, type: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newInputValues = [...inputValues];
+    if (type === 'bool') {
+      newInputValues[index].value = event.target.checked;
+    } else {
       newInputValues[index].value = event.target.value;
-      setInputValues(newInputValues);
-    };
+    }
+    setInputValues(newInputValues);
+  };
 
   const handleModalClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -71,15 +75,15 @@ const NodeModal: React.FC<INodeModal> = ({
   let inputElement;
   switch (item.type) {
     case 'string':
-      inputElement = <input type="text" value={String(item.value) || ""} onChange={handleInputChange(index)} style={{ marginRight: "3em" }} />;
+      inputElement = <input type="text" value={String(item.value) || ""} onChange={handleInputChange(index, "string")} style={{ marginRight: "3em" }} />;
       break;
     case 'number':
-      inputElement = <input type="number" value={Number(item.value) || 0} onChange={handleInputChange(index)} style={{ marginRight: "3em" }} />;      break;
+      inputElement = <input type="number" value={Number(item.value) || 0} onChange={handleInputChange(index, "number")} style={{ marginRight: "3em" }} />;      break;
     case 'bool':
-      inputElement = <input type="checkbox" checked={Boolean(item.value) || false} onChange={handleInputChange(index)} style={{ marginRight: "3em" }} />;
+      inputElement = <input type="checkbox" checked={Boolean(item.value) || false} onChange={handleInputChange(index, "bool")} style={{ marginRight: "3em" }} />;
       break;
     default:
-      inputElement = <input type="text" value={String(item.value) || ""} onChange={handleInputChange(index)} style={{ marginRight: "3em" }} />;
+      inputElement = <input type="text" value={String(item.value) || ""} onChange={handleInputChange(index, "string")} style={{ marginRight: "3em" }} />;
   }
 
   return (

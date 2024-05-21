@@ -53,7 +53,7 @@
             <Feature name="multi-teacher"/>
         </subFeature>
         <Feature name="session-overlap" optional="true"/>
-        <Feature name="service" optional="true"/>
+        <Feature name="service" optional="true" parameters="[random:bool:false, serviceMax:number:192]"/>
         </subFeature>
     </Feature>
     <Feature name="attending" mandatory="true">

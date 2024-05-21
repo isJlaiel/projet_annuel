@@ -1,7 +1,7 @@
 export interface IValue {
     key: string;
     type: string;
-    value: string | number |boolean | null;
+    value: string | number | boolean | null;
   }
 
 export interface INodeModal {
