@@ -22,7 +22,6 @@ import { FeatureModel } from '../models/featureModel.js';
 
      async configureFeatures(req: Request, res:Response):Promise<void> {
         try {
-            
             const featureData = req.body;  
             await this.featureService.configureFeatures(featureData)
             // console.log('Received feature configuration:', featureData);

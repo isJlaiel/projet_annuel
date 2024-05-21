@@ -5,8 +5,6 @@ import { FeatureModel } from '../models/featureModel.js';
 import SubFeature from '../models/subFeature.js';
 import {  promises as fs } from 'fs';
 import { FeatureRepository } from '../repositories/featureRepository.js';
-
-
 export class FeatureService {
 
     private  featureRepository :FeatureRepository ;
@@ -14,6 +12,7 @@ export class FeatureService {
     constructor({featureRepository }:{ featureRepository :FeatureRepository}){
         this.featureRepository=featureRepository ;
     }
+
     public  async parseFromXMLToFeatures(): Promise<FeatureModel> {
         try {
             const result = await this.featureRepository.loadXML('src/storage/model.xml');
@@ -66,9 +65,25 @@ export class FeatureService {
         const rooms: string[] = ["no-room", "single-room", "multi-room"];
         const teachersConfig = features.filter((e)=> e.selected === true && e.parent === 'teaching' && teachers.includes(e.label) )
         const RoomsConfig = features.filter((e)=> e.selected === true && e.parent === 'hosting' && rooms.includes(e.label) )
+
         let teacherRoomCombinaisons= [];
-        for (let i: number = 0; i < RoomsConfig.length; ++i) {
-            for (let j: number = 0; j < teachersConfig.length; ++j) {
+        if(teachersConfig.length && !(RoomsConfig.length)){
+            for (let j = 0; j < teachersConfig.length; ++j) {
+                let key = "no-room_ " + teachersConfig[j].label;
+                if (this.teacherRoomCombinaison[key]) {
+                    teacherRoomCombinaisons=  [...teacherRoomCombinaisons,...this.teacherRoomCombinaison[key]()];
+                }
+            }
+        }else if(RoomsConfig.length && !(teachersConfig.length)){
+            for (let j = 0; j < RoomsConfig.length; ++j) {
+                let key =  RoomsConfig[j].label + "_no-teacher";
+                if (this.teacherRoomCombinaison[key]) {
+                    teacherRoomCombinaisons=  [...teacherRoomCombinaisons,...this.teacherRoomCombinaison[key]()];
+                }
+            }
+        }
+        for (let i = 0; i < RoomsConfig.length; ++i) {
+            for (let j = 0; j < teachersConfig.length; ++j) {
                 let key = RoomsConfig[i].label + "_" + teachersConfig[j].label;
                 if (this.teacherRoomCombinaison[key]) {
                     console.log(key)
@@ -78,7 +93,7 @@ export class FeatureService {
                 }
             }
         }
-        console.log(teacherRoomCombinaisons)
+
         this.config['part-dimension'][0].part= teacherRoomCombinaisons ;
 
        
@@ -105,7 +120,7 @@ export class FeatureService {
         
     }
 
-    private  teacherRoomCombinaison: {[key: string]: () => any} = {
+    private teacherRoomCombinaison: {[key: string]: () => any} = {
         "no-room_no-teacher": () =>   this.config['part-dimension'][0].part.filter(p=> p.$.nrTeachers=="0" && p.$.nrRooms=="0" ), 
          "no-room_single-teacher": () => this.config['part-dimension'][0].part.filter(p=> p.$.nrTeachers=="1" && p.$.nrRooms=="0" ),
         "no-room_multi-teacher": () =>this.config['part-dimension'][0].part.filter(p=> p.$.nrTeachers > 1 && p.$.nrRooms=="0" ),
@@ -117,7 +132,7 @@ export class FeatureService {
         "multi-room_multi-teacher": () => this.config['part-dimension'][0].part.filter(p=> p.$.nrTeachers > 1 && p.$.nrRooms > 1 ),
     };
 
-    private  configurationActions: {[key: string]: (featureSelected: any) => void} = {
+    private configurationActions: {[key: string]: (featureSelected: any) => void} = {
         "courses": () => this.configureCourses(),
         "timing": (featureSelected) => this.configureTiming(featureSelected),
         "scheduling": (featureSelected) => this.configureScheduling(featureSelected),
