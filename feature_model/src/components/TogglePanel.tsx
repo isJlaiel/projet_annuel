@@ -75,6 +75,14 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
 
   function handleDownloadClick(ItemId: string) {
     console.log("Download clicked", ItemId);
+    APIService.downloadFile(ItemId).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", ItemId.split("/").slice(-1)[0]);
+      document.body.appendChild(link);
+      link.click();
+    });
   }
 
   function handleSubmitClick() {

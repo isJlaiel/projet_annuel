@@ -27,11 +27,9 @@ import { TreeItem2Icon } from "@mui/x-tree-view/TreeItem2Icon";
 import { TreeItem2Provider } from "@mui/x-tree-view/TreeItem2Provider";
 import { TreeViewBaseItem } from "@mui/x-tree-view/models";
 
-type FileType =
-  | "folder"
-  | "doc"
+type FileType = "folder" | "doc";
 
-type ExtendedTreeItemProps = {
+export type ExtendedTreeItemProps = {
   fileType?: FileType;
   id: string;
   label: string;
@@ -124,7 +122,12 @@ interface CustomLabelProps {
   itemId: string;
 }
 
-function CustomLabel({ icon: Icon, children, itemId, ...other }: CustomLabelProps) {
+function CustomLabel({
+  icon: Icon,
+  children,
+  itemId,
+  ...other
+}: CustomLabelProps) {
   return (
     <TreeItem2Label
       {...other}
@@ -190,8 +193,8 @@ const getIconFromFileType = (fileType: FileType) => {
 interface CustomTreeItemProps
   extends Omit<UseTreeItem2Parameters, "rootRef">,
     Omit<React.HTMLAttributes<HTMLLIElement>, "onFocus"> {
-      onDownloadClick: () => void;
-    }
+  onDownloadClick: () => void;
+}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
   props: CustomTreeItemProps,
@@ -243,7 +246,6 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             })}
             itemId={itemId}
             onDownloadClick={props.onDownloadClick}
-
           />
         </CustomTreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}
@@ -254,10 +256,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 
 interface FileExplorerProps {
   items: TreeViewBaseItem<ExtendedTreeItemProps>[];
-  onDownloadClick: (item: TreeViewBaseItem<ExtendedTreeItemProps>) => void;
+  onDownloadClick: (itemId: string) => void;
 }
 
-export default function FileExplorer({ items, onDownloadClick }: FileExplorerProps) {
+export default function FileExplorer({
+  items,
+  onDownloadClick,
+}: FileExplorerProps) {
   return (
     <RichTreeView
       items={items}
@@ -268,8 +273,12 @@ export default function FileExplorer({ items, onDownloadClick }: FileExplorerPro
         maxWidth: 400,
         overflowY: "auto",
       }}
-      slots={{ item: (props) => <CustomTreeItem {...props} onDownloadClick={onDownloadClick} /> }}
-
+      slots={{
+        item: (props) => (
+          <CustomTreeItem {...props} onDownloadClick={() => onDownloadClick(props.itemId)}
+          />
+        ),
+      }}
     />
   );
 }
