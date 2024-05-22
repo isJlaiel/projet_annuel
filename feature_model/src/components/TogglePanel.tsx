@@ -99,28 +99,26 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
     });
   }
 
-  function handleSubmitClick() {
+  async function handleSubmitClick() {
     setIsLoading(true);
     // convert nodes to JSON
     const nodesData = jsonifyNodes(nodes);
     const json = JSON.stringify(nodesData, null, 2);
-
+try{
     // ask the API to run generator
-    APIService.configureFeatureModel(json)
-      .then(() => {
+    await APIService.configureFeatureModel(json)
+      
         // get the updated files tree
         console.log("Model configured successfully.");
-        APIService.getFilesTree().then((response) => {
-          // format server response and update state
-          setItems(processServerFilesTree(response.data));
-          setIsLoading(false);
-        });
-      })
-      .catch((error) => {
+       const result = await APIService.getFilesTree()
+
+          setItems(processServerFilesTree(result.data));
+        setIsLoading(false);
+}catch(error)  {
         console.error("Error:", error);
         setIsLoading(false);
         setErrorMessage("Error while submitting the model. Please try again.");
-      });
+      }
   }
 
   return (

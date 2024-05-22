@@ -49,7 +49,6 @@ export async  function runJar(jarPath, options, folderPath) {
     async function moveFiles(src, dest) {
         try {
             const files = await readdirPromise(src, { withFileTypes: true });
-            console.log(files)
             const moveOperations = files.map(async file => {
                 if (file.isDirectory()) {
                     throw new Error(`${file.name} is a directory, not a file.`);

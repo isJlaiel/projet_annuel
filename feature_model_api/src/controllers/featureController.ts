@@ -3,6 +3,9 @@ import { FeatureService } from '../services/featureService.js';
 import { Request, Response } from 'express';
 import { FeatureModel } from '../models/featureModel.js';
 import path from 'path';
+import util from 'util';
+
+const readdirPromise = util.promisify(fs.readdir)
 
 
  export  class FeatureController{
@@ -35,7 +38,7 @@ import path from 'path';
         }
     }
 
-    private async getFilesTree(dir: string): Promise<any> {
+    private async getFilesTree(dir: string){
         const dirents = await fs.readdir(dir, { withFileTypes: true });
         const files = await Promise.all(dirents.map(async (dirent) => {
             const res = path.resolve(dir, dirent.name);
