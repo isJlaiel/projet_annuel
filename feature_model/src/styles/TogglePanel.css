@@ -44,6 +44,11 @@
   font-size: small;
 }
 
+.disabled {
+  background-color: grey;
+  cursor: not-allowed;
+}
+
 .list-container {
   background-color: white;
   color: black;
@@ -59,4 +64,12 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }

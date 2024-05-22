@@ -56,12 +56,15 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
   );
 
   useEffect(() => {
+    setIsLoading(true);
     APIService.getFilesTree()
       .then((response) => {
         setItems(processServerFilesTree(response.data));
+        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching files tree: ", error);
+        setIsLoading(false);
       });
   }, [processServerFilesTree]);
 
@@ -104,21 +107,21 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
     // convert nodes to JSON
     const nodesData = jsonifyNodes(nodes);
     const json = JSON.stringify(nodesData, null, 2);
-try{
-    // ask the API to run generator
-    await APIService.configureFeatureModel(json)
-      
-        // get the updated files tree
-        console.log("Model configured successfully.");
-       const result = await APIService.getFilesTree()
+    try {
+      // ask the API to run generator
+      await APIService.configureFeatureModel(json);
 
-          setItems(processServerFilesTree(result.data));
-        setIsLoading(false);
-}catch(error)  {
-        console.error("Error:", error);
-        setIsLoading(false);
-        setErrorMessage("Error while submitting the model. Please try again.");
-      }
+      // get the updated files tree
+      console.log("Model configured successfully.");
+      const result = await APIService.getFilesTree();
+
+      setItems(processServerFilesTree(result.data));
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error:", error);
+      setIsLoading(false);
+      setErrorMessage("Error while submitting the model. Please try again.");
+    }
   }
 
   return (
@@ -133,7 +136,7 @@ try{
       {pannelOpen && (
         <Resizable
           defaultSize={{
-            width: "250px",
+            width: "350px",
             height: "90vh",
           }}
           minWidth={250}
@@ -142,25 +145,27 @@ try{
           maxHeight={"90vh"}
           className="panel"
         >
-          <button onClick={handleSubmitClick} className="submit-button">
+          <button
+            onClick={handleSubmitClick}
+            className={`submit-button ${isLoading ? "disabled" : ""}`}
+            disabled={isLoading}
+          >
             Submit Model
           </button>
           <div className="list-container">
-            {items.length > 0 ? (
+            {isLoading ? (
+              <div className="loading">
+                <CircularProgress />
+              </div>
+            ) : items.length > 0 ? (
               <FileExplorer
                 items={items}
                 onDownloadClick={handleDownloadClick}
               />
+            ) : errorMessage ? (
+              <div>{errorMessage}</div>
             ) : (
-              <div className="content">
-                {isLoading ? (
-                  <CircularProgress />
-                ) : errorMessage ? (
-                  <div>{errorMessage}</div>
-                ) : (
-                  "No files to display."
-                )}
-              </div>
+              "No files to display."
             )}
           </div>
         </Resizable>
