@@ -39,7 +39,8 @@ export class FeatureRepository {
     } catch (err) {
         console.error('Error writing file:', err);
     } 
-    runJar(jarPath,options,dirPath)
+   await runJar(jarPath,options,dirPath)
+
     }
 
 

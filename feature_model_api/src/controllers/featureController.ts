@@ -1,5 +1,4 @@
 import { promises as fs } from 'fs';
-import { Feature } from '../models/feature.js';
 import { FeatureService } from '../services/featureService.js';
 import { Request, Response } from 'express';
 import { FeatureModel } from '../models/featureModel.js';
@@ -7,11 +6,11 @@ import path from 'path';
 
 
  export  class FeatureController{
-     featureService: FeatureService;
+    featureService: FeatureService;
     constructor({featureService}: {featureService: FeatureService}){
         this.featureService = featureService ;
     }
-    public  async getFeatures (req: Request, res:Response): Promise<void> {
+    public async getFeatures (req: Request, res:Response): Promise<void> {
         try{
             const featureModel: FeatureModel  = await this.featureService.parseFromXMLToFeatures()
             res.json(featureModel);
@@ -25,7 +24,6 @@ import path from 'path';
         try {
             const featureData = req.body;  
             await this.featureService.configureFeatures(featureData)
-            // console.log('Received feature configuration:', featureData);
             res.status(200).json({
                 message: "Features configured successfully",
                 featureData: featureData
@@ -41,7 +39,7 @@ import path from 'path';
         const dirents = await fs.readdir(dir, { withFileTypes: true });
         const files = await Promise.all(dirents.map(async (dirent) => {
             const res = path.resolve(dir, dirent.name);
-            const relativePath = path.relative('src/storage/files', res);
+            const relativePath = path.relative('src/storage/', res);
             if (dirent.isDirectory()) {
                 return { name: dirent.name, path: relativePath, children: await this.getFilesTree(res) };
             } else {
@@ -53,7 +51,7 @@ import path from 'path';
 
     async getFiles(req: Request, res: Response): Promise<void> {
         try {
-            const files = await this.getFilesTree('src/storage/files');
+            const files = await this.getFilesTree('src/storage/');
             res.json(files);
         } catch (error) {
             console.error('Error reading files:', error);

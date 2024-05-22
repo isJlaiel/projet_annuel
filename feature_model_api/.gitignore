@@ -4,3 +4,4 @@ node_modules/
 .env*
 # Ignore built ts files
 dist/**/*
+src/storage/experiment*/
