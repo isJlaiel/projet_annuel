@@ -1,0 +1,39 @@
+nrStudents = 2394, nrGroupes = 121, nrTeachers = 55
+nrWeeks = 16, nrDays = 5, nrSlots = 1440
+nrParts = 313, nrCourses = 159
+nrSessions = 9945, nrClasses =1732
+distributionTeacher = {D1=1, D2=18, D3=36}
+distributionRooms = {Amphi=1, Salle-info=0, Salle-craie=1, Salle-TP=3, Salle-TD=8}
+calculateClusteringCoefficient(MEdgesGroups)=0.5379803948915513
+calculateAverageDegree(MEdgesGroups)=28.973441108545035
+calculateClusteringCoefficient(MEdgesRooms)=1.0
+calculateAverageDegree(MEdgesRooms)=231.97344110854505
+calculateClusteringCoefficient(MEdgesTeachers)=0.7687101517288796
+calculateAverageDegree(MEdgesTeachers)=272.3729792147806
+calculateClusteringCoefficient(edges)=0.3956357539085034
+calculateAverageDegree(edges)=193.6812933025404
+saturationTeacher=1.0, saturationRooms=1.0
+ruleHard = 768, ruleSoft = 0, nrRules = 768
+nrTeachers = 55, nrRooms = 16, ratio_room_class = 0.009237875288683603, ratio_room_sessions = 0.001608848667672197
+nrStudentsPerClass = 1.382217090069284, moyenne_capacity_room = 47.5, Student/capacity = 3.15
+nrClassesPerStudent = 22.22514619883041, timeClasseMeanCalc = 17.85219399538106, ratio_room_sessions = 0.001608848667672197
+gdcClass = 0.22377965719530954, gdcAllNodes = 0.007726254996145792, sumClassesStudentsTimes = 205.1
+gdcClassRoom = 0.13401123114300695, gdcClassTeachers = 0.1573500746474758, gdcClassGroups = 0.01673797868777876
+MaxMeanRoomTimes = 3088.6666666666665, roomCountUses = 0.8125
+CountNoUseRoom = 3, courseGroupsCountSum = 16.67924528301887,  sumGrpstudents = 330.41509433962267
+MeanEcartTypeServiceTeacher = 0.6780387786512985, minServEcartType = 0.0, maxServEcartType = 11.258330249197702
+formations : L1-f0 Effectif : 242 
+formations : L3-f1 Effectif : 193 
+formations : M2-f2 Effectif : 50 
+formations : L3-f3 Effectif : 189 
+formations : L3-f4 Effectif : 176 
+formations : L1-f5 Effectif : 156 
+formations : M2-f6 Effectif : 36 
+formations : L2-f7 Effectif : 175 
+formations : L2-f8 Effectif : 217 
+formations : L3-f9 Effectif : 111 
+formations : L3-f10 Effectif : 187 
+formations : L2-f11 Effectif : 150 
+formations : L1-f12 Effectif : 149 
+formations : L2-f13 Effectif : 320 
+formations : M2-f14 Effectif : 43 

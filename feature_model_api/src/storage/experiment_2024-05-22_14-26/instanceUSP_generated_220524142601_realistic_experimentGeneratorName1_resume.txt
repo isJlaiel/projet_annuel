@@ -1,0 +1,39 @@
+nrStudents = 1834, nrGroupes = 51, nrTeachers = 29
+nrWeeks = 16, nrDays = 5, nrSlots = 1440
+nrParts = 209, nrCourses = 164
+nrSessions = 5135, nrClasses =640
+distributionTeacher = {D1=5, D2=9, D3=15}
+distributionRooms = {Amphi=1, Salle-info=0, Salle-craie=1, Salle-TP=0, Salle-TD=7}
+calculateClusteringCoefficient(MEdgesGroups)=0.8757247944612722
+calculateAverageDegree(MEdgesGroups)=13.25
+calculateClusteringCoefficient(MEdgesRooms)=1.0
+calculateAverageDegree(MEdgesRooms)=137.5125
+calculateClusteringCoefficient(MEdgesTeachers)=0.862271464615882
+calculateAverageDegree(MEdgesTeachers)=77.353125
+calculateClusteringCoefficient(edges)=0.4497738258585903
+calculateAverageDegree(edges)=78.0421875
+saturationTeacher=1.0, saturationRooms=1.0
+ruleHard = 354, ruleSoft = 0, nrRules = 354
+nrTeachers = 29, nrRooms = 12, ratio_room_class = 0.01875, ratio_room_sessions = 0.0023369036027263874
+nrStudentsPerClass = 2.865625, moyenne_capacity_room = 51.0, Student/capacity = 2.996732026143791
+nrClassesPerStudent = 13.432388222464558, timeClasseMeanCalc = 32.625, ratio_room_sessions = 0.0023369036027263874
+gdcClass = 0.24426349765258215, gdcAllNodes = 0.016554162648666024, sumClassesStudentsTimes = 160.51666666666668
+gdcClassRoom = 0.21519953051643192, gdcClassTeachers = 0.12105340375586854, gdcClassGroups = 0.020735524256651018
+MaxMeanRoomTimes = 2821.4333333333334, roomCountUses = 0.75
+CountNoUseRoom = 3, courseGroupsCountSum = 4.164634146341464,  sumGrpstudents = 150.21341463414635
+MeanEcartTypeServiceTeacher = 0.33338827502440127, minServEcartType = 0.0, maxServEcartType = 9.600000000000001
+formations : M2-f0 Effectif : 37 
+formations : M2-f1 Effectif : 47 
+formations : L3-f2 Effectif : 60 
+formations : L1-f3 Effectif : 142 
+formations : L1-f4 Effectif : 155 
+formations : L1-f5 Effectif : 278 
+formations : L1-f6 Effectif : 351 
+formations : M2-f7 Effectif : 43 
+formations : M2-f8 Effectif : 30 
+formations : M2-f9 Effectif : 35 
+formations : L2-f10 Effectif : 192 
+formations : L3-f11 Effectif : 203 
+formations : M2-f12 Effectif : 35 
+formations : M2-f13 Effectif : 45 
+formations : L2-f14 Effectif : 181 
