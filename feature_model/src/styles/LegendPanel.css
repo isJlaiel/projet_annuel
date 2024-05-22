@@ -5,7 +5,7 @@
   background: rgba(255, 255, 255, 0.8);
   color: black;
   max-height: 600px;
-  max-width: 13em;
+  max-width: 200px;
   z-index: 9999;
   border-radius: 30px;
   display: flex;
@@ -19,9 +19,10 @@
   flex-direction: row;
   align-items: center;
   width: 100%;
-  margin-left: 15px;
+  margin-left: 0px;
 }
 
 .legend-icon {
-  margin-right: 10px;
+  margin-right: 5px;
+  transform: scale(0.8);
 }

@@ -59,28 +59,9 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
         <Handle
           type="source"
           position={Position.Bottom}
+          className="handle-source"
           isConnectable={false}
-          className={
-            data.cardinality ? "handle-source-cardinality" : "handle-source"
-          }
         />
-        <div style={{ position: "relative", height: "0", width: "100%" }}>
-          {data.cardinality && (
-            <span
-              style={{
-                position: "absolute",
-                bottom: "-61px",
-                left: "0",
-                right: "0",
-                fontSize: "8px",
-                textAlign: "center",
-                color: "white",
-              }}
-            >
-              {data.cardinality}
-            </span>
-          )}
-        </div>
       </div>
       <div className="label-container">{data.label}</div>
     </div>

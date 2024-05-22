@@ -108,6 +108,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
     APIService.configureFeatureModel(json)
       .then(() => {
         // get the updated files tree
+        console.log("Model configured successfully.");
         APIService.getFilesTree().then((response) => {
           // format server response and update state
           setItems(processServerFilesTree(response.data));

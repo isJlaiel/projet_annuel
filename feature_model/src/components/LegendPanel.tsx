@@ -33,23 +33,23 @@ const LegendPanel: React.FC = () => {
             isConnectable={false}
           />
         </div>
-        <p>Feature Node (not selected)</p>
+        <p>Non-selected node</p>
       </div>
       <div className="legend-item">
         <div className="legend-icon">
           <FeatureNode
             data={{
               label: "...",
-              isMandatory: true,
-              isDisabled: false,
+              isMandatory: false,
+              isDisabled: true,
               isSelected: false,
               parameters: [],
-              onModalClose: () => {},
+              onModalClose: () => {}
             }}
             isConnectable={false}
           />
         </div>
-        <p>Feature Node (mandatory)</p>
+        <p>Disabled node</p>
       </div>
       <div className="legend-item">
         <div className="legend-icon">
@@ -65,7 +65,23 @@ const LegendPanel: React.FC = () => {
             isConnectable={false}
           />
         </div>
-        <p>Feature Node (selected)</p>
+        <p>Selected node</p>
+      </div>
+      <div className="legend-item">
+        <div className="legend-icon">
+          <FeatureNode
+            data={{
+              label: "...",
+              isMandatory: true,
+              isDisabled: false,
+              isSelected: false,
+              parameters: [],
+              onModalClose: () => {},
+            }}
+            isConnectable={false}
+          />
+        </div>
+        <p>Mandatory node</p>
       </div>
     </div>
   );
