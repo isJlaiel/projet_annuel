@@ -52,6 +52,7 @@ import path from 'path';
     async getFiles(req: Request, res: Response): Promise<void> {
         try {
             const files = await this.getFilesTree('src/storage/');
+            await Promise.all(files)
             res.json(files);
         } catch (error) {
             console.error('Error reading files:', error);

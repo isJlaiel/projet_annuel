@@ -56,7 +56,7 @@ export class FeatureService {
         return parsedSubFeatures[0];
     }
     
-     async configureFeatures(features : any) {
+     async configureFeatures(features : any) :Promise<void>{
 
         const xmlData = await this.featureRepository.loadXML('src/storage/configurationFiles/config.xml')
         this.config = xmlData.configuration;
@@ -65,8 +65,6 @@ export class FeatureService {
         const rooms: string[] = ["no-room", "single-room", "multi-room"];
         const teachersConfig = features.filter((e)=> e.selected === true && e.parent === 'teaching' && teachers.includes(e.label) )
         const roomsConfig = features.filter((e)=> e.selected === true && e.parent === 'hosting' && rooms.includes(e.label) )
-        console.log(teachersConfig.length)
-        console.log(roomsConfig.length)
 
         if(teachersConfig.length || roomsConfig.length){
         let teacherRoomCombinaisons= [];
@@ -113,14 +111,7 @@ export class FeatureService {
         }
         xmlData.configuration =this.config
         await this.featureRepository.generateInstance(xmlData)
-        // const builder = new xml2js.Builder();
-        // const xml = builder.buildObject(xmlData);
-        // try {
-        //     fs.writeFile('fichier_modifie2.xml', xml)
-
-        // } catch (error) {
-        //     console.log(error)
-        // }
+     
         
     }
 
