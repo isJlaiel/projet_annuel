@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { MdClose } from "react-icons/md";
 import { FiMenu } from "react-icons/fi";
 import { Node } from "reactflow";
@@ -7,6 +7,7 @@ import APIService from "../services/apiService";
 import FileExplorer from "./FilesTree";
 import { TreeViewBaseItem } from "@mui/x-tree-view/models";
 import { ExtendedTreeItemProps } from "./FilesTree";
+import "../styles/TogglePanel.css";
 
 const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
   const [pannelOpen, setPannelOpen] = useState(false);
@@ -29,26 +30,39 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
     parent: string;
   }
 
-  function processServerFilesTree(
-    response: ServerResponseItem[]
-  ): TreeViewBaseItem<ExtendedTreeItemProps>[] {
-    return response.map((item: ServerResponseItem) => {
-      if (item.children !== undefined) {
-        return {
-          id: item.path,
-          label: item.name,
-          fileType: "folder",
-          children: processServerFilesTree(item.children),
-        };
-      } else {
-        return {
-          id: item.path,
-          label: item.name,
-          fileType: "doc",
-        };
-      }
-    });
-  }
+  const processServerFilesTree = useCallback(
+    (
+      response: ServerResponseItem[]
+    ): TreeViewBaseItem<ExtendedTreeItemProps>[] => {
+      return response.map((item: ServerResponseItem) => {
+        if (item.children !== undefined) {
+          return {
+            id: item.path,
+            label: item.name,
+            fileType: "folder",
+            children: processServerFilesTree(item.children),
+          };
+        } else {
+          return {
+            id: item.path,
+            label: item.name,
+            fileType: "doc",
+          };
+        }
+      });
+    },
+    []
+  );
+
+  useEffect(() => {
+    APIService.getFilesTree()
+      .then((response) => {
+        setItems(processServerFilesTree(response.data));
+      })
+      .catch((error) => {
+        console.error("Error fetching files tree: ", error);
+      });
+  }, [processServerFilesTree]);
 
   function jsonifyNodes(nodes: Node[]): NodeData[] {
     return nodes
@@ -74,7 +88,6 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
   }
 
   function handleDownloadClick(ItemId: string) {
-    console.log("Download clicked", ItemId);
     APIService.downloadFile(ItemId).then((response) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -110,73 +123,26 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
 
   return (
     <>
-      <button
-        className="toggle"
-        onClick={() => setPannelOpen((prev) => !prev)}
-        style={{
-          position: "fixed",
-          top: "20px",
-          right: "20px",
-          zIndex: 2,
-          background: "white",
-          color: "black",
-          border: "none",
-          cursor: "pointer",
-        }}
-      >
+      <button className="toggle" onClick={() => setPannelOpen((prev) => !prev)}>
         {pannelOpen ? (
-          <MdClose style={{ width: "32px", height: "32px" }} />
+          <MdClose className="icon" />
         ) : (
-          <FiMenu style={{ width: "32px", height: "32px" }} />
+          <FiMenu className="icon" />
         )}
       </button>
       {pannelOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: "20px",
-            right: "20px",
-            background: "white",
-            height: "90vh",
-            width: "20vw",
-            minWidth: "250px",
-            zIndex: 1,
-            borderRadius: "30px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <button
-            onClick={handleSubmitClick}
-            style={{ marginBottom: "15px", marginTop: "25px" }}
-          >
+        <div className="panel">
+          <button onClick={handleSubmitClick} className="submit-button">
             Submit Model
           </button>
-          <div
-            className="list-container"
-            style={{
-              backgroundColor: "white",
-              color: "black",
-              border: "1px solid black",
-              borderRadius: "10px",
-              width: "90%",
-              height: "70%",
-              overflow: "auto",
-            }}
-          >
+          <div className="list-container">
             {items.length > 0 ? (
-              <FileExplorer items={items} onDownloadClick={handleDownloadClick} />
+              <FileExplorer
+                items={items}
+                onDownloadClick={handleDownloadClick}
+              />
             ) : (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "100%",
-                }}
-              >
+              <div className="content">
                 {isLoading ? (
                   <CircularProgress />
                 ) : errorMessage ? (

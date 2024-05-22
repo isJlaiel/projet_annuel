@@ -2,64 +2,25 @@ import React from "react";
 import RootNode from "./RootNode";
 import ChoiceNode from "./ChoiceNode";
 import FeatureNode from "./FeatureNode";
+import "../styles/LegendPanel.css";
 
 const LegendPanel: React.FC = () => {
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: "0px",
-        left: "-25px",
-        background: "rgba(255,255,255, 0.8)",
-        color: "black",
-        maxHeight: "600px",
-        maxWidth: "13em",
-        zIndex: 9999,
-        borderRadius: "30px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        transform: "scale(0.7)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          width: "100%",
-          marginLeft: "15px",
-        }}
-      >
-        <div style={{ marginRight: "10px" }}>
+    <div className="legend-panel">
+      <div className="legend-item">
+        <div className="legend-icon">
           <RootNode data={{ label: "..." }} isConnectable={true} />
         </div>
         <p>Root node</p>
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          width: "100%",
-          marginLeft: "15px",
-        }}
-      >
-        <div style={{ marginRight: "10px" }}>
+      <div className="legend-item">
+        <div className="legend-icon">
           <ChoiceNode data={{ type: "..." }} />
         </div>
         <p>Choice Node</p>
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          width: "100%",
-          marginLeft: "15px",
-        }}
-      >
-        <div style={{ marginRight: "10px" }}>
+      <div className="legend-item">
+        <div className="legend-icon">
           <FeatureNode
             data={{
               label: "...",
@@ -74,16 +35,8 @@ const LegendPanel: React.FC = () => {
         </div>
         <p>Feature Node (not selected)</p>
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          width: "100%",
-          marginLeft: "15px",
-        }}
-      >
-        <div style={{ marginRight: "10px" }}>
+      <div className="legend-item">
+        <div className="legend-icon">
           <FeatureNode
             data={{
               label: "...",
@@ -98,16 +51,8 @@ const LegendPanel: React.FC = () => {
         </div>
         <p>Feature Node (mandatory)</p>
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          width: "100%",
-          marginLeft: "15px",
-        }}
-      >
-        <div style={{ marginRight: "10px" }}>
+      <div className="legend-item">
+        <div className="legend-icon">
           <FeatureNode
             data={{
               label: "...",

@@ -1,0 +1,27 @@
+.choice-node-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.choice-node {
+  background-color: black;
+  color: white;
+  width: 20px;
+  height: 20px;
+}
+
+.handle-target {
+  opacity: 0;
+  left: 50%;
+  top: 60%;
+  transform: translate(-50%, -60%);
+}
+
+.handle-source {
+  opacity: 0;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

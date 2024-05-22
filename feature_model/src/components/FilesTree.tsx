@@ -80,17 +80,15 @@ const CustomTreeItemContent = styled(TreeItem2Content)(({ theme }) => ({
     },
   },
   "&:hover": {
-    backgroundColor: alpha(theme.palette.primary.main, 0.1),
-    color:
-      theme.palette.mode === "light" ? theme.palette.primary.main : "white",
+    backgroundColor: alpha("#008000", 0.1),
+    color: "#008000",
   },
   [`&.Mui-focused, &.Mui-selected, &.Mui-selected.Mui-focused`]: {
     backgroundColor: "inherit",
     color: "inherit",
     "&:hover": {
-      backgroundColor: alpha(theme.palette.primary.main, 0.1),
-      color:
-        theme.palette.mode === "light" ? theme.palette.primary.main : "white",
+      backgroundColor: alpha("#008000", 0.1),
+      color: "#008000",
     },
   },
 }));
@@ -157,7 +155,6 @@ function CustomLabel({
       <Button
         sx={{
           height: "fit-content",
-          color: "black",
           borderColor: "black",
           display: "flex",
           alignItems: "center",
@@ -168,7 +165,7 @@ function CustomLabel({
           other.onDownloadClick(itemId);
         }}
       >
-        <DownloadIcon style={{ color: "#000029" }} />
+        <DownloadIcon style={{ color: "green" }} />
       </Button>
     </TreeItem2Label>
   );
@@ -275,7 +272,9 @@ export default function FileExplorer({
       }}
       slots={{
         item: (props) => (
-          <CustomTreeItem {...props} onDownloadClick={() => onDownloadClick(props.itemId)}
+          <CustomTreeItem
+            {...props}
+            onDownloadClick={() => onDownloadClick(props.itemId)}
           />
         ),
       }}

@@ -1,0 +1,52 @@
+.modal-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 1em;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.modal-title {
+  color: black;
+}
+
+.modal-list {
+  width: 100%;
+}
+
+.modal-list-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-label {
+  color: black;
+}
+
+.input-element {
+  margin-right: 3em;
+}
+
+.modal-button {
+  background-color: green;
+  color: white;
+  align-self: flex-end;
+  margin-top: auto;
+}
