@@ -132,10 +132,11 @@ function CustomLabel({
       sx={{
         display: "flex",
         alignItems: "center",
+        justifyContent: "space-between",
         userSelect: "none",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden" }}>
         {Icon && (
           <Box
             component={Icon}
@@ -145,7 +146,7 @@ function CustomLabel({
           />
         )}
 
-        <StyledTreeItemLabelText variant="body2">
+        <StyledTreeItemLabelText variant="body2" sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={children}>
           {children}
         </StyledTreeItemLabelText>
       </Box>
@@ -154,11 +155,12 @@ function CustomLabel({
 
       <Button
         sx={{
-          height: "fit-content",
-          borderColor: "black",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          minWidth: 0,
+          width: 32,
+          height: 32,
+          borderRadius: 16,
+          padding: 0,
+          flexShrink: 0,
         }}
         onClick={(e) => {
           e.stopPropagation();
@@ -169,7 +171,7 @@ function CustomLabel({
       </Button>
     </TreeItem2Label>
   );
-}
+} 
 
 const isExpandable = (reactChildren: React.ReactNode) => {
   if (Array.isArray(reactChildren)) {
@@ -267,8 +269,7 @@ export default function FileExplorer({
       sx={{
         height: "fit-content",
         flexGrow: 1,
-        maxWidth: 400,
-        overflowY: "auto",
+        maxWidth: 700,
       }}
       slots={{
         item: (props) => (

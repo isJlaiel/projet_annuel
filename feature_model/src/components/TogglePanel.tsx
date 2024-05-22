@@ -7,6 +7,7 @@ import APIService from "../services/apiService";
 import FileExplorer from "./FilesTree";
 import { TreeViewBaseItem } from "@mui/x-tree-view/models";
 import { ExtendedTreeItemProps } from "./FilesTree";
+import { Resizable } from "re-resizable";
 import "../styles/TogglePanel.css";
 
 const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
@@ -112,8 +113,8 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
         APIService.getFilesTree().then((response) => {
           // format server response and update state
           setItems(processServerFilesTree(response.data));
+          setIsLoading(false);
         });
-        setIsLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -132,7 +133,17 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
         )}
       </button>
       {pannelOpen && (
-        <div className="panel">
+        <Resizable
+          defaultSize={{
+            width: "250px",
+            height: "90vh",
+          }}
+          minWidth={250}
+          maxWidth={800}
+          minHeight={350}
+          maxHeight={"90vh"}
+          className="panel"
+        >
           <button onClick={handleSubmitClick} className="submit-button">
             Submit Model
           </button>
@@ -154,7 +165,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
               </div>
             )}
           </div>
-        </div>
+        </Resizable>
       )}
     </>
   );

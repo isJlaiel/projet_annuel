@@ -1,4 +1,5 @@
 /* TogglePanel.css */
+@import "react-resizable/css/styles.css";
 .toggle {
   position: fixed;
   top: 20px;
@@ -32,6 +33,7 @@
 }
 
 .submit-button {
+  width: 110px;
   margin-bottom: 15px;
   margin-top: 0px;
   background-color: green;
@@ -39,6 +41,7 @@
   border: none;
   padding: 10px;
   border-radius: 10px;
+  font-size: small;
 }
 
 .list-container {
