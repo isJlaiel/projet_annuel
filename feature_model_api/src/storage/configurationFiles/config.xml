@@ -86,12 +86,20 @@
 <departement id="D2" nrCours="1" probability="0.91" >{L1:0.76},{L2:0.62},{L3:0.06},{M1:0.0},{M2:0.07}</departement>
 </departement-commun>
 <part-dimension>
+<part id="CM" nrTeachers="0" nrRooms="0" probability="0.07"/>
+<part id="TD" nrTeachers="0" nrRooms="1" probability="0.07"/>
 <part id="CM" nrTeachers="1" nrRooms="1" probability="0.97"/>
 <part id="CM" nrTeachers="1" nrRooms="2" probability="0.0"/>
-<part id="CM" nrTeachers="1" nrRooms="3" probability="0.0"/>
+<part id="CM" nrTeachers="0" nrRooms="3" probability="0.0"/>
 <part id="TP" nrTeachers="1" nrRooms="1" probability="0.91"/>
 <part id="TD" nrTeachers="1" nrRooms="1" probability="0.98"/>
 <part id="CMTD" nrTeachers="1" nrRooms="1" probability="1.0"/>
+<part id="CM" nrTeachers="2" nrRooms="1" probability="0.97"/>
+<part id="CM" nrTeachers="0" nrRooms="2" probability="0.0"/>
+<part id="CM" nrTeachers="2" nrRooms="3" probability="0.0"/>
+<part id="TP" nrTeachers="2" nrRooms="1" probability="0.91"/>
+<part id="TD" nrTeachers="2" nrRooms="1" probability="0.98"/>
+<part id="CMTD" nrTeachers="2" nrRooms="1" probability="1.0"/>
 </part-dimension>
 <departement-composition>
     <departement id="D1">
@@ -136,4 +144,17 @@
 <probaMultimedia >{Salle-TD:0.95},{Salle-info:0.05}</probaMultimedia>
 <MinEffectifAmphi >50</MinEffectifAmphi>
 <teachers>auto:1</teachers>
+<features>
+<feature name="no-overlap" activate="0"/>
+<feature name="same-duration" activate="0"/>
+<feature name="modular" activate="0"/> 
+<feature name="full-period" activate="0"/>
+<feature name="all-exclusive" activate="0"/>
+<feature name="some-exclusive" activate="0"/>
+<feature name="none-exclusive" activate="0"/>
+<feature name="teaching-session-overlap" activate="0"/>
+<feature name="attending-session-overlap" activate="0"/>
+<feature name="service" activate="0"/>
+<feature name="sectioning" activate="1"/>
+</features>
 </configuration>

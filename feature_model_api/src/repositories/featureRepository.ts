@@ -1,6 +1,12 @@
 import * as xml2js from 'xml2js';
 import { promises as fs } from 'fs';
+import { getFolderName, runJar } from '../utils/versionManager.js';
+import path from 'path';
 
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const basicPath = path.join(__dirname, "../..", "src", "storage");
 export class FeatureRepository {
  
     private parser: xml2js.Parser;
@@ -16,9 +22,27 @@ export class FeatureRepository {
 
     }
 
-    async saveXML(filePath: string, xmlObject: any): Promise<void> {
+    async generateInstance(xmlObject: any): Promise<void> {
+        console.log(basicPath)
+        const jarPath = `${basicPath}/configurationFiles/ExprimentGenerator_new2024Bis.jar`
         const xml: string = this.builder.buildObject(xmlObject);
-        // await fs.promises.writeFile(filePath, xml);
+        const folderName : string = getFolderName() 
+        const options = `${basicPath}/${folderName}/config.xml ${basicPath}/configurationFiles/configurationVolume.xml ${basicPath}/configurationFiles/configuration_rule.xml ${basicPath}/configurationFiles/teacherCalculationByEtape.xml ${basicPath}/configurationFiles/effectifFormationsData.xml experimentGeneratorName "1" `
+        const dirPath = `${basicPath}/${folderName}`
+
+    try {
+        await fs.mkdir(dirPath, { recursive: true });
+        const filePath = path.join(dirPath, 'config.xml');
+        await fs.writeFile(filePath, xml);
+
+        console.log('File written successfully');
+    } catch (err) {
+        console.error('Error writing file:', err);
+    } 
+    runJar(jarPath,options,dirPath)
     }
 
+
 }
+
+

@@ -15,7 +15,7 @@ export class FeatureService {
 
     public  async parseFromXMLToFeatures(): Promise<FeatureModel> {
         try {
-            const result = await this.featureRepository.loadXML('src/storage/model.xml');
+            const result = await this.featureRepository.loadXML('src/storage/configurationFiles/model.xml');
             if (result && result.FeatureModel && result.FeatureModel.Features) {
                 const name : string = result.FeatureModel.$.name ;
                 const features : Feature[] = this.parseFeatures(result.FeatureModel.Features[0].Feature)
@@ -58,33 +58,36 @@ export class FeatureService {
     
      async configureFeatures(features : any) {
 
-        const xmlData = await this.featureRepository.loadXML('src/storage/config.xml')
+        const xmlData = await this.featureRepository.loadXML('src/storage/configurationFiles/config.xml')
         this.config = xmlData.configuration;
 
         const teachers: string[] = ["no-teacher", "single-teacher", "multi-teacher"];
         const rooms: string[] = ["no-room", "single-room", "multi-room"];
         const teachersConfig = features.filter((e)=> e.selected === true && e.parent === 'teaching' && teachers.includes(e.label) )
-        const RoomsConfig = features.filter((e)=> e.selected === true && e.parent === 'hosting' && rooms.includes(e.label) )
+        const roomsConfig = features.filter((e)=> e.selected === true && e.parent === 'hosting' && rooms.includes(e.label) )
+        console.log(teachersConfig.length)
+        console.log(roomsConfig.length)
 
+        if(teachersConfig.length || roomsConfig.length){
         let teacherRoomCombinaisons= [];
-        if(teachersConfig.length && !(RoomsConfig.length)){
+        if(teachersConfig.length && !roomsConfig.length){
             for (let j = 0; j < teachersConfig.length; ++j) {
                 let key = "no-room_ " + teachersConfig[j].label;
                 if (this.teacherRoomCombinaison[key]) {
                     teacherRoomCombinaisons=  [...teacherRoomCombinaisons,...this.teacherRoomCombinaison[key]()];
                 }
             }
-        }else if(RoomsConfig.length && !(teachersConfig.length)){
-            for (let j = 0; j < RoomsConfig.length; ++j) {
-                let key =  RoomsConfig[j].label + "_no-teacher";
+        }else if(roomsConfig.length && !(teachersConfig.length)){
+            for (let j = 0; j < roomsConfig.length; ++j) {
+                let key =  roomsConfig[j].label + "_no-teacher";
                 if (this.teacherRoomCombinaison[key]) {
                     teacherRoomCombinaisons=  [...teacherRoomCombinaisons,...this.teacherRoomCombinaison[key]()];
                 }
             }
         }
-        for (let i = 0; i < RoomsConfig.length; ++i) {
+        for (let i = 0; i < roomsConfig.length; ++i) {
             for (let j = 0; j < teachersConfig.length; ++j) {
-                let key = RoomsConfig[i].label + "_" + teachersConfig[j].label;
+                let key = roomsConfig[i].label + "_" + teachersConfig[j].label;
                 if (this.teacherRoomCombinaison[key]) {
                     console.log(key)
                     teacherRoomCombinaisons=  [...teacherRoomCombinaisons,...this.teacherRoomCombinaison[key]()];
@@ -96,7 +99,7 @@ export class FeatureService {
 
         this.config['part-dimension'][0].part= teacherRoomCombinaisons ;
 
-       
+    }
         const featuresSelected = features.filter((e)=> e.selected === true && (! teachers.includes(e.label)|| !rooms.includes(e.label) )   )
         if (featuresSelected.some(feature => feature.label == "single-week")) {
             const index : number = featuresSelected.findIndex((feature) => feature.label == "full-period");
@@ -109,14 +112,15 @@ export class FeatureService {
                 this.configurationActions[feature.parent](feature)}
         }
         xmlData.configuration =this.config
-        const builder = new xml2js.Builder();
-        const xml = builder.buildObject(xmlData);
-        try {
-            fs.writeFile('fichier_modifie2.xml', xml)
+        await this.featureRepository.generateInstance(xmlData)
+        // const builder = new xml2js.Builder();
+        // const xml = builder.buildObject(xmlData);
+        // try {
+        //     fs.writeFile('fichier_modifie2.xml', xml)
 
-        } catch (error) {
-            console.log(error)
-        }
+        // } catch (error) {
+        //     console.log(error)
+        // }
         
     }
 
@@ -222,6 +226,7 @@ export class FeatureService {
             this.config.features[0].feature.find(e => e.$.name  == "attending-session-overlap").$.activate = "1" 
         }
     }
+    
     
 
 }
