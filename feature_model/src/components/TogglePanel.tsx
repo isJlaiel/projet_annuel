@@ -152,22 +152,22 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
           >
             Submit Model
           </button>
-          <div className="list-container">
-            {isLoading ? (
+          <div
+            className="list-container"
+            style={{
+              position: "relative",
+              overflow: isLoading ? "hidden" : "auto",
+            }}
+          >
+            <FileExplorer items={items} onDownloadClick={handleDownloadClick} />
+            {isLoading && (
               <div className="loading">
-                <CircularProgress />
+                <CircularProgress color="inherit" style={{ color: "green" }} />{" "}
               </div>
-            ) : items.length > 0 ? (
-              <FileExplorer
-                items={items}
-                onDownloadClick={handleDownloadClick}
-              />
-            ) : errorMessage ? (
-              <div>{errorMessage}</div>
-            ) : (
-              "No files to display."
             )}
           </div>
+          {errorMessage && <div>{errorMessage}</div>}
+          {items.length === 0 && !isLoading && "No files to display."}
         </Resizable>
       )}
     </>
