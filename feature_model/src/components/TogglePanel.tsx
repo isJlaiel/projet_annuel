@@ -56,17 +56,20 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
   );
 
   useEffect(() => {
-    setIsLoading(true);
-    APIService.getFilesTree()
-      .then((response) => {
-        setItems(processServerFilesTree(response.data));
+    async function fetchData() {
+        setIsLoading(true);
+        try {
+            const filesTree = await APIService.getFilesTree();
+            setItems(processServerFilesTree(filesTree.data));
+        } catch (error) {
+            console.error("Error fetching files tree: ", error);
+        }
         setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching files tree: ", error);
-        setIsLoading(false);
-      });
-  }, [processServerFilesTree]);
+    }
+
+    fetchData();
+}, [processServerFilesTree]); // Ensuring dependency is listed if it's used
+
 
   function jsonifyNodes(nodes: Node[]): NodeData[] {
     return nodes
@@ -111,7 +114,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
       // ask the API to run generator
       await APIService.configureFeatureModel(json);
 
-      // get the updated files tree
+      await new Promise(resolve => setTimeout(resolve, 1000));      
       console.log("Model configured successfully.");
       const result = await APIService.getFilesTree();
 

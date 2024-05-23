@@ -21,13 +21,6 @@
             <Feature name="full-week" optional="true"/>
         </subFeature>
     </Feature>
-    <Feature name="scheduling" mandatory="true">
-        <subFeature>
-            <Feature name="no-overlap" optional="true"/>
-            <Feature name="same-duration" optional="true"/>
-            <Feature name="modular" optional="true"/>
-        </subFeature>
-    </Feature>
     <Feature name="hosting" mandatory="False">
         <!-- Hosting features with room management options -->
     <subFeature>
@@ -44,7 +37,7 @@
         </subFeature>
     </subFeature>
     </Feature>
-    <Feature name="teaching" mandatory="False">
+        <Feature name="teaching" mandatory="False">
         <!-- Teaching features -->
         <subFeature>
         <subFeature type="OR">
@@ -55,13 +48,6 @@
         <Feature name="session-overlap" optional="true"/>
         <Feature name="service" optional="true" parameters="[random:bool:false, serviceMax:number:192]"/>
         </subFeature>
-    </Feature>
-    <Feature name="attending" mandatory="true">
-        <!-- Features related to session attendance -->
-    <subFeature >
-        <Feature name="session-overlap" optional="true"/>
-        <Feature name="sectioning" optional="true"/>
-    </subFeature >
     </Feature>
     <Feature name="crosscutting" mandatory="true">
         <!-- Features related to across various aspects of the UTP -->
@@ -74,5 +60,19 @@
         <Feature name="resourcing" optional="true"/>
     </subFeature >
    </Feature>
+    <Feature name="scheduling" mandatory="true">
+        <subFeature>
+            <Feature name="no-overlap" optional="true"/>
+            <Feature name="same-duration" optional="true"/>
+            <Feature name="modular" optional="true"/>
+        </subFeature>
+    </Feature>
+    <Feature name="attending" mandatory="true">
+        <!-- Features related to session attendance -->
+    <subFeature >
+        <Feature name="session-overlap" optional="true"/>
+        <Feature name="sectioning" optional="true"/>
+    </subFeature >
+    </Feature>
 </Features> 
 </FeatureModel>

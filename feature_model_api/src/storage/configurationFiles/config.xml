@@ -86,20 +86,42 @@
 <departement id="D2" nrCours="1" probability="0.91" >{L1:0.76},{L2:0.62},{L3:0.06},{M1:0.0},{M2:0.07}</departement>
 </departement-commun>
 <part-dimension>
-<part id="CM" nrTeachers="0" nrRooms="0" probability="0.07"/>
-<part id="TD" nrTeachers="0" nrRooms="1" probability="0.07"/>
-<part id="CM" nrTeachers="1" nrRooms="1" probability="0.97"/>
-<part id="CM" nrTeachers="1" nrRooms="2" probability="0.0"/>
-<part id="CM" nrTeachers="0" nrRooms="3" probability="0.0"/>
-<part id="TP" nrTeachers="1" nrRooms="1" probability="0.91"/>
-<part id="TD" nrTeachers="1" nrRooms="1" probability="0.98"/>
-<part id="CMTD" nrTeachers="1" nrRooms="1" probability="1.0"/>
-<part id="CM" nrTeachers="2" nrRooms="1" probability="0.97"/>
-<part id="CM" nrTeachers="0" nrRooms="2" probability="0.0"/>
-<part id="CM" nrTeachers="2" nrRooms="3" probability="0.0"/>
-<part id="TP" nrTeachers="2" nrRooms="1" probability="0.91"/>
-<part id="TD" nrTeachers="2" nrRooms="1" probability="0.98"/>
-<part id="CMTD" nrTeachers="2" nrRooms="1" probability="1.0"/>
+<part id="CM" nrTeachers="0" nrRooms="0" probability="0.2"/>
+<part id="CM" nrTeachers="1" nrRooms="0" probability="0.58"/>
+<part id="CM" nrTeachers="2" nrRooms="0" probability="0.55"/>
+<part id="CM" nrTeachers="0" nrRooms="1" probability="0.81"/>
+<part id="CM" nrTeachers="1" nrRooms="1" probability="0.2"/>
+<part id="CM" nrTeachers="2" nrRooms="1" probability="0.01"/>
+<part id="CM" nrTeachers="0" nrRooms="2" probability="0.89"/>
+<part id="CM" nrTeachers="1" nrRooms="2" probability="0.88"/>
+<part id="CM" nrTeachers="2" nrRooms="2" probability="0.65"/>
+<part id="TP" nrTeachers="0" nrRooms="0" probability="0.4"/>
+<part id="TP" nrTeachers="1" nrRooms="0" probability="0.92"/>
+<part id="TP" nrTeachers="2" nrRooms="0" probability="0.88"/>
+<part id="TP" nrTeachers="0" nrRooms="1" probability="0.6"/>
+<part id="TP" nrTeachers="1" nrRooms="1" probability="0.23"/>
+<part id="TP" nrTeachers="2" nrRooms="1" probability="0.98"/>
+<part id="TP" nrTeachers="0" nrRooms="2" probability="0.73"/>
+<part id="TP" nrTeachers="1" nrRooms="2" probability="0.8"/>
+<part id="TP" nrTeachers="2" nrRooms="2" probability="0.87"/>
+<part id="CMTD" nrTeachers="0" nrRooms="0" probability="0.83"/>
+<part id="CMTD" nrTeachers="1" nrRooms="0" probability="0.14"/>
+<part id="CMTD" nrTeachers="2" nrRooms="0" probability="0.94"/>
+<part id="CMTD" nrTeachers="0" nrRooms="1" probability="0.89"/>
+<part id="CMTD" nrTeachers="1" nrRooms="1" probability="0.93"/>
+<part id="CMTD" nrTeachers="2" nrRooms="1" probability="0.79"/>
+<part id="CMTD" nrTeachers="0" nrRooms="2" probability="0.42"/>
+<part id="CMTD" nrTeachers="1" nrRooms="2" probability="0.47"/>
+<part id="CMTD" nrTeachers="2" nrRooms="2" probability="0.61"/>
+<part id="TD" nrTeachers="0" nrRooms="0" probability="0.31"/>
+<part id="TD" nrTeachers="1" nrRooms="0" probability="0.13"/>
+<part id="TD" nrTeachers="2" nrRooms="0" probability="0.51"/>
+<part id="TD" nrTeachers="0" nrRooms="1" probability="0.52"/>
+<part id="TD" nrTeachers="1" nrRooms="1" probability="0.03"/>
+<part id="TD" nrTeachers="2" nrRooms="1" probability="0.62"/>
+<part id="TD" nrTeachers="0" nrRooms="2" probability="0.98"/>
+<part id="TD" nrTeachers="1" nrRooms="2" probability="0.86"/>
+<part id="TD" nrTeachers="2" nrRooms="2" probability="0.15"/>
 </part-dimension>
 <departement-composition>
     <departement id="D1">

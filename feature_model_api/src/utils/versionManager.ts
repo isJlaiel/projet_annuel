@@ -10,7 +10,7 @@ const movePromise =   util.promisify(fs.move)
 const removePromise = util.promisify(fs.remove)
 export function getFolderName() : string{
     const date: Date = new Date();
-   return 'experiment_' + moment(date).format('YYYY-MM-DD_HH-mm');
+   return 'experiment_' + moment(date).format('YYYY-MM-DD_HH-mm-ss');
 }
 
 export async  function runJar(jarPath, options, folderPath) {

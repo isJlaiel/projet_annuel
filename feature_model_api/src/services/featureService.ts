@@ -1,9 +1,7 @@
-import * as xml2js from 'xml2js';
 import { Attribute } from "../types/attribute.js";
 import { Feature } from '../models/feature.js';
 import { FeatureModel } from '../models/featureModel.js';
 import SubFeature from '../models/subFeature.js';
-import {  promises as fs } from 'fs';
 import { FeatureRepository } from '../repositories/featureRepository.js';
 export class FeatureService {
 
@@ -70,24 +68,23 @@ export class FeatureService {
         let teacherRoomCombinaisons= [];
         if(teachersConfig.length && !roomsConfig.length){
             for (let j = 0; j < teachersConfig.length; ++j) {
-                let key = "no-room_ " + teachersConfig[j].label;
+                let key = "no-room_" + teachersConfig[j].label.trim();
                 if (this.teacherRoomCombinaison[key]) {
                     teacherRoomCombinaisons=  [...teacherRoomCombinaisons,...this.teacherRoomCombinaison[key]()];
                 }
             }
-        }else if(roomsConfig.length && !(teachersConfig.length)){
+        }else if(roomsConfig.length && !teachersConfig.length){
             for (let j = 0; j < roomsConfig.length; ++j) {
-                let key =  roomsConfig[j].label + "_no-teacher";
+                let key =  roomsConfig[j].label.trim() + "_no-teacher";
                 if (this.teacherRoomCombinaison[key]) {
                     teacherRoomCombinaisons=  [...teacherRoomCombinaisons,...this.teacherRoomCombinaison[key]()];
                 }
             }
-        }
+        }else if (teachersConfig.length && roomsConfig.length){
         for (let i = 0; i < roomsConfig.length; ++i) {
             for (let j = 0; j < teachersConfig.length; ++j) {
-                let key = roomsConfig[i].label + "_" + teachersConfig[j].label;
+                let key = roomsConfig[i].label.trim() + "_" + teachersConfig[j].label.trim();
                 if (this.teacherRoomCombinaison[key]) {
-                    console.log(key)
                     teacherRoomCombinaisons=  [...teacherRoomCombinaisons,...this.teacherRoomCombinaison[key]()];
                 } else {
                     console.log("No action defined for:", key);  
@@ -95,10 +92,11 @@ export class FeatureService {
             }
         }
 
+        }
         this.config['part-dimension'][0].part= teacherRoomCombinaisons ;
 
     }
-        const featuresSelected = features.filter((e)=> e.selected === true && (! teachers.includes(e.label)|| !rooms.includes(e.label) )   )
+        const featuresSelected = features.filter((e)=> e.selected === true && !teachers.includes(e.label) && !rooms.includes(e.label)   )
         if (featuresSelected.some(feature => feature.label == "single-week")) {
             const index : number = featuresSelected.findIndex((feature) => feature.label == "full-period");
             if (index !== -1) {
@@ -150,7 +148,6 @@ export class FeatureService {
             return { ...ds, _: elements.join(',') };
         });
         this.config['part-dimension'][0].part = this.config['part-dimension'][0].part.filter(p=> p.$.id ==='CM' || p.$.id === 'TD')
-        console.log(this.config['departement-composition'][0].departement)
         this.config['departement-composition'][0].departement=  this.config['departement-composition'][0].departement.map((d) => {
             return{...d,etape:  d.etape.map((e) => {
               const elements = [];
@@ -194,7 +191,7 @@ export class FeatureService {
 
     }
     private configureHosting(featureSelected){
-        console.log(featureSelected)
+        
         if(featureSelected.label === "room-capacity"){
             delete  this.config.roomSize;
         }else if(featureSelected.label === "all-exclusive"){
