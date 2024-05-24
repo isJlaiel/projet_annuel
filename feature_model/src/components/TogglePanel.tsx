@@ -105,6 +105,19 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
     });
   }
 
+  async function handleDeleteClick(itemId: string) {
+    setIsLoading(true);
+    try {
+      await APIService.deleteFile(itemId);
+      const result = await APIService.getFilesTree();
+      setItems(processServerFilesTree(result.data));
+    } catch (error) {
+      console.error("Une erreur s'est produite lors de la suppression du fichier :", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   async function handleSubmitClick() {
     setIsLoading(true);
     // convert nodes to JSON
@@ -162,7 +175,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
               overflow: isLoading ? "hidden" : "auto",
             }}
           >
-            <FileExplorer items={items} onDownloadClick={handleDownloadClick} />
+            <FileExplorer items={items} onDownloadClick={handleDownloadClick} onDeleteClick={handleDeleteClick} />
             {isLoading && (
               <div className="loading">
                 <CircularProgress color="inherit" style={{ color: "green" }} />{" "}

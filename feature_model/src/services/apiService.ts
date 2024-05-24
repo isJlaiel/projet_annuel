@@ -64,4 +64,13 @@ export default class APIService {
         }
     }
 
+    static async deleteFile(itemId: string){
+        try {
+            return (await APIService.getInstance().delete(`/features/files/${itemId}`)) ;
+        } catch (error) {
+            console.error("Error deleting file: ", error);
+            throw error;
+        }
+    }
+
 }

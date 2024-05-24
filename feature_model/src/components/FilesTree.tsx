@@ -10,6 +10,7 @@ import ArticleIcon from "@mui/icons-material/Article";
 import FolderRounded from "@mui/icons-material/FolderRounded";
 import Button from "@mui/material/Button";
 import DownloadIcon from "@mui/icons-material/Download";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
 import { treeItemClasses } from "@mui/x-tree-view/TreeItem";
 import {
@@ -117,6 +118,7 @@ interface CustomLabelProps {
   icon?: React.ElementType;
   expandable?: boolean;
   onDownloadClick: (itemId: string) => void;
+  onDeleteClick: (itemId: string) => void;
   itemId: string;
 }
 
@@ -124,6 +126,8 @@ function CustomLabel({
   icon: Icon,
   children,
   itemId,
+  onDownloadClick,
+  onDeleteClick,
   ...other
 }: CustomLabelProps) {
   return (
@@ -164,10 +168,26 @@ function CustomLabel({
         }}
         onClick={(e) => {
           e.stopPropagation();
-          other.onDownloadClick(itemId);
+          onDownloadClick(itemId);
         }}
       >
         <DownloadIcon style={{ color: "green" }} />
+      </Button>
+      <Button
+        sx={{
+          minWidth: 0,
+          width: 32,
+          height: 32,
+          borderRadius: 16,
+          padding: 0,
+          flexShrink: 0,
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onDeleteClick(itemId);
+        }}
+      >
+        <DeleteIcon style={{ color: "red" }} />
       </Button>
     </TreeItem2Label>
   );
@@ -193,6 +213,7 @@ interface CustomTreeItemProps
   extends Omit<UseTreeItem2Parameters, "rootRef">,
     Omit<React.HTMLAttributes<HTMLLIElement>, "onFocus"> {
   onDownloadClick: () => void;
+  onDeleteClick: () => void;
 }
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -245,6 +266,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
             })}
             itemId={itemId}
             onDownloadClick={props.onDownloadClick}
+            onDeleteClick={props.onDeleteClick}
           />
         </CustomTreeItemContent>
         {children && <TransitionComponent {...getGroupTransitionProps()} />}
@@ -256,11 +278,13 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 interface FileExplorerProps {
   items: TreeViewBaseItem<ExtendedTreeItemProps>[];
   onDownloadClick: (itemId: string) => void;
+  onDeleteClick: (itemId: string) => void;
 }
 
 export default function FileExplorer({
   items,
   onDownloadClick,
+  onDeleteClick,
 }: FileExplorerProps) {
   return (
     <RichTreeView
@@ -276,6 +300,7 @@ export default function FileExplorer({
           <CustomTreeItem
             {...props}
             onDownloadClick={() => onDownloadClick(props.itemId)}
+            onDeleteClick={() => onDeleteClick(props.itemId)}
           />
         ),
       }}
