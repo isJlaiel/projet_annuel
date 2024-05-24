@@ -73,7 +73,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
 
   function jsonifyNodes(nodes: Node[]): NodeData[] {
     return nodes
-      .filter((node) => node.type === "feature")
+      .filter((node) => node.type === "feature" || node.type === "root")
       .map((node) => ({
         label: node.data.label,
         selected: node.data.isMandatory
@@ -122,6 +122,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
     setIsLoading(true);
     // convert nodes to JSON
     const nodesData = jsonifyNodes(nodes);
+    console.log("Nodes data:", nodesData);
     const json = JSON.stringify(nodesData, null, 2);
     try {
       // ask the API to run generator
