@@ -92,37 +92,37 @@
         <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
     </Parameter>
     <Parameter feature="multi-teacher" name="probability">
-        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
     </Parameter>
     <Parameter feature="single-teacher" name="courseType">
         <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
     </Parameter>
     <Parameter feature="single-teacher" name="probability">
-        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
     </Parameter>
     <Parameter feature="no-teacher" name="courseType">
         <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
     </Parameter>
     <Parameter feature="no-teacher" name="probability">
-        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
     </Parameter>
     <Parameter feature="multi-room" name="roomType">
         <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
     </Parameter>
     <Parameter feature="multi-room" name="probability">
-        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
     </Parameter>
     <Parameter feature="single-room" name="roomType">
         <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
     </Parameter>
     <Parameter feature="single-room" name="probability">
-        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
     </Parameter>
     <Parameter feature="no-room" name="roomType">
         <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
     </Parameter>
     <Parameter feature="no-room" name="probability">
-        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
     </Parameter>
 </Parameters>
 </FeatureModel>

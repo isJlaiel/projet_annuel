@@ -74,19 +74,23 @@ const NodeModal: React.FC<INodeModal> = ({
                   );
                 }
                 break;
-              case "number":
+              case "number": {
+                const numberAttributes = {
+                  ...(item.min ? { min: Number(item.min) } : {}),
+                  ...(item.max ? { max: Number(item.max) } : {}),
+                  ...(item.step ? { step: Number(item.step) } : {}),
+                };
                 inputElement = (
                   <input
                     type="number"
-                    min={Number(item.min)}
-                    max={Number(item.max)}
-                    step={Number(item.step) || 1}
                     value={Number(item.value) || 0}
                     onChange={handleInputChange(index, "number")}
                     className="input-element"
+                    {...numberAttributes}
                   />
                 );
                 break;
+              }
               case "boolean":
                 inputElement = (
                   <input
