@@ -286,9 +286,11 @@ export default function FileExplorer({
   onDownloadClick,
   onDeleteClick,
 }: FileExplorerProps) {
+  const sortedItems = [...items].sort((a, b) => b.label.localeCompare(a.label));
+
   return (
     <RichTreeView
-      items={items}
+      items={sortedItems}
       aria-label="file explorer"
       sx={{
         height: "fit-content",
