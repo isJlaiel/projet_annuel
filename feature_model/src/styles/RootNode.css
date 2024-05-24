@@ -2,6 +2,7 @@
   background-color: white;
   width: 60px;
   border-radius: 20%;
+  cursor: pointer;
 }
 
 .handle {

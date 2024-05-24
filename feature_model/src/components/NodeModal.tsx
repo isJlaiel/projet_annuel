@@ -16,7 +16,7 @@ const NodeModal: React.FC<INodeModal> = ({
     (index: number, type: string) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newInputValues = [...inputValues];
-      if (type === "bool") {
+      if (type === "boolean") {
         newInputValues[index].value = event.target.checked;
       } else {
         newInputValues[index].value = event.target.value;
@@ -49,31 +49,50 @@ const NodeModal: React.FC<INodeModal> = ({
             let inputElement;
             switch (item.type) {
               case "string":
-                inputElement = (
-                  <input
-                    type="text"
-                    value={String(item.value) || ""}
-                    onChange={handleInputChange(index, "string")}
-                    className="input-element"
-                  />
-                );
+                if (item.options && item.options.length > 0) {
+                  inputElement = (
+                    <select
+                      value={String(item.value) || ""}
+                      onChange={handleInputChange(index, "string")}
+                      className="input-element"
+                    >
+                      {item.options.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  );
+                } else {
+                  inputElement = (
+                    <input
+                      type="text"
+                      value={String(item.value) || ""}
+                      onChange={handleInputChange(index, "string")}
+                      className="input-element"
+                    />
+                  );
+                }
                 break;
               case "number":
                 inputElement = (
                   <input
                     type="number"
+                    min={Number(item.min)}
+                    max={Number(item.max)}
+                    step={Number(item.step) || 1}
                     value={Number(item.value) || 0}
                     onChange={handleInputChange(index, "number")}
                     className="input-element"
                   />
                 );
                 break;
-              case "bool":
+              case "boolean":
                 inputElement = (
                   <input
                     type="checkbox"
                     checked={Boolean(item.value) || false}
-                    onChange={handleInputChange(index, "bool")}
+                    onChange={handleInputChange(index, "boolean")}
                     className="input-element"
                   />
                 );

@@ -1,8 +1,12 @@
 export interface IValue {
-    key: string;
-    type: string;
-    value: string | number | boolean | null;
-  }
+  key: string;
+  type: string;
+  value: string | number | boolean | null;
+  options?: string[] | null;
+  min?: number | null;
+  max?: number | null;
+  step?: number | null;
+}
 
 export interface INodeModal {
   closeModal: () => void;

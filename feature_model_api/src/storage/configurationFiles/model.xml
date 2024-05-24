@@ -13,7 +13,7 @@
     <Feature name="timing" mandatory="true">
         <!-- Timing features for scheduling -->
         <subFeature>
-            <Feature name="full-period" optional="true" parameters="[nrPeriods:number:20]">
+            <Feature name="full-period" optional="true">
             <subFeature>
                <Feature name="single-week" optional="true"/>
             </subFeature>
@@ -46,7 +46,7 @@
             <Feature name="multi-teacher"/>
         </subFeature>
         <Feature name="session-overlap" optional="true"/>
-        <Feature name="service" optional="true" parameters="[random:bool:false, serviceMax:number:192]"/>
+        <Feature name="service" optional="true"/>
         </subFeature>
     </Feature>
     <Feature name="crosscutting" mandatory="true">
@@ -75,4 +75,54 @@
     </subFeature >
     </Feature>
 </Features> 
+<Parameters>
+    <Parameter feature="full-period" name="nrPeriods">
+        <defaultValue type="number">20</defaultValue>
+    </Parameter>
+    <Parameter feature="service" name="random">
+        <defaultValue type="boolean">false</defaultValue>
+    </Parameter>
+    <Parameter feature="service" name="serviceMax">
+        <defaultValue type="number">192</defaultValue>
+    </Parameter>
+    <Parameter feature="feature model for UTP" name="nrFormations">
+        <defaultValue type="number">0</defaultValue>
+    </Parameter>
+    <Parameter feature="multi-teacher" name="courseType">
+        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
+    </Parameter>
+    <Parameter feature="multi-teacher" name="probability">
+        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+    </Parameter>
+    <Parameter feature="single-teacher" name="courseType">
+        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
+    </Parameter>
+    <Parameter feature="single-teacher" name="probability">
+        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+    </Parameter>
+    <Parameter feature="no-teacher" name="courseType">
+        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
+    </Parameter>
+    <Parameter feature="no-teacher" name="probability">
+        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+    </Parameter>
+    <Parameter feature="multi-room" name="roomType">
+        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
+    </Parameter>
+    <Parameter feature="multi-room" name="probability">
+        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+    </Parameter>
+    <Parameter feature="single-room" name="roomType">
+        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
+    </Parameter>
+    <Parameter feature="single-room" name="probability">
+        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+    </Parameter>
+    <Parameter feature="no-room" name="roomType">
+        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
+    </Parameter>
+    <Parameter feature="no-room" name="probability">
+        <defaultValue type="number" min="0.5" max="1" step="0.1">0.5</defaultValue>
+    </Parameter>
+</Parameters>
 </FeatureModel>

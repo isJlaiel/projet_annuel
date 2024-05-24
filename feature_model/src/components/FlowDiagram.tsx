@@ -51,15 +51,6 @@ function processFeatures(
       data: {
         label: feature.attributes.name,
         isMandatory: feature.attributes.mandatory === "true",
-        parameters: feature.attributes.parameters
-          ? feature.attributes.parameters
-              .replace(/[[\]]/g, "")
-              .split(",")
-              .map((parameter: string) => {
-                const [key, type, defaultValue] = parameter.split(":");
-                return { key, type, value: defaultValue || null };
-              })
-          : [],
       },
     });
 
@@ -187,9 +178,37 @@ const FlowDiagram: React.FC<object> = () => {
             isMandatory: true,
           },
         };
+        console.log("response", response);
         const results = processFeatures("root", response.data.features);
         const newNodes = [root, ...results.nodes];
         const newEdges = results.edges;
+
+        const parameters = response.data.parameters;
+        if (parameters) {
+          for (const parameter of parameters) {
+            const feature = parameter.feature;
+            const defaultValue = parameter.defaultValue;
+            const options = parameter.options;
+            const min = parameter.min;
+            const max = parameter.max;
+            const step = parameter.step;
+
+            for (const node of newNodes) {
+              if (node.data.label === feature) {
+                node.data.parameters = node.data.parameters || [];
+                node.data.parameters.push({
+                  key: parameter.name,
+                  value: defaultValue,
+                  type: parameter.type,
+                  options: options,
+                  min: min,
+                  max: max,
+                  step: step,
+                });
+              }
+            }
+          }
+        }
 
         setGraphData({ nodes: newNodes, edges: newEdges });
 

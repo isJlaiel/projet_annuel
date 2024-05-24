@@ -1,6 +1,12 @@
 export interface IRootNode {
-    data: {
-      label: string;
-    };
-    isConnectable: boolean;
-  }
+  data: {
+    label: string;
+    parameters: {
+      key: string;
+      value: string | number | boolean | null;
+      type: string;
+    }[];
+    showModal: boolean;
+  };
+  isConnectable: boolean;
+}
