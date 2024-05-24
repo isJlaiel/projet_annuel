@@ -201,8 +201,8 @@ const FlowDiagram: React.FC<object> = () => {
                   value: defaultValue,
                   type: parameter.type,
                   options: options,
-                  min: min,
-                  max: max,
+                  min: min != null ? Number(min) : undefined,
+                  max: max != null ? Number(max) : undefined,
                   step: step,
                 });
               }

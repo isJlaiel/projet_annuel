@@ -92,18 +92,7 @@ export class FeatureService {
       if (parameter.defaultValue[0].$.step) {
         step = Number(parameter.defaultValue[0].$.step);
       }
-      if (!parameter.defaultValue || parameter.defaultValue.length === 0) {
-        return new Parameter(
-          name,
-          feature,
-          "string",
-          "",
-          options,
-          min,
-          max,
-          step
-        );
-      }
+      
       let defaultValue: string = parameter.defaultValue[0]._;
       const type: string = parameter.defaultValue[0].$.type;
       return new Parameter(
