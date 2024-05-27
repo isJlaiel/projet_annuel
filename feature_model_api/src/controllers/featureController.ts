@@ -30,6 +30,7 @@ export class FeatureController {
   }
 
   async configureFeatures(req: Request, res: Response): Promise<void> {
+    console.log('ttttttttttttttttttttoooooooooooooooooootttttttttttttttttto')
     try {
       const featureData = req.body;
       await this.featureService.configureFeatures(featureData);
@@ -45,6 +46,7 @@ export class FeatureController {
   }
 
   private async getFilesTree(dir: string) {
+    console.log('jdjijijiji')
     const dirents = await fsPromises.readdir(dir, { withFileTypes: true });
     const files = await Promise.all(
       dirents.map(async (dirent) => {

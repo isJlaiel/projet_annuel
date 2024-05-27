@@ -1,19 +1,20 @@
 version: '3.8'
 services:
-  client:
+  frontend:
     build: ./feature_model
-    container_name: feature_model
     ports:
-      - '3000:3000'
+      - "80:5173"
     volumes:
-      - ./client:/app
-      - /home/ilaieil/projetAnnuel/projet_annuel/feature_model/node_modules
+      - ./feature_model:/app
+    environment:
+      - NODE_ENV=development
 
-  api:
+  backend:
+    user: "user"  # Make sure this matches the user created in the Dockerfile
     build: ./feature_model_api
-    container_name: feature_model_api
     ports:
-      - '4000:4000'
+      - "3000:3000"
     volumes:
-      - ./api:/app
-      - /home/ilaieil/projetAnnuel/projet_annuel/feature_model_api/node_modules
+      - ./feature_model_api:/app
+    environment:
+      - NODE_ENV=development
