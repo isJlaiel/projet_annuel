@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "npm run build && nodemon dist/index.js"
-  },
+    "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec 'npm run build && node dist/index.js'"
+  },  
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -22,7 +21,7 @@
     "@types/xml2js": "^0.4.14",
     "eslint": "^8.57.0",
     "globals": "^15.1.0",
-    "nodemon": "^3.1.0",
+    "nodemon": "^3.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
     "typescript-eslint": "^7.8.0"

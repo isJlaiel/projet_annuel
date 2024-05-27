@@ -10,11 +10,12 @@ services:
       - NODE_ENV=development
 
   backend:
-    user: "user"  # Make sure this matches the user created in the Dockerfile
+    user: "user"  
     build: ./feature_model_api
     ports:
       - "3000:3000"
     volumes:
       - ./feature_model_api:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development

@@ -6,13 +6,8 @@ import { FeatureModel } from "../models/featureModel.js";
 import path from "path";
 import archiver from 'archiver';
 
-import { fileURLToPath } from "url";
-import mime from "mime";
-import stream from "stream";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const basicPath = path.join(__dirname, "../..", "src", "storage");
-
+const basicPath = path.join(process.cwd(), "src", "storage");
 export class FeatureController {
   featureService: FeatureService;
   constructor({ featureService }: { featureService: FeatureService }) {
@@ -30,7 +25,6 @@ export class FeatureController {
   }
 
   async configureFeatures(req: Request, res: Response): Promise<void> {
-    console.log('ttttttttttttttttttttoooooooooooooooooootttttttttttttttttto')
     try {
       const featureData = req.body;
       await this.featureService.configureFeatures(featureData);

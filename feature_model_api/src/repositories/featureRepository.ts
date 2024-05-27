@@ -5,8 +5,7 @@ import path from 'path';
 
 import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const basicPath = path.join(__dirname, "../..", "src", "storage");
+const basicPath = path.join(process.cwd(), "src", "storage");
 export class FeatureRepository {
  
     private parser: xml2js.Parser;
