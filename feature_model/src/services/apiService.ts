@@ -56,7 +56,7 @@ export default class APIService {
     static async downloadFile(filePath: string){
         try {
             const path = encodeURIComponent(filePath);
-            return await APIService.getInstance().get(`/download/${path}`) ;  
+            return await APIService.getInstance().get(`/download/${path}`, { responseType: 'blob' });
         } catch (error) {
             console.error("Error downloading file: ", error);
             throw error;
