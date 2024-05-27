@@ -53,11 +53,10 @@ export default class APIService {
         }
     }
 
-    static async downloadFile(itemId: string){
+    static async downloadFile(filePath: string){
         try {
-            //return (await APIService.getInstance().get(`/features/files/${itemId}`)) ;
-            const data = { message: "Fichier téléchargé avec succès", itemId };
-            return Promise.resolve({ data: JSON.stringify(data, null, 2) });
+            const path = encodeURIComponent(filePath);
+            return await APIService.getInstance().get(`/download/${path}`) ;  
         } catch (error) {
             console.error("Error downloading file: ", error);
             throw error;
