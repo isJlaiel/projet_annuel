@@ -1,4 +1,4 @@
-import { promises as fsPromises } from "fs";
+import { Stats, promises as fsPromises } from "fs";
 import fs from "fs";
 import { FeatureService } from "../services/featureService.js";
 import { Request, Response } from "express";
@@ -31,7 +31,6 @@ export class FeatureController {
 
   async configureFeatures(req: Request, res: Response): Promise<void> {
     try {
-      console.log('heeeeeeeeeeeeeeeeeeeeee')
       const featureData = req.body;
       await this.featureService.configureFeatures(featureData);
       res.status(200).json({
@@ -79,7 +78,11 @@ export class FeatureController {
 
   async downloadFile(req, res) {
     const fullPath = path.join(basicPath, req.params.filePath);
+    
     try {
+      const stats = fs.statSync(fullPath);
+      if     (stats.isDirectory()) {
+
       const zipPath = path.join(__dirname, 'download.zip');
 
       const output = fs.createWriteStream(zipPath);
@@ -104,15 +107,15 @@ export class FeatureController {
       archive.directory(fullPath, false);
       archive.finalize();
     
-      // } else if (stats.isFile()) {
-      //   res.download(fullPath,(err)=>{
-      //     if(err){
-      //         res.status(500).send({
-      //             message : "erreur download : "+ err
-      //         })
-      //     }
-      // } )
-      // }
+      } else if (stats.isFile()) {
+        res.download(fullPath,(err)=>{
+          if(err){
+              res.status(500).send({
+                  message : "erreur download : "+ err
+              })
+          }
+      } )
+      }
   } catch (err) {
       console.error('Error accessing the file path:', err);
       res.status(404).send('File not found');
