@@ -8,7 +8,7 @@ import { FeatureRepository } from './repositories/featureRepository.js';
 import featureRoutes from "./routes/featureRoutes.js";
 // Création de l'application Express
 export const app = express();
-const PORT = 3002;
+const PORT = 3000;
 
 // Configuration de middleware
 app.use(cors());

@@ -7,7 +7,7 @@ export default class APIService {
     static getInstance() : AxiosInstance{
         if (!APIService.instance) {
             APIService.instance = axios.create({
-                baseURL: "http://localhost:3002",
+                baseURL: "http://localhost:3000",
                 headers: {
                     'Content-Type': 'application/json'
                 }
