@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
-import { treeItemClasses } from "@mui/x-tree-view/TreeItem";
+import { TreeItemProps, treeItemClasses } from "@mui/x-tree-view/TreeItem";
 import {
   unstable_useTreeItem2 as useTreeItem2,
   UseTreeItem2Parameters,
@@ -150,7 +150,7 @@ function CustomLabel({
           />
         )}
 
-        <StyledTreeItemLabelText variant="body2" sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={children}>
+        <StyledTreeItemLabelText variant="body2" sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} title={children?.toString()}>
           {children}
         </StyledTreeItemLabelText>
       </Box>
@@ -298,7 +298,7 @@ export default function FileExplorer({
         maxWidth: 700,
       }}
       slots={{
-        item: (props) => (
+        item: (props: TreeItemProps) => (
           <CustomTreeItem
             {...props}
             onDownloadClick={() => onDownloadClick(props.itemId)}
