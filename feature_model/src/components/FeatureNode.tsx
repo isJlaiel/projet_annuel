@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Handle, Position } from "reactflow";
-import { IFeatureNode } from "../interfaces/FeatureNode";
+import { IFeatureNode, IParameter } from "../interfaces/FeatureNode";
 import Modal from "./NodeModal";
 import "../styles/FeatureNode.css";
 import classNames from "classnames";
@@ -11,13 +11,7 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
     setIsModalOpen(data.showModal || false);
   }, [data.showModal]);
 
-  const saveNodeValues = (
-    newValues: {
-      key: string;
-      value: string | number | boolean | null;
-      type: string;
-    }[]
-  ) => {
+  const saveNodeValues = (newValues: IParameter[]) => {
     data.parameters = newValues;
   };
 
@@ -32,7 +26,6 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
     <div
       className="node-container"
       onClick={() => {
-        console.log(data);
         if (data.parameters && data.parameters.length > 0 && !data.isSelected) {
           setIsModalOpen(true);
         }
@@ -40,10 +33,7 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
     >
       {isModalOpen && (
         <Modal
-          closeModal={() => {
-            setIsModalOpen(false);
-            data.onModalClose();
-          }}
+          closeModal={() => setIsModalOpen(false)}
           parameters={data.parameters || []}
           nodeLabel={data.label}
           saveNodeValues={saveNodeValues}

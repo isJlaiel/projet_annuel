@@ -12,15 +12,11 @@ const NodeModal: React.FC<INodeModal> = ({
   const [inputValues, setInputValues] = useState(parameters);
 
   // Handle input change
-  const handleInputChange =
-    (index: number, type: string) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+ const handleInputChange =
+  (typeIndex: number, valueIndex: number) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const newInputValues = [...inputValues];
-      if (type === "boolean") {
-        newInputValues[index].value = event.target.checked;
-      } else {
-        newInputValues[index].value = event.target.value;
-      }
+      newInputValues[typeIndex].values[valueIndex].value = event.target.value;
       setInputValues(newInputValues);
     };
 
@@ -45,75 +41,77 @@ const NodeModal: React.FC<INodeModal> = ({
       <div className="modal-content" onClick={handleModalClick}>
         <h2 className="modal-title">{nodeLabel}</h2>
         <ul className="modal-list">
-          {inputValues.map((item, index) => {
-            let inputElement;
-            switch (item.type) {
-              case "string":
-                if (item.options && item.options.length > 0) {
-                  inputElement = (
-                    <select
-                      value={String(item.value) || ""}
-                      onChange={handleInputChange(index, "string")}
-                      className="input-element"
-                    >
-                      {item.options.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  );
-                } else {
-                  inputElement = (
-                    <input
-                      type="text"
-                      value={String(item.value) || ""}
-                      onChange={handleInputChange(index, "string")}
-                      className="input-element"
-                    />
-                  );
-                }
-                break;
+          {inputValues.map((parameter, typeIndex) => {
+            console.log("t", parameter);
+            switch (parameter.type) {
               case "number":
-                inputElement = (
-                  <input
-                    type="number"
-                    min={Number(item.min)}
-                    max={Number(item.max)}
-                    step={item.step ? Number(item.step) : 1}
-                    value={Number(item.value) || 0}
-                    onChange={handleInputChange(index, "number")}
-                    className="input-element"
-                  />
+                return (
+                  <li key={typeIndex} className="modal-list-item">
+                    <label className="modal-label">
+                      {parameter.values[0].key}
+                    </label>
+                    <input
+                      className="input-element"
+                      type="number"
+                      onChange={handleInputChange(typeIndex, 0)}
+                      value={parameter.values[0].value.toString()}
+                    />
+                  </li>
                 );
-                break;
+              case "string":
+                return (
+                  <li key={typeIndex} className="modal-list-item">
+                    <label className="modal-label">
+                      {parameter.values[0].key}
+                    </label>
+                    <input
+                      className="input-element"
+                      type="text"
+                      onChange={handleInputChange(typeIndex, 0)}
+                      value={parameter.values[0].value.toString()}
+                    />
+                  </li>
+                );
               case "boolean":
-                inputElement = (
-                  <input
-                    type="checkbox"
-                    checked={Boolean(item.value) || false}
-                    onChange={handleInputChange(index, "boolean")}
-                    className="input-element"
-                  />
+                return (
+                  <li key={typeIndex} className="modal-list-item">
+                    <label className="modal-label">
+                      {parameter.values[0].key}
+                    </label>
+                    <input
+                      type="checkbox"
+                      className="input-element"
+                      checked={Boolean(parameter.values[0].value)}
+                      onChange={handleInputChange(typeIndex, 0)}
+                    />
+                  </li>
                 );
-                break;
+              case "probabilityForm":
+                return (
+                  <div
+                  key={`${typeIndex}`}>
+                    {parameter.values.map((value, valueIndex) => (
+                      <li
+                        key={`${typeIndex}-${valueIndex}`}
+                        className="modal-list-item"
+                      >
+                        <label className="modal-label">{value.key}</label>
+                        <input
+                          className="input-element"
+                          type="number"
+                          min="0"
+                          max="1"
+                          step="0.01"
+                          onChange={handleInputChange(typeIndex, valueIndex)}
+                          value={Number(value.value)}
+                        />
+                      </li>
+                    ))}
+                  </div>
+                );
               default:
-                inputElement = (
-                  <input
-                    type="text"
-                    value={String(item.value) || ""}
-                    onChange={handleInputChange(index, "string")}
-                    className="input-element"
-                  />
-                );
+                return null;
             }
-
-            return (
-              <li key={item.key} className="modal-list-item">
-                <label className="modal-label">{item.key}</label>
-                {inputElement}
-              </li>
-            );
           })}
         </ul>
         <button className="modal-button" onClick={handleOkClick}>

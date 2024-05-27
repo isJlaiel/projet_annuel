@@ -1,16 +1,9 @@
-export interface IValue {
-  key: string;
-  type: string;
-  value: string | number | boolean | null;
-  options?: string[] | null;
-  min?: number | null;
-  max?: number | null;
-  step?: number | null;
-}
+import { IParameter } from "./FeatureNode";
+
 
 export interface INodeModal {
   closeModal: () => void;
-  parameters: IValue[];
+  parameters: IParameter[];
   nodeLabel: string;
-  saveNodeValues: (newValues: IValue[]) => void;
+  saveNodeValues: (newValues: IParameter[]) => void;
 }

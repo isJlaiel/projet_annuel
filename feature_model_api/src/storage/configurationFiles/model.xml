@@ -76,53 +76,23 @@
     </Feature>
 </Features> 
 <Parameters>
-    <Parameter feature="full-period" name="nrPeriods">
-        <defaultValue type="number">20</defaultValue>
+    <Parameter feature="full-period" type="number">
+        <value key="nrPeriods">20</value>
     </Parameter>
-    <Parameter feature="service" name="random">
-        <defaultValue type="boolean">false</defaultValue>
+    <Parameter feature="service" type="boolean">
+        <value key="random">false</value>
     </Parameter>
-    <Parameter feature="service" name="serviceMax">
-        <defaultValue type="number">192</defaultValue>
+    <Parameter feature="service" type="number">
+        <value key="serviceMax">192</value>
     </Parameter>
-    <Parameter feature="feature model for UTP" name="nrFormations">
-        <defaultValue type="number">0</defaultValue>
+    <Parameter feature="feature model for UTP" type="number">
+        <value key="nrFormations">0</value>
     </Parameter>
-    <Parameter feature="multi-teacher" name="courseType">
-        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
-    </Parameter>
-    <Parameter feature="multi-teacher" name="probability">
-        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
-    </Parameter>
-    <Parameter feature="single-teacher" name="courseType">
-        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
-    </Parameter>
-    <Parameter feature="single-teacher" name="probability">
-        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
-    </Parameter>
-    <Parameter feature="no-teacher" name="courseType">
-        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
-    </Parameter>
-    <Parameter feature="no-teacher" name="probability">
-        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
-    </Parameter>
-    <Parameter feature="multi-room" name="roomType">
-        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
-    </Parameter>
-    <Parameter feature="multi-room" name="probability">
-        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
-    </Parameter>
-    <Parameter feature="single-room" name="roomType">
-        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
-    </Parameter>
-    <Parameter feature="single-room" name="probability">
-        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
-    </Parameter>
-    <Parameter feature="no-room" name="roomType">
-        <defaultValue type="string" options="CM,TD,TP,CMTD">CM</defaultValue>
-    </Parameter>
-    <Parameter feature="no-room" name="probability">
-        <defaultValue type="number" min="0" max="1" step="0.1">0.5</defaultValue>
+    <Parameter feature="no-room" type="probabilityForm">
+        <value key="CM">0.5</value>
+        <value key="TD">0.5</value>
+        <value key="TP">0.5</value>
+        <value key="CMTD">0.5</value>
     </Parameter>
 </Parameters>
 </FeatureModel>

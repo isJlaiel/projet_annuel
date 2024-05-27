@@ -178,33 +178,40 @@ const FlowDiagram: React.FC<object> = () => {
             isMandatory: true,
           },
         };
-        console.log("response", response);
         const results = processFeatures("root", response.data.features);
         const newNodes = [root, ...results.nodes];
         const newEdges = results.edges;
 
         const parameters = response.data.parameters;
+        console.log("parameters", parameters);
         if (parameters) {
           for (const parameter of parameters) {
             const feature = parameter.feature;
-            const defaultValue = parameter.defaultValue;
-            const options = parameter.options;
-            const min = parameter.min;
-            const max = parameter.max;
-            const step = parameter.step;
-
+            const type = parameter.type;
+            const values = parameter.values;
+        
             for (const node of newNodes) {
               if (node.data.label === feature) {
                 node.data.parameters = node.data.parameters || [];
-                node.data.parameters.push({
-                  key: parameter.name,
-                  value: defaultValue,
-                  type: parameter.type,
-                  options: options,
-                  min: min != null ? Number(min) : undefined,
-                  max: max != null ? Number(max) : undefined,
-                  step: step,
-                });
+                const newParameter = { type: type, values: [] };
+        
+                for (const value of values) {
+                  const key = value.key;
+                  const defaultValue = value.value;
+                  const min = value.min != null ? Number(value.min) : undefined;
+                  const max = value.max != null ? Number(value.max) : undefined;
+                  const step = value.step;
+        
+                  newParameter.values.push({
+                    key: key,
+                    value: defaultValue,
+                    min: min,
+                    max: max,
+                    step: step,
+                  });
+                }
+        
+                node.data.parameters.push(newParameter);
               }
             }
           }

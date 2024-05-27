@@ -3,7 +3,7 @@ import { Feature } from "../models/feature.js";
 import { FeatureModel } from "../models/featureModel.js";
 import SubFeature from "../models/subFeature.js";
 import { FeatureRepository } from "../repositories/featureRepository.js";
-import Parameter from "../models/Parameter.js";
+import Parameter, { ParameterValue } from "../models/Parameter.js";
 export class FeatureService {
   private featureRepository: FeatureRepository;
   private config;
@@ -73,41 +73,21 @@ export class FeatureService {
   }
 
   private parseParameters(parametersData: any): Parameter[] {
-    const parameters: Parameter[] = parametersData.map((parameter: any) => {
-      const name: string = parameter.$.name;
-      const feature: string = parameter.$.feature;
-      let options: string[] = [];
-      let min: number = null;
-      let max: number = null;
-      let step: number = null;
-      if (parameter.defaultValue[0].$.options) {
-        options = parameter.defaultValue[0].$.options.split(",");
-      }
-      if (parameter.defaultValue[0].$.min) {
-        min = Number(parameter.defaultValue[0].$.min);
-      }
-      if (parameter.defaultValue[0].$.max) {
-        max = Number(parameter.defaultValue[0].$.max);
-      }
-      if (parameter.defaultValue[0].$.step) {
-        step = Number(parameter.defaultValue[0].$.step);
-      }
-      
-      let defaultValue: string = parameter.defaultValue[0]._;
-      const type: string = parameter.defaultValue[0].$.type;
-      return new Parameter(
-        name,
-        feature,
-        type,
-        defaultValue,
-        options,
-        min,
-        max,
-        step
-      );
+    const parameters: Parameter[] = parametersData.map((parameterData: any) => {
+        const feature: string = parameterData.$.feature;
+        const type: string = parameterData.$.type;
+        const values: ParameterValue[] = parameterData.value.map((valueData: any) => {
+            const key: string = valueData.$.key;
+            const value: string = valueData._;
+            const min: string = valueData.$.min || null;
+            const max: string = valueData.$.max || null;
+            const step: string = valueData.$.step || null;
+            return new ParameterValue(key, value, min, max, step);
+        });
+        return new Parameter(feature, type, values);
     });
     return parameters;
-  }
+}
 
   async configureFeatures(features: any): Promise<void> {
     const xmlData = await this.featureRepository.loadXML(

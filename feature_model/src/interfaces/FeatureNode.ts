@@ -1,7 +1,14 @@
 export interface IValue {
   key: string;
+  value: string | number | boolean | null;
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
+export interface IParameter {
   type: string;
-  value: string | number |boolean | null;
+  values: IValue[];
 }
 
 export interface IFeatureNode {
@@ -12,7 +19,7 @@ export interface IFeatureNode {
     children?: number[];
     cardinality?: string;
     isDisabled?: boolean;
-    parameters?: IValue[];
+    parameters?: IParameter[];
     showModal?: boolean;
     onModalClose: () => void;
   };

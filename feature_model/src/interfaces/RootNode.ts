@@ -1,11 +1,9 @@
+import { IParameter } from "./FeatureNode";
+
 export interface IRootNode {
   data: {
     label: string;
-    parameters: {
-      key: string;
-      value: string | number | boolean | null;
-      type: string;
-    }[];
+    parameters: IParameter[];
     showModal: boolean;
   };
   isConnectable: boolean;

@@ -2,7 +2,8 @@ import { Handle, Position } from "reactflow";
 import { IRootNode } from "../interfaces/RootNode";
 import "../styles/RootNode.css";
 import { useState, useEffect } from "react";
-import NodeModal from "./NodeModal";
+import Modal from "./NodeModal";
+import { IParameter } from "../interfaces/FeatureNode";
 
 const RootNode: React.FC<IRootNode> = ({ data, isConnectable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,13 +12,7 @@ const RootNode: React.FC<IRootNode> = ({ data, isConnectable }) => {
     setIsModalOpen(data.showModal || false);
   }, [data.showModal]);
 
-  const saveNodeValues = (
-    newValues: {
-      key: string;
-      value: string | number | boolean | null;
-      type: string;
-    }[]
-  ) => {
+  const saveNodeValues = (newValues: IParameter[]) => {
     data.parameters = newValues;
   };
 
@@ -36,12 +31,12 @@ const RootNode: React.FC<IRootNode> = ({ data, isConnectable }) => {
         isConnectable={isConnectable}
       />
       {isModalOpen && (
-        <NodeModal
-          closeModal={() => setIsModalOpen(false)}
-          parameters={data.parameters || []}
-          nodeLabel={data.label}
-          saveNodeValues={saveNodeValues}
-        />
+        <Modal
+        closeModal={() => setIsModalOpen(false)}
+        parameters={data.parameters || []}
+        nodeLabel={data.label}
+        saveNodeValues={saveNodeValues}
+      />
       )}
     </div>
   );
