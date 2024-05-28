@@ -86,13 +86,14 @@
         <value key="serviceMax">192</value>
     </Parameter>
     <Parameter feature="feature model for UTP" type="number">
-        <value key="nrFormations">0</value>
+        <value key="nrFormations">50</value>
     </Parameter>
-    <Parameter feature="no-room" type="probabilityForm">
-        <value key="CM">0.5</value>
-        <value key="TD">0.5</value>
-        <value key="TP">0.5</value>
-        <value key="CMTD">0.5</value>
+    <Parameter feature="feature model for UTP" type="probabilityForm">
+        <value key="CM">0</value>
+        <value key="TD">0</value>
+        <value key="TP">0</value>
+        <value key="CMTD">0</value>
     </Parameter>
+
 </Parameters>
 </FeatureModel>

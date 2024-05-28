@@ -50,3 +50,18 @@
   align-self: flex-end;
   margin-top: auto;
 }
+
+.input-number {
+  width: 80px;
+  margin: 3px;
+}
+
+.span-probability input {
+  width: 80px;
+  margin: 3px;
+}
+
+.span-probability {
+  font-size: small;
+  color: black;
+}

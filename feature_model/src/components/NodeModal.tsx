@@ -90,23 +90,100 @@ const NodeModal: React.FC<INodeModal> = ({
                 return (
                   <div
                   key={`${typeIndex}`}>
-                    {parameter.values.map((value, valueIndex) => (
-                      <li
-                        key={`${typeIndex}-${valueIndex}`}
-                        className="modal-list-item"
-                      >
-                        <label className="modal-label">{value.key}</label>
+                    <li>
+                      <label className="modal-label">
+                        CM
+                      </label>
+                    </li>
+                    <li>
+                     
                         <input
-                          className="input-element"
-                          type="number"
-                          min="0"
-                          max="1"
-                          step="0.01"
-                          onChange={handleInputChange(typeIndex, valueIndex)}
-                          value={Number(value.value)}
-                        />
-                      </li>
-                    ))}
+                        id="no-room_no-teacher"
+                        className="input-number"
+                        type="number"
+                        onChange={handleInputChange(typeIndex, 0)}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                      />
+                      
+                      <input
+                        id="no-room_single-teacher"
+                        className="input-number"
+                        type="number"
+                        onChange={handleInputChange(typeIndex, 0)}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                      />
+                      <input
+                        id="no-room_multi-teacher"
+                        className="input-number"
+                        type="number"
+                        onChange={handleInputChange(typeIndex, 0)}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                      />
+                    </li>
+                    <li>
+                      <input
+                        id="single-room_no-teacher"
+                        className="input-number"
+                        type="number"
+                        onChange={handleInputChange(typeIndex, 0)}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                      />
+                      <input
+                        id="single-room_single-teacher"
+                        className="input-number"
+                        type="number"
+                        onChange={handleInputChange(typeIndex, 0)}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                      />
+                      <input
+                        id="single-room_multi-teacher"
+                        className="input-number"
+                        type="number"
+                        onChange={handleInputChange(typeIndex, 0)}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                      />
+                    </li>
+                    <li>
+                      <input
+                        id="multi-room_no-teacher"
+                        className="input-number"
+                        type="number"
+                        onChange={handleInputChange(typeIndex, 0)}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                      />
+                      <input
+                        id="multi-room_single-teacher"
+                        className="input-number"
+                        type="number"
+                        onChange={handleInputChange(typeIndex, 0)}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                      />
+                      <input
+                        id="multi-room_multi-teacher"
+                        className="input-number"
+                        type="number"
+                        onChange={handleInputChange(typeIndex, 0)}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                      />
+                    </li>
                   </div>
                 );
               default:
