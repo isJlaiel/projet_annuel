@@ -3,7 +3,6 @@ import { Feature } from "../models/feature.js";
 import { FeatureModel } from "../models/featureModel.js";
 import SubFeature from "../models/subFeature.js";
 import { FeatureRepository } from "../repositories/featureRepository.js";
-import Parameter, { ParameterValue } from "../models/Parameter.js";
 import Config from "../models/config.js";
 export class FeatureService {
   private featureRepository: FeatureRepository;
@@ -21,7 +20,7 @@ export class FeatureService {
         const name: string = result.FeatureModel.$.name;
         const features: Feature[] = this.parseFeatures(result.FeatureModel.Features[0].Feature);
         if (result.FeatureModel.Parameters) {
-          const parameters: Parameter[] = this.parseParameters(result.FeatureModel.Parameters[0].Parameter );
+          const parameters: string = JSON.stringify(result.FeatureModel.Parameters[0].Parameter);
           return new FeatureModel(name, features, parameters);
         }
         return new FeatureModel(name, features);
@@ -60,24 +59,7 @@ export class FeatureService {
     return parsedSubFeatures[0];
   }
 
-  private parseParameters(parametersData: any): Parameter[] {
-    const parameters: Parameter[] = parametersData.map((parameterData: any) => {
-        const feature: string = parameterData.$.feature;
-        const type: string = parameterData.$.type;
-        const values: ParameterValue[] = parameterData.value.map((valueData: any) => {
-            const key: string = valueData.$.key;
-            const value: string = valueData._;
-            const min: string = valueData.$.min || null;
-            const max: string = valueData.$.max || null;
-            const step: string = valueData.$.step || null;
-            return new ParameterValue(key, value, min, max, step);
-        });
-        return new Parameter(feature, type, values);
-    });
-    return parameters;
-}
-
-  public async configureFeatures(features: any): Promise<void> {
+  async configureFeatures(features: any): Promise<void> {
     const xmlData = await this.featureRepository.loadXML(
       "src/storage/configurationFiles/config.xml"
     );

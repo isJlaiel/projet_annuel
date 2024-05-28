@@ -81,15 +81,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
           : node.data.isSelected
           ? true
           : false,
-        parameters: node.data.parameters
-          ? node.data.parameters.map(
-              (param: { key: string; value: string | null; type: string }) => ({
-                key: param.key,
-                value: param.value || null,
-                type: param.type,
-              })
-            )
-          : [],
+          parameters: node.data.parameters,
         parent: node.id.split("/").slice(-2, -1)[0],
       }));
   }

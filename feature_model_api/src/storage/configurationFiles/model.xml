@@ -89,10 +89,23 @@
         <value key="nrFormations">50</value>
     </Parameter>
     <Parameter feature="feature model for UTP" type="probabilityForm">
-        <value key="CM">0</value>
-        <value key="TD">0</value>
-        <value key="TP">0</value>
-        <value key="CMTD">0</value>
+        <value key="CM"/>
+        <value key="TD"/>
+        <value key="TP"/>
+        <value key="CMTD"/> 
+        <configurations>
+            <configuration>
+                <configurations>no-room_no-teacher</configurations>
+                <configurations>no-room_single-teacher</configurations>
+                <configurations>no-room_multi-teacher</configurations>
+                <configurations>single-room_no-teacher</configurations>
+                <configurations>single-room_single-teacher</configurations>
+                <configurations>single-room_multi-teacher</configurations>
+                <configurations>multi-room_no-teacher</configurations>
+                <configurations>multi-room_single-teacher</configurations>
+                <configurations>multi-room_multi-teacher</configurations>
+            </configuration>
+        </configurations>
     </Parameter>
 
 </Parameters>

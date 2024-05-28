@@ -10,14 +10,23 @@ const NodeModal: React.FC<INodeModal> = ({
   saveNodeValues,
 }) => {
   const [inputValues, setInputValues] = useState(parameters);
+  const [openKey, setOpenKey] = useState<string | null>(null);
 
   // Handle input change
- const handleInputChange =
-  (typeIndex: number, valueIndex: number) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const newInputValues = [...inputValues];
-      newInputValues[typeIndex].values[valueIndex].value = event.target.value;
-      setInputValues(newInputValues);
+  const handleInputChange =
+    (typeKey: string, key: string) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = event.target.value;
+      setInputValues((prevValues) => {
+        const newValues = { ...prevValues };
+        newValues[typeKey].values = newValues[typeKey].values.map((value) => {
+          if (value.key === key) {
+            return { ...value, value: newValue };
+          }
+          return value;
+        });
+        return newValues;
+      });
     };
 
   const handleModalClick = (event: React.MouseEvent) => {
@@ -41,162 +50,124 @@ const NodeModal: React.FC<INodeModal> = ({
       <div className="modal-content" onClick={handleModalClick}>
         <h2 className="modal-title">{nodeLabel}</h2>
         <ul className="modal-list">
-          {inputValues.map((parameter, typeIndex) => {
-            console.log("t", parameter);
-            switch (parameter.type) {
-              case "number":
-                return (
-                  <li key={typeIndex} className="modal-list-item">
-                    <label className="modal-label">
-                      {parameter.values[0].key}
-                    </label>
-                    <input
-                      className="input-element"
-                      type="number"
-                      onChange={handleInputChange(typeIndex, 0)}
-                      value={parameter.values[0].value.toString()}
-                    />
-                  </li>
+          {Object.entries(inputValues).map(
+            ([typeKey, parameter], typeIndex) => {
+              if (parameter.type === "probabilityForm") {
+                const groupedValues = parameter.values.reduce(
+                  (groups, value) => {
+                    const category = value.key.split("_").pop();
+                    if (!groups[category]) {
+                      groups[category] = [];
+                    }
+                    groups[category].push(value);
+                    return groups;
+                  },
+                  {} as { [key: string]: typeof parameter.values }
                 );
-              case "string":
-                return (
-                  <li key={typeIndex} className="modal-list-item">
-                    <label className="modal-label">
-                      {parameter.values[0].key}
-                    </label>
-                    <input
-                      className="input-element"
-                      type="text"
-                      onChange={handleInputChange(typeIndex, 0)}
-                      value={parameter.values[0].value.toString()}
-                    />
-                  </li>
+
+                return Object.entries(groupedValues).map(
+                  ([category, values]) => (
+                    <div key={category} className="probability-form">
+                      <button
+                        className="probability-form-button"
+                        onClick={() =>
+                          setOpenKey(openKey === category ? null : category)
+                        }
+                      >
+                        {category.toUpperCase()}
+                      </button>
+
+                      {openKey === category &&
+                        values.map((value, valueIndex) => (
+                          <li
+                            className="input-container"
+                            key={`${typeKey}-${valueIndex}`}
+                          >
+                            <label className="modal-label">{value.key}</label>
+                            <input
+                              className="input-number"
+                              type="number"
+                              onChange={handleInputChange(typeKey, value.key)}
+                              value={value.value ? value.value.toString() : ""}
+                              min={0}
+                              max={1}
+                              step={0.01}
+                            />
+                          </li>
+                        ))}
+                    </div>
+                  )
                 );
-              case "boolean":
-                return (
-                  <li key={typeIndex} className="modal-list-item">
-                    <label className="modal-label">
-                      {parameter.values[0].key}
-                    </label>
-                    <input
-                      type="checkbox"
-                      className="input-element"
-                      checked={Boolean(parameter.values[0].value)}
-                      onChange={handleInputChange(typeIndex, 0)}
-                    />
-                  </li>
-                );
-              case "probabilityForm":
-                return (
-                  <div
-                  key={`${typeIndex}`}>
-                    <li>
-                      <label className="modal-label">
-                        CM
-                      </label>
-                    </li>
-                    <li>
-                     <label>no-room_no-teacher</label>
-                        <input
-                        id="no-room_no-teacher"
-                        className="input-number"
-                        type="number"
-                        onChange={handleInputChange(typeIndex, 0)}
-                        min={0}
-                        max={1}
-                        step={0.01}
-                      />
-                      <label>no-room_single-teacher</label>
-                      <input
-                        id="no-room_single-teacher"
-                        className="input-number"
-                        type="number"
-                        onChange={handleInputChange(typeIndex, 0)}
-                        min={0}
-                        max={1}
-                        step={0.01}
-                      />
-                      <label>no-room_multi-teacher</label>
-                      <input
-                        id="no-room_multi-teacher"
-                        className="input-number"
-                        type="number"
-                        onChange={handleInputChange(typeIndex, 0)}
-                        min={0}
-                        max={1}
-                        step={0.01}
-                      />
-                    </li>
-                    <li>
-                      <label>single-room_no-teacher</label>
-                      <input
-                        id="single-room_no-teacher"
-                        className="input-number"
-                        type="number"
-                        onChange={handleInputChange(typeIndex, 0)}
-                        min={0}
-                        max={1}
-                        step={0.01}
-                      />
-                      <label>single-room_single-teacher</label>
-                      <input
-                        id="single-room_single-teacher"
-                        className="input-number"
-                        type="number"
-                        onChange={handleInputChange(typeIndex, 0)}
-                        min={0}
-                        max={1}
-                        step={0.01}
-                      />
-                      <label>single-room_multi-teacher</label>
-                      <input
-                        id="single-room_multi-teacher"
-                        className="input-number"
-                        type="number"
-                        onChange={handleInputChange(typeIndex, 0)}
-                        min={0}
-                        max={1}
-                        step={0.01}
-                      />
-                    </li>
-                    <li>
-                      <label>multi-room_no-teacher</label>
-                      <input
-                        id="multi-room_no-teacher"
-                        className="input-number"
-                        type="number"
-                        onChange={handleInputChange(typeIndex, 0)}
-                        min={0}
-                        max={1}
-                        step={0.01}
-                      />
-                      <label>multi-room_single-teacher</label>
-                      <input
-                        id="multi-room_single-teacher"
-                        className="input-number"
-                        type="number"
-                        onChange={handleInputChange(typeIndex, 0)}
-                        min={0}
-                        max={1}
-                        step={0.01}
-                      />
-                      <label>multi-room_multi-teacher</label>
-                      <input
-                        id="multi-room_multi-teacher"
-                        className="input-number"
-                        type="number"
-                        onChange={handleInputChange(typeIndex, 0)}
-                        min={0}
-                        max={1}
-                        step={0.01}
-                      />
-                    </li>
-                  </div>
-                );
-              default:
-                return null;
+              } else {
+                return parameter.values.map((value, valueIndex) => {
+                  switch (parameter.type) {
+                    case "number":
+                      return (
+                        <li
+                          key={`${typeIndex}-${valueIndex}`}
+                          className="modal-list-item"
+                        >
+                          <label className="modal-label">{value.key}</label>
+                          <input
+                            className="input-element"
+                            type="number"
+                            onChange={handleInputChange(typeKey, value.key)}
+                            value={value.value ? value.value.toString() : ""}
+                          />
+                        </li>
+                      );
+                    case "string":
+                      return (
+                        <li
+                          key={`${typeIndex}-${valueIndex}`}
+                          className="modal-list-item"
+                        >
+                          <label className="modal-label">{value.key}</label>
+                          <input
+                            className="input-element"
+                            type="text"
+                            onChange={handleInputChange(typeKey, value.key)}
+                            value={value.value ? value.value.toString() : ""}
+                          />
+                        </li>
+                      );
+                    case "boolean":
+                      return (
+                        <li
+                          key={`${typeIndex}-${valueIndex}`}
+                          className="modal-list-item"
+                        >
+                          <label className="modal-label">{value.key}</label>
+                          <input
+                            type="checkbox"
+                            className="input-element"
+                            checked={Boolean(value.value)}
+                            onChange={handleInputChange(typeKey, value.key)}
+                          />
+                        </li>
+                      );
+                    case "probabilityForm":
+                      return (
+                        <li
+                          key={`${typeKey}-${valueIndex}`}
+                          className="modal-list-item"
+                        >
+                          <label className="modal-label">{value.key}</label>
+                          <input
+                            className="input-element"
+                            type="number"
+                            onChange={handleInputChange(typeKey, value.key)}
+                            value={value.value ? value.value.toString() : ""}
+                          />
+                        </li>
+                      );
+                    default:
+                      return null;
+                  }
+                });
+              }
             }
-          })}
+          )}
         </ul>
         <button className="modal-button" onClick={handleOkClick}>
           ok

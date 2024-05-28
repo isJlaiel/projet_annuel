@@ -25,6 +25,7 @@ import { Feature } from "../interfaces/Feature";
 import NodeContextMenu from "./NodeContextMenu";
 import React from "react";
 import LegendPanel from "./LegendPanel";
+import { IParameter, IValue } from "../interfaces/FeatureNode";
 const nodeTypes = {
   feature: FeatureNode,
   root: RootNode,
@@ -182,41 +183,50 @@ const FlowDiagram: React.FC<object> = () => {
         const newNodes = [root, ...results.nodes];
         const newEdges = results.edges;
 
-        const parameters = response.data.parameters;
-        console.log("parameters", parameters);
+        const parameters = JSON.parse(response.data.parameters);
+
         if (parameters) {
           for (const parameter of parameters) {
-            const feature = parameter.feature;
-            const type = parameter.type;
-            const values = parameter.values;
-        
-            for (const node of newNodes) {
-              if (node.data.label === feature) {
-                node.data.parameters = node.data.parameters || [];
-                const newParameter = { type: type, values: [] };
-        
-                for (const value of values) {
-                  const key = value.key;
-                  const defaultValue = value.value;
-                  const min = value.min != null ? Number(value.min) : undefined;
-                  const max = value.max != null ? Number(value.max) : undefined;
-                  const step = value.step;
-        
-                  newParameter.values.push({
-                    key: key,
-                    value: defaultValue,
-                    min: min,
-                    max: max,
-                    step: step,
+            const feature = parameter.$?.feature;
+            const type = parameter.$?.type;
+            let values: IValue[] = [];
+
+            if (type === "probabilityForm") {
+              const configurations =
+                parameter.configurations?.[0]?.configuration?.[0]
+                  ?.configurations || [];
+              const keys = parameter.value.map((val: any) => val.$?.key);
+
+              for (const key of keys) {
+                for (const config of configurations) {
+                  values.push({
+                    key: `${config}_${key}`,
+                    value: "",
+                    type: "number",
                   });
                 }
-        
-                node.data.parameters.push(newParameter);
+              }
+            } else {
+              values = parameter.value.map((val: any) => ({
+                key: val.$?.key,
+                value: val._,
+                type: type,
+              }));
+            }
+
+            const iParameter: IParameter = { type: type, values };
+
+            for (const node of newNodes) {
+              if (node.data.label === feature) {
+                if (node.data.parameters) {
+                  node.data.parameters.push(iParameter);
+                } else {
+                  node.data.parameters = [iParameter];
+                }
               }
             }
           }
         }
-
         setGraphData({ nodes: newNodes, edges: newEdges });
 
         const tree = buildTree(newNodes, newEdges);

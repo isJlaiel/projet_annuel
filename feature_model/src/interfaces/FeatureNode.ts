@@ -9,6 +9,7 @@ export interface IValue {
 export interface IParameter {
   type: string;
   values: IValue[];
+  others?: Record<string, unknown>;
 }
 
 export interface IFeatureNode {

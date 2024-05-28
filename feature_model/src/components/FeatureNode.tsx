@@ -26,7 +26,7 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
     <div
       className="node-container"
       onClick={() => {
-        if (data.parameters && data.parameters.length > 0 && !data.isSelected) {
+        if (data.parameters && Object.keys(data.parameters).length && !data.isSelected) {
           setIsModalOpen(true);
         }
       }}

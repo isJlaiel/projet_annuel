@@ -19,9 +19,9 @@ const RootNode: React.FC<IRootNode> = ({ data, isConnectable }) => {
   return (
     <div
       className="react-flow__node-default root-node"
-      onClick={() =>
-        data.parameters && data.parameters.length && setIsModalOpen(true)
-      }
+      onClick={() => {
+        data.parameters && Object.keys(data.parameters) && setIsModalOpen(true);
+      }}
     >
       <div>{data.label}</div>
       <Handle

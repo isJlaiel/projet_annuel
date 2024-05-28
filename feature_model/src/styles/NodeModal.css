@@ -37,11 +37,13 @@
 }
 
 .modal-label {
+  display: block;
   color: black;
 }
 
 .input-element {
   margin-right: 3em;
+  box-sizing: border-box;
 }
 
 .modal-button {
@@ -55,13 +57,28 @@
   width: 80px;
   margin: 3px;
 }
-
-.span-probability input {
-  width: 80px;
-  margin: 3px;
+.probability-form {
+  margin: 15px;
+  margin-right: 3em;
 }
 
-.span-probability {
-  font-size: small;
-  color: black;
+.probability-form li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.probability-form-button {
+  background-color: gray;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.probability-form-button:hover {
+  background-color: green;
 }
