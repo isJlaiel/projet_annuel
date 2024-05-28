@@ -96,7 +96,7 @@ const NodeModal: React.FC<INodeModal> = ({
                       </label>
                     </li>
                     <li>
-                     
+                     <label>no-room_no-teacher</label>
                         <input
                         id="no-room_no-teacher"
                         className="input-number"
@@ -106,7 +106,7 @@ const NodeModal: React.FC<INodeModal> = ({
                         max={1}
                         step={0.01}
                       />
-                      
+                      <label>no-room_single-teacher</label>
                       <input
                         id="no-room_single-teacher"
                         className="input-number"
@@ -116,6 +116,7 @@ const NodeModal: React.FC<INodeModal> = ({
                         max={1}
                         step={0.01}
                       />
+                      <label>no-room_multi-teacher</label>
                       <input
                         id="no-room_multi-teacher"
                         className="input-number"
@@ -127,6 +128,7 @@ const NodeModal: React.FC<INodeModal> = ({
                       />
                     </li>
                     <li>
+                      <label>single-room_no-teacher</label>
                       <input
                         id="single-room_no-teacher"
                         className="input-number"
@@ -136,6 +138,7 @@ const NodeModal: React.FC<INodeModal> = ({
                         max={1}
                         step={0.01}
                       />
+                      <label>single-room_single-teacher</label>
                       <input
                         id="single-room_single-teacher"
                         className="input-number"
@@ -145,6 +148,7 @@ const NodeModal: React.FC<INodeModal> = ({
                         max={1}
                         step={0.01}
                       />
+                      <label>single-room_multi-teacher</label>
                       <input
                         id="single-room_multi-teacher"
                         className="input-number"
@@ -156,6 +160,7 @@ const NodeModal: React.FC<INodeModal> = ({
                       />
                     </li>
                     <li>
+                      <label>multi-room_no-teacher</label>
                       <input
                         id="multi-room_no-teacher"
                         className="input-number"
@@ -165,6 +170,7 @@ const NodeModal: React.FC<INodeModal> = ({
                         max={1}
                         step={0.01}
                       />
+                      <label>multi-room_single-teacher</label>
                       <input
                         id="multi-room_single-teacher"
                         className="input-number"
@@ -174,6 +180,7 @@ const NodeModal: React.FC<INodeModal> = ({
                         max={1}
                         step={0.01}
                       />
+                      <label>multi-room_multi-teacher</label>
                       <input
                         id="multi-room_multi-teacher"
                         className="input-number"

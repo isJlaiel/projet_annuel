@@ -7,6 +7,7 @@ router.get('/features', (req, res) => featureController.getFeatures(req, res));
 router.put('/features/configure',(req, res) => featureController.configureFeatures(req, res));
 router.get('/features/files', (req, res) => featureController.getFiles(req, res));
 router.get('/download/:filePath', (req, res) => featureController.downloadFile(req, res));
+router.delete('/features/files/:filePath', (req, res) => featureController.deleteFile(req, res));
 
 return router;
 };

@@ -94,21 +94,26 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
       }));
   }
 
-  function handleDownloadClick(ItemId: string) {
-    APIService.downloadFile(ItemId).then((response) => {
+  function handleDownloadClick(file: string) {
+    APIService.downloadFile(file).then((response) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", ItemId.split("/").slice(-1)[0]);
+      let filename = file.split("/").slice(-1)[0];
+      if (!filename.endsWith(".zip")) {
+        filename += ".zip";
+      }
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
     });
   }
 
-  async function handleDeleteClick(itemId: string) {
+
+  async function handleDeleteClick(file: string) {
     setIsLoading(true);
     try {
-      await APIService.deleteFile(itemId);
+      await APIService.deleteFile(file);
       const result = await APIService.getFilesTree();
       setItems(processServerFilesTree(result.data));
     } catch (error) {

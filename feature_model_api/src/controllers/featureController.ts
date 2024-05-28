@@ -4,8 +4,11 @@ import { FeatureService } from "../services/featureService.js";
 import { Request, Response } from "express";
 import { FeatureModel } from "../models/featureModel.js";
 import path from "path";
-import archiver from 'archiver';
+import archiver from "archiver";
+import util from "util";
+import fsExtra from "fs-extra";
 
+const removePromise = util.promisify(fsExtra.remove);
 
 const basicPath = path.join(process.cwd(), "src", "storage");
 export class FeatureController {
@@ -40,7 +43,6 @@ export class FeatureController {
   }
 
   private async getFilesTree(dir: string) {
-    console.log('jdjijijiji')
     const dirents = await fsPromises.readdir(dir, { withFileTypes: true });
     const files = await Promise.all(
       dirents.map(async (dirent) => {
@@ -71,52 +73,63 @@ export class FeatureController {
     }
   }
 
-
-  async downloadFile(req, res) {
+  async downloadFile(req: Request, res: Response): Promise<void> {
     const fullPath = path.join(basicPath, req.params.filePath);
-    
+
     try {
       const stats = fs.statSync(fullPath);
-      if     (stats.isDirectory()) {
+      if (stats.isDirectory()) {
+        const zipPath = path.join(__dirname, "download.zip");
 
-      const zipPath = path.join(__dirname, 'download.zip');
+        const output = fs.createWriteStream(zipPath);
+        const archive = archiver("zip", {
+          zlib: { level: 9 }, // Sets the compression level.
+        });
 
-      const output = fs.createWriteStream(zipPath);
-      const archive = archiver('zip', {
-          zlib: { level: 9 } // Sets the compression level.
-      });
-  
-      output.on('close', () => {
-          res.download(zipPath, 'download.zip', (err) => {
-              if (err) {
-                  console.error('Error downloading the file:', err);
-              }
-              fs.unlinkSync(zipPath); // Delete the zip file after download
+        output.on("close", () => {
+          res.download(zipPath, "download.zip", (err) => {
+            if (err) {
+              console.error("Error downloading the file:", err);
+            }
+            fs.unlinkSync(zipPath); // Delete the zip file after download
           });
-      });
-  
-      archive.on('error', (err) => {
-          throw err;
-      });
-  
-      archive.pipe(output);
-      archive.directory(fullPath, false);
-      archive.finalize();
-    
-      } else if (stats.isFile()) {
-        res.download(fullPath,(err)=>{
-          if(err){
-              res.status(500).send({
-                  message : "erreur download : "+ err
-              })
-          }
-      } )
-      }
-  } catch (err) {
-      console.error('Error accessing the file path:', err);
-      res.status(404).send('File not found');
-  }
-}
+        });
 
-  
+        archive.on("error", (err) => {
+          throw err;
+        });
+
+        archive.pipe(output);
+        archive.directory(fullPath, false);
+        archive.finalize();
+      } else if (stats.isFile()) {
+        res.download(fullPath, (err) => {
+          if (err) {
+            res.status(500).send({
+              message: "erreur download : " + err,
+            });
+          }
+        });
+      }
+    } catch (err) {
+      console.error("Error accessing the file path:", err);
+      res.status(404).send("File not found");
+    }
+  }
+  async deleteFile(req: Request, res: Response): Promise<void> {
+    try {
+      console.log(
+        "----------------------------------------------------------------------------------------"
+      );
+      const fullPath = path.join(basicPath, req.params.filePath);
+      console.log(fullPath);
+
+      await removePromise(fullPath);
+      res.sendStatus(200); // This will send a 200 OK status
+      console.log(`Removed ${fullPath}`);
+    } catch (err) {
+      console.error(`Operation failed: ${err}`);
+      res.status(500).send(`Operation failed: ${err}`); // Send a 500 Internal Server Error on failure
+    }
+  }
 }

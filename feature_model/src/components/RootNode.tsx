@@ -4,7 +4,6 @@ import "../styles/RootNode.css";
 import { useState, useEffect } from "react";
 import Modal from "./NodeModal";
 import { IParameter } from "../interfaces/FeatureNode";
-import RootNodeModal from "./RootNodeModal";
 
 const RootNode: React.FC<IRootNode> = ({ data, isConnectable }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
