@@ -39,7 +39,7 @@ export default function ContextMenu({
   }
   const label = node?.data?.label || "Node";
   const editParams =
-    !node?.data.isMandatory && node?.data.parameters?.length > 0;
+  !node?.data.isMandatory && Object.keys(node?.data.parameters || {}).length > 0;
 
   return (
     <div

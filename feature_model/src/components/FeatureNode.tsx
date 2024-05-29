@@ -33,7 +33,10 @@ const FeatureNode: React.FC<IFeatureNode> = ({ data }) => {
     >
       {isModalOpen && (
         <Modal
-          closeModal={() => setIsModalOpen(false)}
+        closeModal={() => {
+          setIsModalOpen(false);
+          data.showModal = false;
+        }}
           parameters={data.parameters || []}
           nodeLabel={data.label}
           saveNodeValues={saveNodeValues}
