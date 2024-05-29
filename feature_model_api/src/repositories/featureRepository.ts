@@ -18,11 +18,9 @@ export class FeatureRepository {
     async loadXML(path: string): Promise<any> {
         const xmlData  =  (await fs.readFile(path, 'utf-8')).replace(/^\s+</, '<');
         return  await this.parser.parseStringPromise(xmlData);
-
     }
 
     async generateInstance(xmlObject: any): Promise<void> {
-        console.log(basicPath)
         const jarPath = `${basicPath}/configurationFiles/ExprimentGenerator_new2024Bis.jar`
         const xml: string = this.builder.buildObject(xmlObject);
         const folderName : string = getFolderName() 

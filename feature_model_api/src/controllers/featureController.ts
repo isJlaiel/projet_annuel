@@ -118,18 +118,14 @@ export class FeatureController {
   }
   async deleteFile(req: Request, res: Response): Promise<void> {
     try {
-      console.log(
-        "----------------------------------------------------------------------------------------"
-      );
       const fullPath = path.join(basicPath, req.params.filePath);
-      console.log(fullPath);
 
       await removePromise(fullPath);
-      res.sendStatus(200); // This will send a 200 OK status
+      res.sendStatus(200);
       console.log(`Removed ${fullPath}`);
     } catch (err) {
       console.error(`Operation failed: ${err}`);
-      res.status(500).send(`Operation failed: ${err}`); // Send a 500 Internal Server Error on failure
+      res.status(500).send(`Operation failed: ${err}`); 
     }
   }
 }

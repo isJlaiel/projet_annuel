@@ -92,7 +92,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
       const link = document.createElement("a");
       link.href = url;
       let filename = file.split("/").slice(-1)[0];
-      if (!filename.endsWith(".zip")) {
+      if (!filename.endsWith(".txt") && !filename.endsWith(".xml") ) {
         filename += ".zip";
       }
       link.setAttribute("download", filename);
@@ -117,12 +117,9 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
 
   async function handleSubmitClick() {
     setIsLoading(true);
-    // convert nodes to JSON
     const nodesData = jsonifyNodes(nodes);
-    console.log("Nodes data:", nodesData);
     const json = JSON.stringify(nodesData, null, 2);
     try {
-      // ask the API to run generator
       await APIService.configureFeatureModel(json);
 
       await new Promise(resolve => setTimeout(resolve, 1000));      

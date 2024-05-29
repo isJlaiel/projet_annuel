@@ -1,7 +1,5 @@
-# Base Image
 FROM node:18
 
-# Set Working Directory
 WORKDIR /app
 
 # Install NPM Packages

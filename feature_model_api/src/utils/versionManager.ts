@@ -20,7 +20,7 @@ export async  function runJar(jarPath, options, folderPath) {
         if (stderr) {
             console.error(`Errors: ${stderr}`);
         } else {
-            console.log("It's GOOD");
+            console.log("succes ");
             await organizeFiles(folderPath);
         }
     } catch (error) {

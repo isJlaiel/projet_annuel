@@ -60,17 +60,17 @@ export class FeatureService {
     return parsedSubFeatures[0];
   }
 
-  async configureFeatures(features: any): Promise<void> {
-
+  async configureFeatures(features): Promise<void> {
 
     const xmlData = await this.featureRepository.loadXML("src/storage/configurationFiles/config.xml" );
     this.config = xmlData.configuration;
     const rootParams = features[0].parameters['1'].values.filter(e=>e.value!=='');
+    if(features[0].parameters[0].values[0].key == 'nrFormations'){
+      this.config.formations[0].$.nrFormations  = features[0].parameters[0].values[0].value
+    }
     for (let j = 0; j < rootParams.length; ++j) {
         const last_ = rootParams[j].key.lastIndexOf("_");;
         const _id= rootParams[j].key.substring(last_ + 1).trim();
-        console.log(_id)
-        console.log(rootParams[j].value)
         const functions = this.teacherRoomProbability(_id, rootParams[j].value )
         const key = rootParams[j].key
         if(functions[key]){
@@ -80,7 +80,7 @@ export class FeatureService {
 
         }
     }
-        const teachers: string[] = ["no-teacher", "single-teacher", "multi-teacher"];
+    const teachers: string[] = ["no-teacher", "single-teacher", "multi-teacher"];
     const rooms: string[] = ["no-room", "single-room", "multi-room"];
     const teachersConfig = features.filter((e) =>e.selected === true && e.parent === "teaching" && teachers.includes(e.label) );
     const roomsConfig = features.filter((e) => e.selected === true && e.parent === "hosting" && rooms.includes(e.label));
@@ -200,10 +200,13 @@ export class FeatureService {
   }
 
   private configureTiming(featureSelected) {
+    console.log(featureSelected.parameters['0'].values)
     if (featureSelected.label === "full-period") {
-      const nrPeriods = featureSelected.parameters.find((e) => e.key == "nrPeriods").value;
+      const nrPeriods = featureSelected.parameters['0'].values.find((e) => e.key == "nrPeriods")?.value 
+      if(nrPeriods){
       this.config.distributionWeeks[0].distributionWeek =this.config.distributionWeeks[0].distributionWeek.map((ds) => {return { ...ds, _: nrPeriods } });  }
-    if (featureSelected.label === "single-week") {
+      }
+      if (featureSelected.label === "single-week") {
       this.config.distributionWeeks[0].distributionWeek = this.config.distributionWeeks[0].distributionWeek.map((ds) => {return { ...ds, _: 1 }; });
     }
     if (featureSelected.label === "full-week") {
@@ -239,11 +242,16 @@ export class FeatureService {
   private configureTeaching(featureSelected) {
     if (featureSelected.label === "session-overlap") {
       this.config.features[0].feature.find((e) => e.$.name == "teaching-session-overlap").$.activate = "1";
+    }else if(featureSelected.label === "service"){
+      this.config.features[0].feature.find((e) => e.$.name == "service").$.random = featureSelected.parameters[0].values[0].value == 'false' ? 0 : 1
+      if(featureSelected.parameters[0].values[0].value == 'false' ){
+        this.config.features[0].feature.find((e) => e.$.name == "service").$.serviceMax =  featureSelected.parameters[1].values[0].value 
+      }
     }
   }
   private configureAttending(featureSelected) {
     if (featureSelected.label === "session-overlap") {
-      this.config.features[0].feature.find((e) => e.$.name == "attending-session-overlap").$.activate = "1";
+      this.config.features[0].feature.find((e) => e.$.name == "service").$.activate = "1";
     }
   }
 }

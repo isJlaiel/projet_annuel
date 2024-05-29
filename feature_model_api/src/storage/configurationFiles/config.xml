@@ -176,7 +176,7 @@
 <feature name="none-exclusive" activate="0"/>
 <feature name="teaching-session-overlap" activate="0"/>
 <feature name="attending-session-overlap" activate="0"/>
-<feature name="service" activate="0"/>
+<feature name="service" activate="0" random="1" serviceMax="192"/>
 <feature name="sectioning" activate="1"/>
 </features>
 </configuration>

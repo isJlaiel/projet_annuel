@@ -5,16 +5,6 @@ FROM ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 # User Setup
-ARG USERNAME=user
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-RUN echo "USER_UID : "${USER_UID}" \nUSER_GID : "${USER_GID} && \
-    groupadd --gid $USER_GID $USERNAME && \
-    useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME && \
-    apt-get update && \
-    apt-get install -y sudo wget && \
-    echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME && \
-    chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Install Node.js and Java
 RUN apt-get update && \
