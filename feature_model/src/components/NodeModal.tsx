@@ -16,7 +16,10 @@ const NodeModal: React.FC<INodeModal> = ({
   const handleInputChange =
     (typeKey: string, key: string) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = event.target.value;
+      const newValue =
+        event.target.type === "checkbox"
+          ? event.target.checked
+          : event.target.value;
       setInputValues((prevValues) => {
         const newValues = { ...prevValues };
         newValues[typeKey].values = newValues[typeKey].values.map((value) => {
@@ -83,7 +86,9 @@ const NodeModal: React.FC<INodeModal> = ({
                             className="input-container"
                             key={`${typeKey}-${valueIndex}`}
                           >
-                            <label className="modal-label">{value.key}</label>
+                            <label className="modal-label">
+                              {value.key.split("_")[0]}
+                            </label>
                             <input
                               className="input-number"
                               type="number"

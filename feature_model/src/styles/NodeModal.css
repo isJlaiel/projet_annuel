@@ -10,6 +10,11 @@
 
 .modal-content {
   position: fixed;
+  max-height: 90vh;
+  max-width: 90vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
