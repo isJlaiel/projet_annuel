@@ -87,7 +87,7 @@ const NodeModal: React.FC<INodeModal> = ({
                             key={`${typeKey}-${valueIndex}`}
                           >
                             <label className="modal-label">
-                              {value.key.split("_")[0]}
+                            {value.key.substring(0, value.key.lastIndexOf('_'))}
                             </label>
                             <input
                               className="input-number"

@@ -180,7 +180,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
               </div>
             )}
           </div>
-          {errorMessage && <div>{errorMessage}</div>}
+          {errorMessage && <div className="error">{errorMessage}</div>}
           {items.length === 0 && !isLoading && "No files to display."}
         </Resizable>
       )}
