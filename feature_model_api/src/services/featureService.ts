@@ -5,6 +5,7 @@ import SubFeature from "../models/subFeature.js";
 import { FeatureRepository } from "../repositories/featureRepository.js";
 import Config from "../models/config.js";
 export class FeatureService {
+  
   private featureRepository: FeatureRepository;
   private config: Config;
   constructor({ featureRepository }: { featureRepository: FeatureRepository }) {
@@ -60,12 +61,26 @@ export class FeatureService {
   }
 
   async configureFeatures(features: any): Promise<void> {
-    const xmlData = await this.featureRepository.loadXML(
-      "src/storage/configurationFiles/config.xml"
-    );
+
+
+    const xmlData = await this.featureRepository.loadXML("src/storage/configurationFiles/config.xml" );
     this.config = xmlData.configuration;
-      console.log(this.config)
-    const teachers: string[] = ["no-teacher", "single-teacher", "multi-teacher"];
+    const rootParams = features[0].parameters['1'].values.filter(e=>e.value!=='');
+    for (let j = 0; j < rootParams.length; ++j) {
+        const last_ = rootParams[j].key.lastIndexOf("_");;
+        const _id= rootParams[j].key.substring(last_ + 1).trim();
+        console.log(_id)
+        console.log(rootParams[j].value)
+        const functions = this.teacherRoomProbability(_id, rootParams[j].value )
+        const key = rootParams[j].key
+        if(functions[key]){
+          functions[key]()
+        }else{
+          console.log('La clé spécifiée n\'existe pas ');
+
+        }
+    }
+        const teachers: string[] = ["no-teacher", "single-teacher", "multi-teacher"];
     const rooms: string[] = ["no-room", "single-room", "multi-room"];
     const teachersConfig = features.filter((e) =>e.selected === true && e.parent === "teaching" && teachers.includes(e.label) );
     const roomsConfig = features.filter((e) => e.selected === true && e.parent === "hosting" && rooms.includes(e.label));
@@ -115,6 +130,20 @@ export class FeatureService {
     xmlData.configuration = this.config;
     await this.featureRepository.generateInstance(xmlData);
   }
+
+  private teacherRoomProbability(id: string ,  value : string) {
+    return {
+    [`no-room_no-teacher_${id}`]: () =>this.config["part-dimension"][0].part = this.config["part-dimension"][0].part.map((p) => p.$.nrTeachers == "0" && p.$.nrRooms == "0"  && p.$.id === id ? {...p, $: {...p.$, probability: value}} : p),
+    [`no-room_single-teacher_${id}`]: () =>this.config["part-dimension"][0].part = this.config["part-dimension"][0].part.map((p) => p.$.nrTeachers == "1" && p.$.nrRooms == "0" && p.$.id === id ? {...p, $: {...p.$, probability: value}} : p),
+    [`no-room_multi-teacher_${id}`]: () => this.config["part-dimension"][0].part =this.config["part-dimension"][0].part.map((p) => p.$.nrTeachers > 1 && p.$.nrRooms == "0" && p.$.id === id ? {...p, $: {...p.$, probability: value}} : p),
+    [`single-room_no-teacher_${id}`]: () =>this.config["part-dimension"][0].part = this.config["part-dimension"][0].part.map((p) => p.$.nrTeachers == "0" && p.$.nrRooms == "1" && p.$.id === id ? {...p, $: {...p.$, probability: value}} : p),
+    [`single-room_single-teacher_${id}`]: () => this.config["part-dimension"][0].part = this.config["part-dimension"][0].part.map((p) => p.$.nrTeachers == "1" && p.$.nrRooms == "1" && p.$.id === id ? {...p, $: {...p.$, probability: value}} : p),
+    [`single-room_multi-teacher_${id}`]: () =>this.config["part-dimension"][0].part = this.config["part-dimension"][0].part.map((p) => p.$.nrTeachers > 1 && p.$.nrRooms == "1" && p.$.id === id ? {...p, $: {...p.$, probability: value}} : p),
+    [`multi-room_no-teacher_${id}`]: () => this.config["part-dimension"][0].part =this.config["part-dimension"][0].part.map(  (p) => p.$.nrTeachers == "0" && p.$.nrRooms > 1 && p.$.id === id ? {...p, $: {...p.$, probability: value}} : p),
+    [`multi-room_single-teacher_${id}`]: () =>this.config["part-dimension"][0].part = this.config["part-dimension"][0].part.map((p) => p.$.nrTeachers == "1" && p.$.nrRooms > 1 && p.$.id === id ? {...p, $: {...p.$, probability: value}} : p),
+    [`multi-room_multi-teacher_${id}`]: () =>this.config["part-dimension"][0].part = this.config["part-dimension"][0].part.map((p) => p.$.nrTeachers > 1 && p.$.nrRooms > 1 && p.$.id === id ? {...p, $: {...p.$, probability: value}} : p),
+  };
+}
 
   private teacherRoomCombinaison: { [key: string]: () => any } = {
     "no-room_no-teacher": () => this.config["part-dimension"][0].part.filter((p) => p.$.nrTeachers == "0" && p.$.nrRooms == "0"),
