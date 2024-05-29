@@ -86,7 +86,7 @@
         <value key="serviceMax">192</value>
     </Parameter>
     <Parameter feature="feature model for UTP" type="number">
-        <value key="nrFormations">50</value>
+        <value key="nrFormations">15</value>
     </Parameter>
     <Parameter feature="feature model for UTP" type="probabilityForm">
         <value key="CM"/>
