@@ -64,8 +64,8 @@ export class FeatureService {
 
     const xmlData = await this.featureRepository.loadXML("src/storage/configurationFiles/config.xml" );
     this.config = xmlData.configuration;
-    const rootParams = features[0].parameters['1'].values.filter(e=>e.value!=='');
-    if(features[0].parameters[0].values[0].key == 'nrFormations'){
+    const rootParams = features[0]?.parameters['1']?.values.filter(e=>e.value!=='');
+    if(features[0]?.parameters[0]?.values[0]?.key == 'nrFormations'){
       this.config.formations[0].$.nrFormations  = features[0].parameters[0].values[0].value
     }
     for (let j = 0; j < rootParams.length; ++j) {
@@ -185,7 +185,7 @@ export class FeatureService {
     this.config["departement-composition"][0].departement = this.config["departement-composition"][0].departement.map((d) => {
       return {
         ...d,
-        etape: d.etape.map((e) => {
+        etape: d?.etape.map((e) => {
           const elements = [];
           const matches = e._.replace(/\s+/g, "").match(regex);
 
@@ -200,12 +200,11 @@ export class FeatureService {
   }
 
   private configureTiming(featureSelected) {
-    console.log(featureSelected.parameters['0'].values)
     if (featureSelected.label === "full-period") {
       const nrPeriods = featureSelected.parameters['0'].values.find((e) => e.key == "nrPeriods")?.value 
       if(nrPeriods){
       this.config.distributionWeeks[0].distributionWeek =this.config.distributionWeeks[0].distributionWeek.map((ds) => {return { ...ds, _: nrPeriods } });  }
-      }
+    }
       if (featureSelected.label === "single-week") {
       this.config.distributionWeeks[0].distributionWeek = this.config.distributionWeeks[0].distributionWeek.map((ds) => {return { ...ds, _: 1 }; });
     }
