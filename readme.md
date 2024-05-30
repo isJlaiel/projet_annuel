@@ -55,10 +55,8 @@ npm run dev
 ### Utilisation de Docker
 #### Prérequis pour Docker
 Docker installé
-Ajouter l'utilisateur courant au groupe docker pour pouvoir exécuter Docker sans sudo.
-Construire et lancer l'application avec Docker
 
-Construire les conteneurs :
+### Construire les conteneurs :
 
 ```bash
 
@@ -66,7 +64,7 @@ docker compose build
 # Ou pour les versions plus anciennes de Docker :
 docker-compose build 
 ```
-lancer l'application 
+### Lancer l'application 
 
 ```bash
 docker-compose up
