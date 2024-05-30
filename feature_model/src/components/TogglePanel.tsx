@@ -68,7 +68,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
     }
 
     fetchData();
-}, [processServerFilesTree]); // Ensuring dependency is listed if it's used
+}, [processServerFilesTree]); 
 
 
   function jsonifyNodes(nodes: Node[]): NodeData[] {

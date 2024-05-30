@@ -22,7 +22,7 @@
         </subFeature>
     </Feature>
     <Feature name="hosting" mandatory="False">
-        <!-- Hosting features with room management options -->
+        <!-- Hosting features  -->
     <subFeature>
         <subFeature type="OR">
             <Feature name="no-room" />

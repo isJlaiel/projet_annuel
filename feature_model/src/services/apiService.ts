@@ -34,7 +34,7 @@ export default class APIService {
         }
     }
 
-    static async configureFeatureModel(FeatureModelData : any ){
+    static async configureFeatureModel(FeatureModelData){
         try {
             const response=  await APIService.getInstance().put("/features/configure",FeatureModelData)
             return response.data;

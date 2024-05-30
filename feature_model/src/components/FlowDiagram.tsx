@@ -286,7 +286,6 @@ const FlowDiagram: React.FC<object> = () => {
       updateNodeAndParents(node.id, isSelected);
       updateNodeAndChildren(node.id, isSelected);
 
-      // Check if parent is a "Choice Node" of type "XOR"
       const parentEdge = edges.find((edge) => edge.target === node.id);
       if (parentEdge) {
         const parentNode = updatedNodes.find((n) => n.id === parentEdge.source);
@@ -295,7 +294,6 @@ const FlowDiagram: React.FC<object> = () => {
           parentNode.type === "choice" &&
           parentNode.data.type === "XOR"
         ) {
-          // Fade and disable nodes that have the same parent
           updatedNodes = updatedNodes.map((n) => {
             const edge = edges.find((edge) => edge.target === n.id);
             if (edge && edge.source === parentNode.id && n.id !== node.id) {
@@ -314,12 +312,10 @@ const FlowDiagram: React.FC<object> = () => {
   };
   const onNodeContextMenu = useCallback(
     (event: React.MouseEvent, node: Node) => {
-      // Prevent native context menu from showing
       event.preventDefault();
 
       if (ref.current) {
-        // Calculate position of the context menu. We want to make sure it
-        // doesn't get positioned off-screen.
+
         const pane = ref.current.getBoundingClientRect();
         setMenu({
           id: node.id,
@@ -341,15 +337,12 @@ const FlowDiagram: React.FC<object> = () => {
   const onPaneClick = useCallback(() => setMenu(null), [setMenu]);
 
   useEffect(() => {
-    // Fonction pour fermer le menu contextuel
     const closeContextMenu = () => setMenu(null);
 
-    // Si le menu est ouvert, ajoutez un écouteur d'événements de clic au document
     if (menu) {
       document.addEventListener("click", closeContextMenu);
     }
 
-    // Lorsque le composant est démonté ou lorsque le menu est fermé, supprimez l'écouteur d'événements
     return () => {
       document.removeEventListener("click", closeContextMenu);
     };

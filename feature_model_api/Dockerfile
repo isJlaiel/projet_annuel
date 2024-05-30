@@ -1,10 +1,8 @@
 # Base Image
 FROM ubuntu:20.04
 
-# Avoid user interaction with tzdata
 ARG DEBIAN_FRONTEND=noninteractive
 
-# User Setup
 
 # Install Node.js and Java
 RUN apt-get update && \

@@ -12,7 +12,6 @@ const NodeModal: React.FC<INodeModal> = ({
   const [inputValues, setInputValues] = useState(parameters);
   const [openKey, setOpenKey] = useState<string | null>(null);
 
-  // Handle input change
   const handleInputChange =
     (typeKey: string, key: string) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
