@@ -183,7 +183,13 @@ const FlowDiagram: React.FC<object> = () => {
         const newNodes = [root, ...results.nodes];
         const newEdges = results.edges;
 
-        const parameters = JSON.parse(response.data.parameters);
+        let parameters = null;
+
+        try{
+          parameters = JSON.parse(response.data.parameters);
+        }catch(e){
+          console.error("Erreur lors de la récupération des paramètres :", e);
+        }
 
         if (parameters) {
           for (const parameter of parameters) {
