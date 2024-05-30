@@ -2,9 +2,6 @@
 
 <img src="feature_model/public/projet.png" alt="projet" />
 
-## Description
-
-
 ## Prérequis
 
 - Node.js récent et npm installés sur votre machine.
@@ -65,9 +62,9 @@ Construire les conteneurs :
 
 ```bash
 
-docker compose build --build-arg USER_UID=${UID}
+docker compose build
 # Ou pour les versions plus anciennes de Docker :
-docker-compose build --build-arg USER_UID=${UID}
+docker-compose build 
 ```
 lancer l'application 
 
