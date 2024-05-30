@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "dev": "nodemon --watch 'src/**/*' -e ts,tsx --exec 'npm run build && node dist/index.js'",
-    "start":  "npm run build && nodemon dist/index.js"
-  },  
+    "start": "npm run build && nodemon dist/index.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -34,6 +34,7 @@
     "express": "^4.19.2",
     "fs-extra": "^11.2.0",
     "moment": "^2.30.1",
+    "moment-timezone": "^0.5.45",
     "xml2js": "^0.6.2",
     "xmlbuilder": "^15.1.1"
   }

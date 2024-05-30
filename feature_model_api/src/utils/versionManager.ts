@@ -1,6 +1,6 @@
 import path from "path";
 import { exec } from "child_process";
-import moment from "moment";
+import moment from 'moment-timezone';
 import fs from 'fs-extra';
 import util from 'util';
 
@@ -10,7 +10,7 @@ const movePromise =   util.promisify(fs.move)
 const removePromise = util.promisify(fs.remove)
 export function getFolderName() : string{
     const date: Date = new Date();
-   return 'experiment_' + moment(date).format('YYYY-MM-DD_HH-mm-ss');
+   return 'experiment_' + moment(date).tz('Europe/Paris').format('YYYY-MM-DD_HH-mm-ss');
 }
 
 export async  function runJar(jarPath, options, folderPath) {
