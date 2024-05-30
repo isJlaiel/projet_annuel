@@ -117,6 +117,7 @@ const TogglePanel: React.FC<{ nodes: Node[] }> = ({ nodes }) => {
 
   async function handleSubmitClick() {
     setIsLoading(true);
+    setErrorMessage(null);
     const nodesData = jsonifyNodes(nodes);
     const json = JSON.stringify(nodesData, null, 2);
     try {
